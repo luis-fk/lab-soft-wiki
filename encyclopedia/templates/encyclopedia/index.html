@@ -1,0 +1,29 @@
+{% extends "encyclopedia/layout.html" %}
+{% load filter %}
+
+{% block title %}
+    Encyclopedia
+{% endblock %}
+
+{% block body %}
+    {% comment %} This "if" is used in a way to give a dual purpose to this page,
+                  meaning that it is used to display all the entries present in the
+                  wiki, or, if the user search for something that is similar to an
+                  already existing entry, only those matching resulsts are going to
+                  be shown 
+    {% endcomment %}
+    {% if searchResult %}
+        <h1>Search Results</h1>
+    {% else %}
+        <h1>All Pages</h1>
+    {% endif %}
+    <div>
+        <ul id="entries">
+            {% comment %} "entries" has the title of all the entries in the wiki {% endcomment %}
+            {% for entryvar in entries %}
+                <li><a href="{% url 'encyclopedia:entry' entryvar %}">{{ entryvar|replaceHyphensWithSpaces }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+{% endblock %}

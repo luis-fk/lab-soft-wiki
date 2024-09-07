@@ -1,0 +1,78 @@
+
+{% extends "encyclopedia/layout.html" %}
+{% comment %} This page implements two types of functionalities, one for
+              editing already existing pages and one for creating new pages 
+{% endcomment %}
+
+{% load filter %}
+
+{% block title %}
+
+{% comment %} Name shown in the tab depening on what was choosen to be done {% endcomment %}
+    {% if not entry %}
+        Create New Page
+    {% else %}
+        Edit Page
+    {% endif %}
+
+{% endblock %}
+
+{% block body %}
+
+    {% comment %} Messages displayed to the user if they don't comply
+                  with some specification, in this page so far are added
+                  warings for "Page already exists" and "Entry must have a 
+                  title and content 
+    {% endcomment %}
+    {% if messages %}
+        {% for message in messages %}
+            <h3{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h3>
+        {% endfor %}
+    {% endif %}
+    
+    {% comment %} Main div with the two types of input areas {% endcomment %}
+    <div class="textInputs">
+        {% comment %} If there is no entry from the user we create a new page with an
+                      input for a title and textarea for content and button to submit 
+        {% endcomment %}
+        {% if not entry %}
+            <form action="{% url 'encyclopedia:newPage' %}" method="post">
+                {% csrf_token %}
+                <h1>New Page</h1>
+
+                <div class="input-group">
+                    <input class="titleInput" type="text" name="title" placeholder="Title">
+                </div>
+    
+                <div class="textarea-group">
+                    <textarea name="textArea" rows="5" cols="20"></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit">Save New Page</button>
+                </div>
+            </form>
+        {% else %}
+        {% comment %} This condition is true if there's an input from the user
+                      meaning it want to edit an already existing content with only
+                      a text area to edit the content, plus an aditional "Delete Page" 
+                      button.
+        {% endcomment %}
+            <form action="{% url 'encyclopedia:edit' entryName %}" method="post">
+                {% csrf_token %}
+                <h1>Edit {{entryName|replaceHyphensWithSpaces }} </h1>
+
+                <div class="textarea-group">
+                    <textarea name="textArea" rows="5" cols="20">{{ entry }}</textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit">Edit Page</button>
+                    <button type="submit" name="delete">Delete Page</button>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+      
+{% endblock %}
+

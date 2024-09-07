@@ -1,0 +1,24 @@
+{% extends "encyclopedia/layout.html" %}
+{% load filter %}
+
+{% block title %}
+    {{ entryName|replaceHyphensWithSpaces }}
+{% endblock %}
+
+{% block body %}
+    {% comment %} This is were the contents of an entry are displayed to the
+                  user if it exists, with the "safe" operator being unsolved
+                  to render the markdown content that is being converted to
+                  HTML in the python code {% endcomment %}
+    {% if entryExists %}
+        {{ entry|replaceHyphensWithSpaces|safe }}
+
+        <a href="{% url 'encyclopedia:edit' entryName %}">Edit Entry</a>
+    {% else %}
+        <h1 class="errorMessage">Requested page not found!</h1>
+    {% endif %}
+
+    
+{% endblock %}
+
+

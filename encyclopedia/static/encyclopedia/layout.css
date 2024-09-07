@@ -1,0 +1,81 @@
+body {
+    margin: 0;
+    background-color: white;
+}
+
+code {
+    white-space: pre;
+}
+
+h1 {
+    margin-top: 0px;
+    padding-top: 20px;
+}
+
+textarea {
+    height: 90vh;
+    width: 80%;
+}
+
+.main {
+    padding: 10px;
+}
+
+.search {
+    width: 100%;
+    font-size: 15px;
+    line-height: 15px;
+}
+
+.sidebar {
+    background-color: #f0f0f0;
+    height: 100vh;
+    padding: 20px;
+}
+
+.sidebar h2 {
+    margin-top: 5px;
+}
+
+.errorMessage {
+    text-align: center;
+    padding-top: 20vh;
+    font-size: 50px;
+    font-family: sans-serif;
+    color: rgb(219, 80, 80);
+}
+
+.textArea {
+    width: 100px;
+}
+
+.titleInput {
+    margin-bottom: 10px;
+}
+
+.textInputs {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.button-group {
+    margin-top: 10px;
+    text-align: center;
+}
+
+textarea {
+    max-width: 70vw;
+    max-height: 50vh;
+}
+
+.error {
+    font: 10px;
+    color: rgb(219, 71, 71);
+}
+
+#entries {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
