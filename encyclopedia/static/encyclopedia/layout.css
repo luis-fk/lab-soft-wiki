@@ -1,81 +1,136 @@
-body {
+html, body {
+    height: 100%;
     margin: 0;
-    background-color: white;
+    display: flex;
+    flex-direction: column;
 }
 
-code {
-    white-space: pre;
+body {
+    background-image: url('background.png');
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    background-attachment: fixed; 
+    overflow: hidden;
 }
 
-h1 {
-    margin-top: 0px;
-    padding-top: 20px;
+.main-container {
+    flex: 1;
 }
 
-textarea {
-    height: 90vh;
-    width: 80%;
+.top-bar-container {
+    width: 100%;
+    background-color: rgba(136, 195, 255, 0.4);
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
 }
 
-.main {
-    padding: 10px;
+.top-bar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 30px;
+}
+
+.wiki-logo {
+    height: 80px;
+    width: 80px;
+    margin-right: 10px;    
+}
+
+.wiki-title {
+    margin: 0;
+    font-size: 40px;
+    color: white;
+}
+
+.search-form {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .search {
-    width: 100%;
+    width: 600px;
     font-size: 15px;
     line-height: 15px;
+    border-radius: 25px;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+}
+
+.sidebar-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
 }
 
 .sidebar {
-    background-color: #f0f0f0;
-    height: 100vh;
+    background-color: rgba(40, 40, 40, 0.308);
+    width: 250px;
+    height: fit-content;
     padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
 }
 
 .sidebar h2 {
+    color: white;
     margin-top: 5px;
 }
 
-.errorMessage {
-    text-align: center;
-    padding-top: 20vh;
-    font-size: 50px;
-    font-family: sans-serif;
-    color: rgb(219, 80, 80);
-}
-
-.textArea {
-    width: 100px;
-}
-
-.titleInput {
-    margin-bottom: 10px;
-}
-
-.textInputs {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-}
-
-.button-group {
+.sidebar a {
+    color: #ddd;
+    text-decoration: none;
+    display: block;
     margin-top: 10px;
-    text-align: center;
 }
 
-textarea {
-    max-width: 70vw;
-    max-height: 50vh;
+.sidebar a:hover {
+    text-decoration: underline;
 }
 
-.error {
-    font: 10px;
-    color: rgb(219, 71, 71);
+.main-content {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    border: 1px solid #ddd;
 }
 
-#entries {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+.top-bar-links {
+    display: flex;
+    margin-left: auto;
+    gap: 20px;
+    padding-right: 20px;
 }
 
+.top-bar-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+.top-bar-links a:hover {
+    text-decoration: underline;
+}
+
+.footer {
+    background-color: rgba(136, 195, 255, 0.4);
+    padding-top: 10px;
+    color: white; 
+    text-align: center; 
+}
+
+.footer a {
+    color: white;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+.wiki-title-link:hover {
+    text-decoration: none; 
+}

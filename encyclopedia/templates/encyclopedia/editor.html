@@ -1,5 +1,6 @@
 
 {% extends "encyclopedia/layout.html" %}
+{% load static %}
 {% comment %} This page implements two types of functionalities, one for
               editing already existing pages and one for creating new pages 
 {% endcomment %}
@@ -18,6 +19,10 @@
 {% endblock %}
 
 {% block body %}
+
+    <head>
+        <link href="{% static 'encyclopedia/editor.css' %}" rel="stylesheet">
+    </head>
 
     {% comment %} Messages displayed to the user if they don't comply
                   with some specification, in this page so far are added
@@ -38,19 +43,22 @@
         {% if not entry %}
             <form action="{% url 'encyclopedia:newPage' %}" method="post">
                 {% csrf_token %}
-                <h1>New Page</h1>
 
-                <div class="input-group">
-                    <input class="titleInput" type="text" name="title" placeholder="Title">
-                </div>
+                <div class="editor-box">
+                    <h1>Nova Página</h1>
+                    <div class="input-group">
+                        <input class="titleInput" type="text" name="title" placeholder="Título">
+                    </div>
+        
+                    <div class="textarea-group">
+                        <textarea name="textArea" rows="5" cols="20"></textarea>
+                    </div>
     
-                <div class="textarea-group">
-                    <textarea name="textArea" rows="5" cols="20"></textarea>
+                    <div class="button-group">
+                        <button type="submit">Criar página</button>
+                    </div>
                 </div>
 
-                <div class="button-group">
-                    <button type="submit">Save New Page</button>
-                </div>
             </form>
         {% else %}
         {% comment %} This condition is true if there's an input from the user
@@ -62,14 +70,18 @@
                 {% csrf_token %}
                 <h1>Edit {{entryName|replaceHyphensWithSpaces }} </h1>
 
-                <div class="textarea-group">
-                    <textarea name="textArea" rows="5" cols="20">{{ entry }}</textarea>
+                <div class="editor-box">
+                    <h1>Nova Página</h1>
+                    <div class="textarea-group">
+                        <textarea name="textArea" rows="5" cols="20">{{ entry }}</textarea>
+                    </div>
+    
+                    <div class="button-group">
+                        <button type="submit">Editar Página</button>
+                        <button type="submit" name="delete">Deletar Página</button>
+                    </div>
                 </div>
 
-                <div class="button-group">
-                    <button type="submit">Edit Page</button>
-                    <button type="submit" name="delete">Delete Page</button>
-                </div>
             </form>
         {% endif %}
     </div>

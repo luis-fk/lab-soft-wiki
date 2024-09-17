@@ -7,32 +7,63 @@
         <title>{% block title %}{% endblock %}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link href="{% static 'encyclopedia/layout.css' %}" rel="stylesheet">
-        <link href="{% static 'encyclopedia/wiki.png' %}" rel="icon">
+        <link href="{% static 'encyclopedia/logo.png' %}" rel="icon">
     </head>
     <body>
-        <div class="row">
-            <div class="sidebar col-lg-2 col-md-3">
-                <h2>Wiki</h2>
-                <form action="{% url 'encyclopedia:index' %}" method="get">
-                    <input class="search" type="text" name="q" placeholder="Search Encyclopedia">
+        <div class="top-bar-container">
+            <div class="top-bar">
+                <a href="{% url 'encyclopedia:index' %}">
+                    <img src="{% static 'encyclopedia/logo.png' %}" alt="Wiki Logo" class="wiki-logo">
+                </a>
+                <a href="{% url 'encyclopedia:index' %}" class="wiki-title-link">
+                    <h1 class="wiki-title">WikiDengue</h1>
+                </a>
+                <form action="{% url 'encyclopedia:index' %}" method="get" class="search-form">
+                    <input class="search" type="text" name="q" placeholder="Pesquisar">
                 </form>
-                <div>
-                    <a href="{% url 'encyclopedia:index' %}">Home</a>
-                </div>
-                <div>
-                    <a href="{% url 'encyclopedia:newPage' %}">Create New Page</a>
-                </div>
-                <div>
-                    <a href="{% url 'encyclopedia:random' %}">Random Page</a>
-                </div>
-                {% block nav %}
-                {% endblock %}
-            </div>
-            <div class="main col-lg-10 col-md-9">
-                {% block body %}
-                {% endblock %}
+
+                <!-- Corrigir as urls -->
+                <div class="top-bar-links">
+                    <a href="{% url 'encyclopedia:index' %}">Fórum</a>
+                    <a href="{% url 'encyclopedia:newPage' %}">Clima</a>
+                    <a href="{% url 'encyclopedia:random' %}">Cadastrar</a>
+                    <a href="{% url 'encyclopedia:random' %}">Entrar</a>
+                </div>               
             </div>
         </div>
+
+        <div class="main-container">
+            <div class="row justify-content-center">
+                <div class="sidebar-container">
+                    <div class="sidebar">
+                        <h2>Navegação</h2>
+                        <div>
+                            <a href="{% url 'encyclopedia:index' %}">Início</a>
+                        </div>
+                        <div>
+                            <a href="{% url 'encyclopedia:newPage' %}">Criar nova página</a>
+                        </div>
+                        <div>
+                            <a href="{% url 'encyclopedia:random' %}">Random Page</a>
+                        </div>
+                        {% block nav %}
+                        {% endblock %}
+                    </div>
+                </div>
+
+                <div class="main col-lg-10 col-md-9">
+                    {% block body %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2024 WikiDengue. Todos os direitos reservados.</p>
+                <p><a href="{% url 'encyclopedia:random' %}">Contato</a> | <a href="{% url 'encyclopedia:random' %}">Sobre</a></p>
+            </div>
+        </footer>
 
     </body>
 </html>
