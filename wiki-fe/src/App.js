@@ -1,4 +1,4 @@
-import Template from './pages/template';
+import Template from './pages/Template';
 
 function App() {
   return (
