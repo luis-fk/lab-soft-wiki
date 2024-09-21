@@ -1,10 +1,14 @@
 from django.shortcuts import render
 from django.contrib import messages
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework import status
 import random
 import os
 from . import helpers
 from . import util
-
+from . import serializers
+from . import models
 
 def index(request):
     searchInput = request.GET.get("q")
@@ -112,13 +116,15 @@ def edit(request, entry):
             "entry": content.split("\n",2)[2],
         })
         
- 
+@api_view(['GET']) 
 def randomPage(request):
-    entries = util.list_entries()
-    content = helpers.checkInput(random.choice(entries))
-    print(content)
-    return render(request, "encyclopedia/entry.html", {
-        "entryName": content[0],
-        "entry": content[1],
-        "entryExists": content[2],
-    })
+    # entries = util.list_entries()
+    # content = helpers.checkInput(random.choice(entries))
+    user = models.User.objects.all()
+    serializer = serializers.UserSerializer(user, context={'request': request}, many=True)
+    return Response(serializer.data)
+    # return render(request, "encyclopedia/entry.html", {
+    #     "entryName": content[0],
+    #     "entry": content[1],
+    #     "entryExists": content[2],
+    # })
