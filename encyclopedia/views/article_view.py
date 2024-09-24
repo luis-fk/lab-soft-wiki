@@ -24,24 +24,16 @@ def is_admin_or_staff(user):
 @login_required(login_url='/login/')  # Redireciona para login se o usuário não estiver logado
 @user_passes_test(is_admin_or_staff)  # Verifica se o usuário é Admin ou Staff
 def create_artigo(request):
-    if request.method != 'POST':
-        return render(request, "encyclopedia/article.html")
-
     title = request.POST.get('title')
     text = request.POST.get('text')
 
     if not title or not text:
         messages.error(request, "Title and text are required.")
-        return render(request, "encyclopedia/article.html")
 
     if models.Artigo.objects.filter(title=title).exists():
         messages.error(request, "Title already exists.")
-        return render(request, "encyclopedia/article.html")
-
+        
     models.Artigo.objects.create(title=title, text=text)
-
-    return render(request, "encyclopedia/article.html")
-
 
 # Listar todos os artigos
 @api_view(['GET'])
