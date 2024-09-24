@@ -42,14 +42,17 @@ def list_artigo(request):
     serializer = serializers.ArtigoSerializer(artigo, context={'request': request}, many=True)
     return Response(serializer.data)
 
-# Deletar um artigo
-@login_required(login_url='/login/')  # Redireciona para login se o usuário não estiver logado
+# Deletar um artigo (requer login e ser Admin ou Staff)
+@login_required(login_url='/login/')  # Garante que o usuário esteja logado
 @user_passes_test(is_admin_or_staff)  # Verifica se o usuário é Admin ou Staff
-@api_view(['GET'])
-def delete_artigo(request):
-    artigo = models.Artigo.objects.all()
-    serializer = serializers.ArtigoSerializer(artigo, context={'request': request}, many=True)
-    return Response(serializer.data)
+@api_view(['DELETE'])
+def delete_artigo(request, artigo_id):
+    try:
+        artigo = models.Artigo.objects.get(id=artigo_id)
+    except models.Artigo.DoesNotExist:
+        return Response({"error": "Artigo not found."}, status=status.HTTP_404_NOT_FOUND)
+    artigo.delete()
+    return Response({"message": "Artigo deleted successfully."}, status=status.HTTP_200_OK)
 
 
 # Atualizar um artigo (requer login e ser Admin ou Staff), além de usar o ID do artigo.
