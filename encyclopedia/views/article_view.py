@@ -51,12 +51,22 @@ def delete_artigo(request):
     serializer = serializers.ArtigoSerializer(artigo, context={'request': request}, many=True)
     return Response(serializer.data)
 
-# Atualizar um artigo
-@login_required(login_url='/login/')  # Redireciona para login se o usuário não estiver logado
+
+# Atualizar um artigo (requer login e ser Admin ou Staff), além de usar o ID do artigo.
+@login_required(login_url='/login/')  # Garante que o usuário esteja logado
 @user_passes_test(is_admin_or_staff)  # Verifica se o usuário é Admin ou Staff
-@api_view(['GET'])
-def update_artigo(request):
-    artigo = models.Artigo.objects.all()
-    serializer = serializers.ArtigoSerializer(artigo, context={'request': request}, many=True)
-    return Response(serializer.data)
+@api_view(['PUT'])
+def update_artigo(request, artigo_id):
+    try:
+        artigo = models.Artigo.objects.get(id=artigo_id)
+    except models.Artigo.DoesNotExist:
+        return Response({"error": "Artigo not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = ArtigoSerializer(artigo, data=request.data, partial=True)  # partial=True para permitir atualização parcial
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
