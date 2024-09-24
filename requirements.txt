@@ -7,3 +7,5 @@ markdown2==2.5.0
 sqlparse==0.5.1
 typing_extensions==4.12.2
 tzdata==2024.1
+
+# Also needs to use the command: npm install next to run the fe 
