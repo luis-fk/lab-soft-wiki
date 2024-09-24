@@ -20,31 +20,25 @@ from . import models
 @api_view(['POST'])
 def create_user(request):
     if request.method != 'POST':
-        return render(request, "encyclopedia/user.html")
 
-    username = request.POST.get('username')
-    email = request.POST.get('email')
-    password = request.POST.get('password')
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
 
-    if not username or not email:
-        messages.error(request, "Username and email are required.")
-        return render(request, "encyclopedia/user.html")
+        if not username or not email:
+            messages.error(request, "Username and email are required.")
 
-    if models.User.objects.filter(username=username).exists():
-        messages.error(request, "Username already exists.")
-        return render(request, "encyclopedia/user.html")
+        if models.User.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists.")
 
-    if models.User.objects.filter(email=email).exists():
-        messages.error(request, "Email already exists.")
-        return render(request, "encyclopedia/user.html")
+        if models.User.objects.filter(email=email).exists():
+            messages.error(request, "Email already exists.")
 
-    models.User.objects.create(
-        username=username,
-        email=email,
-        password=password,
-    )
-
-    return render(request, "encyclopedia/user.html")
+        models.User.objects.create(
+            username=username,
+            email=email,
+            password=password,
+        )
 
 # Listar o usuário da wiki
 @api_view(['GET'])
