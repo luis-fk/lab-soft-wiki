@@ -1,0 +1,52 @@
+.header-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background-color: rgba(136, 195, 255, 0.4);
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+}
+
+.wiki-logo {
+    height: 60px;
+    width: 60px;
+    padding-right: 10px;
+}
+
+.wiki-title {
+    margin: 0;
+    font-size: 40px;
+    color: white;
+}
+
+.wiki-title-link:hover {
+    text-decoration: none; 
+}
+
+.search {
+    width: 600px;
+    font-size: 15px;
+    line-height: 15px;
+    border-radius: 25px;
+    padding: 10px 15px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #ccc;
+}
+
+.header-links {
+    display: flex;
+    margin-left: auto;
+    gap: 20px;
+    padding-right: 30px;
+}
+
+.header-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+.header-links a:hover {
+    text-decoration: underline;
+}
