@@ -18,6 +18,7 @@ export default function Header() {
             <input className="search" type="text" name="q" placeholder="Pesquisar"/>
 
             <div className="header-links">
+                <a href="{% url 'encyclopedia:index' %}">Por que contribuir?</a>
                 <a href="{% url 'encyclopedia:index' %}">Fórum</a>
                 <a href="{% url 'encyclopedia:newPage' %}">Clima</a>
                 <a href="{% url 'encyclopedia:random' %}">Cadastrar</a>

@@ -16,3 +16,12 @@
     text-decoration: underline;
 }
 
+.footer-content a {
+    color: white;
+    text-decoration: none;
+  }
+  
+.footer-content a:hover {
+    text-decoration: underline;
+}
+
