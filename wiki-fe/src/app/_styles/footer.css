@@ -1,0 +1,27 @@
+.footer-content {
+    background-color: rgba(136, 195, 255, 0.4);
+    padding-top: 10px;
+    color: white; 
+    text-align: center;
+    width: 100%;
+    margin-top: auto;
+}
+
+.footer a {
+    color: white;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+.footer-content a {
+    color: white;
+    text-decoration: none;
+  }
+  
+.footer-content a:hover {
+    text-decoration: underline;
+}
+

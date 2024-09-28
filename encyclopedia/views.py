@@ -120,8 +120,8 @@ def edit(request, entry):
 def randomPage(request):
     # entries = util.list_entries()
     # content = helpers.checkInput(random.choice(entries))
-    user = models.User.objects.all()
-    serializer = serializers.UserSerializer(user, context={'request': request}, many=True)
+    articles = models.Artigo.objects.all()
+    serializer = serializers.ArtigoSerializer(articles, context={'request': request}, many=True)
     return Response(serializer.data)
     # return render(request, "encyclopedia/entry.html", {
     #     "entryName": content[0],
