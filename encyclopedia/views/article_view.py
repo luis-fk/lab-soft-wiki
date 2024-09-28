@@ -1,19 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required, user_passes_test
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework import status
-import random
-import os
-from . import helpers
-from . import util
-from . import serializers
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework import status, permissions
 from . import models
-
-#Criar um novo artigo, mas precisa estar logado como Admin ou Staff.
-#Listar todos os artigos
-#Deletar um artigo
-#Atualizar um artigo
+from . import serializers
 
 # Função auxiliar para verificar se o usuário é Admin ou Staff
 def is_admin_or_staff(user):
@@ -24,52 +16,40 @@ def is_admin_or_staff(user):
 @login_required(login_url='/login/')  # Redireciona para login se o usuário não estiver logado
 @user_passes_test(is_admin_or_staff)  # Verifica se o usuário é Admin ou Staff
 def create_artigo(request):
-    title = request.POST.get('title')
-    text = request.POST.get('text')
-
-    if not title or not text:
-        messages.error(request, "Title and text are required.")
-
-    if models.Artigo.objects.filter(title=title).exists():
-        messages.error(request, "Title already exists.")
-        
-    models.Artigo.objects.create(title=title, text=text)
+    serializer = serializers.ArtigoSerializer(data=request.data)
+    
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Listar todos os artigos
 @api_view(['GET'])
+@permission_classes([permissions.AllowAny])
 def list_artigo(request):
-    artigo = models.Artigo.objects.all()
-    serializer = serializers.ArtigoSerializer(artigo, context={'request': request}, many=True)
+    artigos = models.Artigo.objects.all()
+    serializer = serializers.ArtigoSerializer(artigos, many=True)
     return Response(serializer.data)
 
 # Deletar um artigo (requer login e ser Admin ou Staff)
+@api_view(['DELETE'])
 @login_required(login_url='/login/')  # Garante que o usuário esteja logado
 @user_passes_test(is_admin_or_staff)  # Verifica se o usuário é Admin ou Staff
-@api_view(['DELETE'])
 def delete_artigo(request, artigo_id):
-    try:
-        artigo = models.Artigo.objects.get(id=artigo_id)
-    except models.Artigo.DoesNotExist:
-        return Response({"error": "Artigo not found."}, status=status.HTTP_404_NOT_FOUND)
+    artigo = get_object_or_404(models.Artigo, id=artigo_id)
     artigo.delete()
     return Response({"message": "Artigo deleted successfully."}, status=status.HTTP_200_OK)
 
-
-# Atualizar um artigo (requer login e ser Admin ou Staff), além de usar o ID do artigo.
+# Atualizar um artigo (requer login e ser Admin ou Staff)
+@api_view(['PUT'])
 @login_required(login_url='/login/')  # Garante que o usuário esteja logado
 @user_passes_test(is_admin_or_staff)  # Verifica se o usuário é Admin ou Staff
-@api_view(['PUT'])
 def update_artigo(request, artigo_id):
-    try:
-        artigo = models.Artigo.objects.get(id=artigo_id)
-    except models.Artigo.DoesNotExist:
-        return Response({"error": "Artigo not found."}, status=status.HTTP_404_NOT_FOUND)
-
-    serializer = ArtigoSerializer(artigo, data=request.data, partial=True)  # partial=True para permitir atualização parcial
+    artigo = get_object_or_404(models.Artigo, id=artigo_id)
+    
+    serializer = serializers.ArtigoSerializer(artigo, data=request.data, partial=True)  # partial=True para permitir atualização parcial
 
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
-    else:
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
