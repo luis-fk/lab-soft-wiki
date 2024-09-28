@@ -28,4 +28,16 @@ urlpatterns = [
     path("comentary/list/", views.list_comments, name="list_comments"),
     path("comentary/delete/<int:commentary_id>/", views.delete_comment, name="delete_comment"),
     path("comentary/update/<int:commentary_id>/", views.update_comment, name="update_comment"),
+
+    # URLs para Endereco
+    path("endereco/create/", views.create_endereco, name="create_endereco"),
+    path("endereco/list/", views.list_enderecos, name="list_enderecos"),
+    path("endereco/update/<int:endereco_id>/", views.update_endereco, name="update_endereco"),
+    path("endereco/delete/<int:endereco_id>/", views.delete_endereco, name="delete_endereco"),
+
+    # URLs para Denuncia
+    path("denuncia/create/", views.create_denuncia, name="create_denuncia"),
+    path("denuncia/list/", views.list_denuncias, name="list_denuncias"),
+    path("denuncia/update/<int:denuncia_id>/", views.update_denuncia, name="update_denuncia"),
+    path("denuncia/delete/<int:denuncia_id>/", views.delete_denuncia, name="delete_denuncia"),
 ]
