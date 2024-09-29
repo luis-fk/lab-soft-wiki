@@ -26,6 +26,12 @@ class DenunciaSerializer(serializers.ModelSerializer):
         model = Denuncia
         fields = ('id', 'title', 'text', 'user', 'endereco')
 
+    def create(self, validated_data):
+        endereco_data = validated_data.pop('endereco')
+        endereco = Endereco.objects.create(**endereco_data)
+        denuncia = Denuncia.objects.create(endereco=endereco, **validated_data)
+        return denuncia
+
 class HistoricoSerializer(serializers.ModelSerializer):
     edited_by = UserSerializer(read_only=True)
     article = ArtigoSerializer(read_only=True)
@@ -35,9 +41,13 @@ class HistoricoSerializer(serializers.ModelSerializer):
         fields = ('id', 'num_changes', 'text_changes', 'edited_by', 'article')
 
 class ComentarioSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
-    article = ArtigoSerializer(read_only=True)
-
     class Meta:
         model = Comentario
-        fields = ('id', 'text', 'likes', 'edited', 'user', 'article')
+        fields = ['id', 'text', 'article']
+        read_only_fields = ['id', 'article', 'user']
+
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        comentario = Comentario.objects.create(user=user, **validated_data)
+        return comentario
