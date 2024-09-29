@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     width: 300px; 
     margin: 20px auto;
     padding: 20px;
@@ -10,6 +11,13 @@
     background-color: rgba(136, 195, 255, 0.4);
   }
   
+  .submitButton-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
   .signup-container h2 {
     margin-bottom: 20px;
   }
@@ -20,6 +28,7 @@
   
   .signup-container label {
     display: block;
+    text-align: center;
     margin-bottom: 5px;
   }
   
@@ -30,11 +39,11 @@
     padding: 8px;
     border: 1px solid #000000;
     border-radius: 3px;
-    box-sizing: border-box; /* Ensure padding and border are included in the total width */
+    box-sizing: border-box;
   }
   
   .signup-container button[type="submit"] {
-    background-color: #4caf50; /* Green */
+    background-color: #182833; 
     color: white;
     padding: 10px 15px;
     border: none;
@@ -43,7 +52,7 @@
   }
 
   .signup-container button:hover {
-    background-color: #45a049;
+    background-color: #1F4762;
   }
 
   .terms-container {
