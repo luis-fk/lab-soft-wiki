@@ -1,73 +1,66 @@
-from django.shortcuts import render
-from django.contrib import messages
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required, user_passes_test
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework import status
-import random
-import os
-from . import helpers
-from . import util
-from . import serializers
-from . import models
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework import status, permissions
+from encyclopedia import serializers
+from encyclopedia import models
 
-#SUMÁRIO:
-#Criar o usuário da wiki
-#Listar o usuário da wiki
-#Deletar o usuário da wiki
-#Atualizar o usuário da wiki
+# Função auxiliar para verificar se o usuário é Admin ou Staff
+def is_admin_or_staff(user):
+    return user.is_authenticated and (user.is_staff or user.is_superuser)
 
 # Criar o usuário da wiki
 @api_view(['POST'])
+@permission_classes([permissions.AllowAny])
 def create_user(request):
-    if request.method != 'POST':
+    username = request.data.get('username')
+    email = request.data.get('email')
+    password = request.data.get('password')
 
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+    if not username or not email or not password:
+        return Response({"error": "Username, email, and password are required."}, status=status.HTTP_400_BAD_REQUEST)
 
-        if not username or not email:
-            messages.error(request, "Username and email are required.")
+    if models.User.objects.filter(username=username).exists():
+        return Response({"error": "Username already exists."}, status=status.HTTP_400_BAD_REQUEST)
 
-        if models.User.objects.filter(username=username).exists():
-            messages.error(request, "Username already exists.")
+    if models.User.objects.filter(email=email).exists():
+        return Response({"error": "Email already exists."}, status=status.HTTP_400_BAD_REQUEST)
 
-        if models.User.objects.filter(email=email).exists():
-            messages.error(request, "Email already exists.")
+    user = models.User.objects.create_user(
+        username=username,
+        email=email,
+        password=password,
+    )
+    serializer = serializers.UserSerializer(user)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        models.User.objects.create(
-            username=username,
-            email=email,
-            password=password,
-        )
-
-# Listar o usuário da wiki
+# Listar todos os usuários da wiki
 @api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])  # Apenas usuários autenticados podem listar usuários
 def list_user(request):
-    user = models.User.objects.all()
-    serializer = serializers.UserSerializer(user, context={'request': request}, many=True)
+    users = models.User.objects.all()
+    serializer = serializers.UserSerializer(users, many=True)
     return Response(serializer.data)
 
 # Deletar um usuário da wiki usando o ID do usuário
 @api_view(['DELETE'])
+@login_required(login_url='/login/')  # Garante que o usuário esteja logado
+@user_passes_test(is_admin_or_staff)  # Verifica se o usuário é Admin ou Staff
 def delete_user(request, user_id):
-    try:
-        user = User.objects.get(id=user_id)
-        user.delete()
-        return Response({"message": "User deleted successfully."}, status=status.HTTP_200_OK)
-    except User.DoesNotExist:
-        return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
-    
+    user = get_object_or_404(models.User, id=user_id)
+    user.delete()
+    return Response({"message": "User deleted successfully."}, status=status.HTTP_200_OK)
+
 # Atualizar informações de um usuário da wiki usando o ID do usuário
 @api_view(['PUT'])
+@login_required(login_url='/login/')  # Garante que o usuário esteja logado
+@user_passes_test(is_admin_or_staff)  # Verifica se o usuário é Admin ou Staff
 def update_user(request, user_id):
-    try:
-        user = User.objects.get(id=user_id)
-    except User.DoesNotExist:
-        return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
-    serializer = UserSerializer(user, data=request.data, partial=True)  # Partial=True permite atualizar apenas alguns campos
+    user = get_object_or_404(models.User, id=user_id)
+    serializer = serializers.UserSerializer(user, data=request.data, partial=True)  # partial=True permite atualização parcial
 
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
-    else:
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

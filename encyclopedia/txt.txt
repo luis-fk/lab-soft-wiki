@@ -1,0 +1,327 @@
+from django.urls import path
+
+# Importe as views específicas dos arquivos em `views`
+from .views import (
+    article_view,
+    comentary_view,
+    denuncia_view,
+    endereco_view,
+    user_view,
+    view  # Certifique-se de que `view.py` está corretamente importado
+)
+
+app_name = "encyclopedia"
+
+urlpatterns = [
+    # URLs existentes
+    path("", view.index, name="index"),  # Certifique-se de que `view.py` tem uma função chamada `index`
+    path("wiki/<str:entry>/", view.entry, name="entry"),
+    path("new_page/", view.newPage, name="newPage"),
+    path("edit/<str:entry>/", view.edit, name="edit"),
+    path("random/", view.randomPage, name="random"),
+
+    # URLs para Usuário (user_view.py)
+    path("user/create/", user_view.create_user, name="create_user"),
+    path("user/list/", user_view.list_user, name="list_user"),
+    path("user/delete/<int:user_id>/", user_view.delete_user, name="delete_user"),
+    path("user/update/<int:user_id>/", user_view.update_user, name="update_user"),
+
+    # URLs para Article (article_view.py)
+    path("article/create/", article_view.create_artigo, name="create_artigo"),
+    path("article/list/", article_view.list_artigo, name="list_artigo"),
+    path("article/delete/<int:artigo_id>/", article_view.delete_artigo, name="delete_artigo"),
+    path("article/update/<int:artigo_id>/", article_view.update_artigo, name="update_artigo"),
+
+    # URLs para Comentary (comentary_view.py)
+    path("comentary/create/", comentary_view.create_comentary, name="create_comentary"),
+    path("comentary/list/", comentary_view.list_comments, name="list_comments"),
+    path("comentary/delete/<int:commentary_id>/", comentary_view.delete_comment, name="delete_comment"),
+    path("comentary/update/<int:commentary_id>/", comentary_view.update_comment, name="update_comment"),
+
+    # URLs para Endereco (endereco_view.py)
+    path("endereco/create/", endereco_view.create_endereco, name="create_endereco"),
+    path("endereco/list/", endereco_view.list_enderecos, name="list_enderecos"),
+    path("endereco/update/<int:endereco_id>/", endereco_view.update_endereco, name="update_endereco"),
+    path("endereco/delete/<int:endereco_id>/", endereco_view.delete_endereco, name="delete_endereco"),
+
+    # URLs para Denuncia (denuncia_view.py)
+    path("denuncia/create/", denuncia_view.create_denuncia, name="create_denuncia"),
+    path("denuncia/list/", denuncia_view.list_denuncias, name="list_denuncias"),
+    path("denuncia/update/<int:denuncia_id>/", denuncia_view.update_denuncia, name="update_denuncia"),
+    path("denuncia/delete/<int:denuncia_id>/", denuncia_view.delete_denuncia, name="delete_denuncia"),
+]
+from django.shortcuts import get_object_or_404
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required, user_passes_test
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework import status, permissions
+from encyclopedia import serializers
+from encyclopedia import models
+
+
+# Função auxiliar para verificar se o usuário é Admin ou Staff
+def is_admin_or_staff(user):
+    return user.is_authenticated and (user.is_staff or user.is_superuser)
+
+# Criar um novo artigo (requer que o usuário esteja logado como Admin ou Staff)
+@api_view(['POST'])
+@login_required(login_url='/login/')  # Redireciona para login se o usuário não estiver logado
+@user_passes_test(is_admin_or_staff)  # Verifica se o usuário é Admin ou Staff
+def create_artigo(request):
+    serializer = serializers.ArtigoSerializer(data=request.data)
+    
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Listar todos os artigos
+@api_view(['GET'])
+@permission_classes([permissions.AllowAny])
+def list_artigo(request):
+    artigos = models.Artigo.objects.all()
+    serializer = serializers.ArtigoSerializer(artigos, many=True)
+    return Response(serializer.data)
+
+# Deletar um artigo (requer login e ser Admin ou Staff)
+@api_view(['DELETE'])
+@login_required(login_url='/login/')  # Garante que o usuário esteja logado
+@user_passes_test(is_admin_or_staff)  # Verifica se o usuário é Admin ou Staff
+def delete_artigo(request, artigo_id):
+    artigo = get_object_or_404(models.Artigo, id=artigo_id)
+    artigo.delete()
+    return Response({"message": "Artigo deleted successfully."}, status=status.HTTP_200_OK)
+
+# Atualizar um artigo (requer login e ser Admin ou Staff)
+@api_view(['PUT'])
+@login_required(login_url='/login/')  # Garante que o usuário esteja logado
+@user_passes_test(is_admin_or_staff)  # Verifica se o usuário é Admin ou Staff
+def update_artigo(request, artigo_id):
+    artigo = get_object_or_404(models.Artigo, id=artigo_id)
+    
+    serializer = serializers.ArtigoSerializer(artigo, data=request.data, partial=True)  # partial=True para permitir atualização parcial
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required, user_passes_test
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework import status, permissions
+from encyclopedia import serializers
+from encyclopedia import models
+
+# Função auxiliar para verificar se o usuário é Admin ou Staff
+def is_admin_or_staff(user):
+    return user.is_authenticated and (user.is_staff or user.is_superuser)
+
+# Criar um novo comentário (requer que o usuário esteja logado)
+@api_view(['POST'])
+@login_required(login_url='/login/')  # Redireciona para login se o usuário não estiver logado
+def create_comentary(request):
+    serializer = serializers.ComentarioSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Listar todos os comentários
+@api_view(['GET'])
+@permission_classes([permissions.AllowAny])
+def list_comments(request):
+    comentarios = models.Comentario.objects.all()
+    serializer = serializers.ComentarioSerializer(comentarios, many=True)
+    return Response(serializer.data)
+
+# Deletar um comentário (requer login e ser Admin ou Staff) - usa o ID do comentário.
+@api_view(['DELETE'])
+@login_required(login_url='/login/')  # Garante que o usuário esteja logado
+@user_passes_test(is_admin_or_staff)  # Verifica se o usuário é Admin ou Staff
+def delete_comment(request, commentary_id):
+    comentario = get_object_or_404(models.Comentario, id=commentary_id)
+    comentario.delete()
+    return Response({"message": "Comment deleted successfully."}, status=status.HTTP_200_OK)
+
+# Atualizar um comentário (requer login e ser Admin ou Staff), além de usar o ID do comentário.
+@api_view(['PUT'])
+@login_required(login_url='/login/')  # Garante que o usuário esteja logado
+@user_passes_test(is_admin_or_staff)  # Verifica se o usuário é Admin ou Staff
+def update_comment(request, commentary_id):
+    comentario = get_object_or_404(models.Comentario, id=commentary_id)
+    serializer = serializers.ComentarioSerializer(comentario, data=request.data, partial=True)  # partial=True para permitir atualização parcial
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from rest_framework import status, permissions
+from django.shortcuts import get_object_or_404
+from encyclopedia import serializers
+from encyclopedia import models
+
+# CRUD para Denuncia
+
+# Criar uma nova denúncia
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def create_denuncia(request):
+    serializer = serializers.DenunciaSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(user=request.user)  # Define o usuário logado como o autor da denúncia
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Listar todas as denúncias
+@api_view(['GET'])
+@permission_classes([permissions.AllowAny])
+def list_denuncias(request):
+    denuncias = models.Denuncia.objects.all()
+    serializer = serializers.DenunciaSerializer(denuncias, many=True)
+    return Response(serializer.data)
+
+# Atualizar uma denúncia (usando o ID da denúncia)
+@api_view(['PUT'])
+@permission_classes([permissions.IsAuthenticated])
+def update_denuncia(request, denuncia_id):
+    denuncia = get_object_or_404(models.Denuncia, id=denuncia_id)
+
+    # Verifica se o usuário que está fazendo a atualização é o autor da denúncia
+    if request.user != denuncia.user:
+        return Response({"error": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)
+
+    serializer = serializers.DenunciaSerializer(denuncia, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Deletar uma denúncia (usando o ID da denúncia)
+@api_view(['DELETE'])
+@permission_classes([permissions.IsAuthenticated])
+def delete_denuncia(request, denuncia_id):
+    denuncia = get_object_or_404(models.Denuncia, id=denuncia_id)
+
+    # Verifica se o usuário que está fazendo a exclusão é o autor da denúncia ou um administrador
+    if request.user != denuncia.user and not request.user.is_staff:
+        return Response({"error": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)
+
+    denuncia.delete()
+    return Response({"message": "Denuncia deleted successfully."}, status=status.HTTP_200_OK)
+
+    from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from rest_framework import status, permissions
+from django.shortcuts import get_object_or_404
+from encyclopedia import serializers
+from encyclopedia import models
+
+# CRUD para Endereco
+
+# Criar um novo endereço
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def create_endereco(request):
+    serializer = serializers.EnderecoSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Listar todos os endereços
+@api_view(['GET'])
+@permission_classes([permissions.AllowAny])
+def list_enderecos(request):
+    enderecos = models.Endereco.objects.all()
+    serializer = serializers.EnderecoSerializer(enderecos, many=True)
+    return Response(serializer.data)
+
+# Atualizar um endereço (usando o ID do endereço)
+@api_view(['PUT'])
+@permission_classes([permissions.IsAuthenticated])
+def update_endereco(request, endereco_id):
+    endereco = get_object_or_404(models.Endereco, id=endereco_id)
+    serializer = serializers.EnderecoSerializer(endereco, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Deletar um endereço (usando o ID do endereço)
+@api_view(['DELETE'])
+@permission_classes([permissions.IsAuthenticated])
+def delete_endereco(request, endereco_id):
+    endereco = get_object_or_404(models.Endereco, id=endereco_id)
+    endereco.delete()
+    return Response({"message": "Endereco deleted successfully."}, status=status.HTTP_200_OK)
+
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required, user_passes_test
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework import status, permissions
+from encyclopedia import serializers
+from encyclopedia import models
+
+# Função auxiliar para verificar se o usuário é Admin ou Staff
+def is_admin_or_staff(user):
+    return user.is_authenticated and (user.is_staff or user.is_superuser)
+
+# Criar o usuário da wiki
+@api_view(['POST'])
+@permission_classes([permissions.AllowAny])
+def create_user(request):
+    username = request.data.get('username')
+    email = request.data.get('email')
+    password = request.data.get('password')
+
+    if not username or not email or not password:
+        return Response({"error": "Username, email, and password are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+    if models.User.objects.filter(username=username).exists():
+        return Response({"error": "Username already exists."}, status=status.HTTP_400_BAD_REQUEST)
+
+    if models.User.objects.filter(email=email).exists():
+        return Response({"error": "Email already exists."}, status=status.HTTP_400_BAD_REQUEST)
+
+    user = models.User.objects.create_user(
+        username=username,
+        email=email,
+        password=password,
+    )
+    serializer = serializers.UserSerializer(user)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+# Listar todos os usuários da wiki
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])  # Apenas usuários autenticados podem listar usuários
+def list_user(request):
+    users = models.User.objects.all()
+    serializer = serializers.UserSerializer(users, many=True)
+    return Response(serializer.data)
+
+# Deletar um usuário da wiki usando o ID do usuário
+@api_view(['DELETE'])
+@login_required(login_url='/login/')  # Garante que o usuário esteja logado
+@user_passes_test(is_admin_or_staff)  # Verifica se o usuário é Admin ou Staff
+def delete_user(request, user_id):
+    user = get_object_or_404(models.User, id=user_id)
+    user.delete()
+    return Response({"message": "User deleted successfully."}, status=status.HTTP_200_OK)
+
+# Atualizar informações de um usuário da wiki usando o ID do usuário
+@api_view(['PUT'])
+@login_required(login_url='/login/')  # Garante que o usuário esteja logado
+@user_passes_test(is_admin_or_staff)  # Verifica se o usuário é Admin ou Staff
+def update_user(request, user_id):
+    user = get_object_or_404(models.User, id=user_id)
+    serializer = serializers.UserSerializer(user, data=request.data, partial=True)  # partial=True permite atualização parcial
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
