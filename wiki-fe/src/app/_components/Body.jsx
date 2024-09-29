@@ -11,7 +11,7 @@ export default function Body({ children }) {
 
                 <Link href="/">Início</Link>
                 <Link href="/">Criar nova página</Link>
-                <Link href="/wiki/doenca">A Dengue</Link>
+                <Link href="/wiki/dengue">A Dengue</Link>
             </div>
 
             {children}

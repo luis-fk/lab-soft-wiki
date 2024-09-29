@@ -1,15 +1,14 @@
 import '@/styles/layout.css'
 
-
 export const metadata = {
   title: 'Wiki Dengue',
 }
 
-export default function RootLayout({ children }) {
+export default function LoginLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        {children}
+          {children}
       </body>
     </html>
   )
