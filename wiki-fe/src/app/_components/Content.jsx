@@ -7,5 +7,5 @@ export default function Content({params}) {
       <h1>{params?.title}</h1>
       <p>{params?.content}</p>
     </div>
-  )
+  );
 }

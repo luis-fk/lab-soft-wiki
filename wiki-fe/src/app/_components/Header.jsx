@@ -2,6 +2,7 @@ import React from 'react'
 import '@/styles/header.css'
 import Image from 'next/image'
 import logo from '@/assets/images/logo.png'
+import Link from 'next/link'
 
 export default function Header() {
   return (
@@ -21,8 +22,8 @@ export default function Header() {
                 <a href="{% url 'encyclopedia:index' %}">Por que contribuir?</a>
                 <a href="{% url 'encyclopedia:index' %}">Fórum</a>
                 <a href="{% url 'encyclopedia:newPage' %}">Clima</a>
-                <a href="{% url 'encyclopedia:random' %}">Cadastrar</a>
-                <a href="{% url 'encyclopedia:random' %}">Entrar</a>
+                <Link href="/cadastrar">Cadastrar</Link>
+                <Link href="/login">Entrar</Link>
             </div>               
         </div>
     </>
