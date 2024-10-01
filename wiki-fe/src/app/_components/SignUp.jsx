@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from 'react';
 import "@/styles/sign-up.css";
 import "@/styles/terms-box.css";

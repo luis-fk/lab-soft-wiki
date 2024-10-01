@@ -1,0 +1,56 @@
+.signup-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 300px; 
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 8px; 
+    border: 1px solid white;  
+    margin-top: 7%;
+    background-color: rgba(136, 195, 255, 0.4);
+  }
+  
+  .submitButton-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .signup-container h2 {
+    margin-bottom: 20px;
+  }
+  
+  .signup-container form div {
+    margin-bottom: 10px;
+  }
+  
+  .signup-container label {
+    display: block;
+    text-align: center;
+    margin-bottom: 5px;
+  }
+  
+  .signup-container input[type="password"],
+  .signup-container input[type="email"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #000000;
+    border-radius: 3px;
+    box-sizing: border-box;
+  }
+  
+  .signup-container button[type="submit"] {
+    background-color: #182833; 
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  .signup-container button:hover {
+    background-color: #1F4762;
+  }
