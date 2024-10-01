@@ -64,3 +64,13 @@
   .terms-container input[type="checkbox"] {
     margin-right: 0.5rem;
   }
+
+  .terms-link{
+    color: #000000;
+    text-decoration: none;
+  }
+
+  .terms-link:hover{
+    text-decoration: underline;
+    cursor: pointer;
+  }
