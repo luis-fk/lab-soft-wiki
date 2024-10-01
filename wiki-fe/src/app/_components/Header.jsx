@@ -8,20 +8,20 @@ export default function Header() {
   return (
     <>
         <div className="header-container">
-            <a href="{% url 'encyclopedia:index' %}">
+            <Link href="/">
                 <Image src={logo} alt="Wiki Logo" className="wiki-logo"/>
-            </a>
+            </Link>
 
-            <a href="{% url 'encyclopedia:index' %}" className="wiki-title-link">
+            <Link href="/" className="wiki-title-link">
                 <h1 className="wiki-title">WikiDengue</h1>
-            </a>
+            </Link>
 
             <input className="search" type="text" name="q" placeholder="Pesquisar"/>
 
             <div className="header-links">
-                <a href="{% url 'encyclopedia:index' %}">Por que contribuir?</a>
-                <a href="{% url 'encyclopedia:index' %}">Fórum</a>
-                <a href="{% url 'encyclopedia:newPage' %}">Clima</a>
+                <Link href="/">Por que contribuir?</Link>
+                <Link href="/">Fórum</Link>
+                <Link href="/">Clima</Link>
                 <Link href="/cadastrar">Cadastrar</Link>
                 <Link href="/login">Entrar</Link>
             </div>               
