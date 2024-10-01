@@ -1,7 +1,16 @@
-import React from 'react'
+import Footer from '@/components/Footer';
+import Login from '@/components/Login';
 
-export default function page() {
+export const metadata = {
+  title: 'Login',
+}
+
+export default function SignUpPage() {
   return (
-    <div>Pagina de Login ainda não feita!!!!!</div>
-  )
+    <>
+      <Login />
+
+      <Footer />
+    </>
+  );
 }
