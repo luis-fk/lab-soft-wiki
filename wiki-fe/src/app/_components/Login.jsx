@@ -1,28 +1,24 @@
 "use client"
 import React, { useState } from 'react';
 import "@/styles/login.css";
+import { useRouter } from 'next/navigation';
+import ErrorMessage from './ErrorMessage';
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const router = useRouter();
 
     const handleSubmit = async (event) => {
-    event.preventDefault();
-        try {
-        await fetch('http://127.0.0.1:8000/user/logar/', { 
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-            username,
-            password,
-            email,
-            }), 
-        });
-        } catch (error) {
-        console.log(error);
+        event.preventDefault();
+        if (email === 'test@example.com' && password === 'password') {
+            router.push('/');
+        } else {
+            setErrorMessage('Invalid email or password. Please try again.');
         }
     };
-
+    
     return (
     <>
         <div className="signup-container">
@@ -54,6 +50,8 @@ export default function Login() {
                     <button type="submit">Entrar</button>
                 </div>
             </form>
+
+            <ErrorMessage message={errorMessage} />
         </div>
     </>
     )

@@ -10,6 +10,7 @@ export default function LoginLayout({ children }) {
     <html lang="en">
       <body>
           <BackgroundImage />
+          
           {children}
       </body>
     </html>
