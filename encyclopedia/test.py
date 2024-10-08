@@ -1,132 +1,309 @@
-from django.urls import reverse
+from rest_framework.test import APIClient
 from rest_framework import status
-from rest_framework.test import APITestCase
-from encyclopedia.models import Article, User, Comentario, Denuncia, Endereco
-from django.contrib.auth.models import User as AuthUser
+from django.test import TestCase
+from django.urls import reverse
+from django.contrib.auth import get_user_model
+from encyclopedia.models import Artigo, Comentario, Denuncia, Endereco
 
-class EncyclopediaViewsTestCase(APITestCase):
-
+class ApiTestCase(TestCase):
     def setUp(self):
-        # Criação de dados para teste
-        self.user_admin = AuthUser.objects.create_user(username='admin', password='password123', is_staff=True)
-        self.user_normal = AuthUser.objects.create_user(username='normaluser', password='password123')
-        self.client.login(username='admin', password='password123')
+        self.client = APIClient()
+        User = get_user_model()
+        # Criação de usuários
+        self.user = User.objects.create_user(username='user', password='password', email='user@example.com')
+        self.staff_user = User.objects.create_user(username='admin', password='password', is_staff=True, email='admin@example.com')
 
-        # Criar Artigo para testar rota de artigo
-        self.article = Article.objects.create(title="Test Article", text="Test Content")
+        # Criação de um artigo e outros objetos relacionados
+        self.artigo = Artigo.objects.create(title='Test Article', text='This is a test article.', user=self.user)
+        self.comentario = Comentario.objects.create(text='Test comment', article=self.artigo, user=self.user)
+        self.endereco = Endereco.objects.create(cidade='São Paulo', bairro='Centro', rua='Rua A', numero='123')
 
-        # Criar Comentário
-        self.comentario = Comentario.objects.create(text="Test Comment", article=self.article)
+        # URLs
+        self.create_comment_url = reverse('encyclopedia:create_comentary')
+        self.list_comments_url = reverse('encyclopedia:list_comments')
+        self.delete_comment_url = reverse('encyclopedia:delete_comment', args=[self.comentario.id])
+        self.create_denuncia_url = reverse('encyclopedia:create_denuncia')
 
-        # Criar Endereço
-        self.endereco = Endereco.objects.create(cidade="São Paulo", bairro="Centro", rua="Rua A", numero=123)
-
-        # Criar Denúncia
-        self.denuncia = Denuncia.objects.create(title="Test Denuncia", text="Denuncia Text", user=self.user_admin, endereco=self.endereco)
-
-    # Teste para view index
-    def test_index_view(self):
-        url = reverse('encyclopedia:index')
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    # Teste para view de entrada (entry)
-    def test_entry_view(self):
-        url = reverse('encyclopedia:entry', args=[self.article.title])
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    # Teste para criar novo artigo
-    def test_create_article_view(self):
-        url = reverse('encyclopedia:create_artigo')
-        data = {'title': 'New Test Article', 'text': 'Some content for new article'}
-        response = self.client.post(url, data)
+    def test_create_comment_as_authenticated_user(self):
+        self.client.login(username='user', password='password')
+        data = {'text': 'A new comment', 'article': self.artigo.id}
+        response = self.client.post(self.create_comment_url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['text'], 'A new comment')
+        print("✅ test_create_comment_as_authenticated_user passed")
 
-    # Teste para listar artigos
-    def test_list_article_view(self):
-        url = reverse('encyclopedia:list_artigo')
-        response = self.client.get(url)
+    def test_create_comment_as_unauthenticated_user(self):
+        data = {'text': 'A new comment', 'article': self.artigo.id}
+        response = self.client.post(self.create_comment_url, data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)  # Corrigido para 403
+        print("✅ test_create_comment_as_unauthenticated_user passed")
+
+    def test_list_comments(self):
+        response = self.client.get(self.list_comments_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['text'], 'Test comment')
+        print("✅ test_list_comments passed")
 
-    # Teste para deletar artigo
-    def test_delete_article_view(self):
-        url = reverse('encyclopedia:delete_artigo', args=[self.article.id])
-        response = self.client.delete(url)
+    def test_delete_comment_as_admin(self):
+        self.client.login(username='admin', password='password')
+        response = self.client.delete(self.delete_comment_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['message'], 'Comment deleted successfully.')
+        print("✅ test_delete_comment_as_admin passed")
 
-    # Teste para criar usuário
-    def test_create_user_view(self):
-        url = reverse('encyclopedia:create_user')
-        data = {'username': 'newuser', 'email': 'newuser@example.com', 'password': 'testpassword'}
-        response = self.client.post(url, data)
+    def test_delete_comment_as_non_admin(self):
+        self.client.force_login(self.user)  # Usando force_login
+        response = self.client.delete(self.delete_comment_url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        print("✅ test_delete_comment_as_non_admin passed")
+
+    def test_create_denuncia_with_address(self):
+        self.client.login(username='user', password='password')
+        data = {
+            'title': 'Denúncia Teste',
+            'text': 'Texto da denúncia.',
+            'endereco': {
+                'cidade': 'São Paulo',
+                'bairro': 'Centro',
+                'rua': 'Rua B',
+                'numero': '456',
+                'complemento': 'Apto 101'
+            }
+        }
+        response = self.client.post(self.create_denuncia_url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['title'], 'Denúncia Teste')
+        self.assertEqual(response.data['endereco']['cidade'], 'São Paulo')
+        print("✅ test_create_denuncia_with_address passed")
 
-    # Teste para listar usuários
-    def test_list_user_view(self):
-        url = reverse('encyclopedia:list_user')
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    def test_create_denuncia_with_invalid_address(self):
+        self.client.login(username='user', password='password')
+        data = {
+            'title': 'Denúncia Teste',
+            'text': 'Texto da denúncia.',
+            'endereco': {
+                'cidade': '',  # Campo inválido
+                'bairro': 'Centro',
+                'rua': 'Rua B',
+                'numero': '456'
+            }
+        }
+        response = self.client.post(self.create_denuncia_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        print("✅ test_create_denuncia_with_invalid_address passed")
+from rest_framework.test import APIClient
+from rest_framework import status
+from django.test import TestCase
+from django.urls import reverse
+from encyclopedia.models import Artigo, User
 
-    # Teste para deletar usuário
-    def test_delete_user_view(self):
-        url = reverse('encyclopedia:delete_user', args=[self.user_normal.id])
-        response = self.client.delete(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    # Teste para criar comentário
-    def test_create_comment_view(self):
-        url = reverse('encyclopedia:create_comentary')
-        data = {'text': 'New Comment'}
-        response = self.client.post(url, data)
+class ArtigoApiTestCase(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_user(username='user', password='password', email='user@example.com')
+        self.admin_user = User.objects.create_user(username='admin', password='password', is_staff=True)
+        self.artigo = Artigo.objects.create(title='Test Artigo', text='This is a test artigo.', user=self.user)
+        
+        # URLs
+        self.create_artigo_url = reverse('encyclopedia:create_artigo')
+        self.list_artigos_url = reverse('encyclopedia:list_artigo')
+        self.update_artigo_url = reverse('encyclopedia:update_artigo', args=[self.artigo.id])
+        self.delete_artigo_url = reverse('encyclopedia:delete_artigo', args=[self.artigo.id])
+
+    def test_create_artigo(self):
+        self.client.force_authenticate(user=self.admin_user)
+        data = {'title': 'New Artigo', 'text': 'This is a new artigo.'}
+        response = self.client.post(self.create_artigo_url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        print("✅ test_create_artigo passed")
 
-    # Teste para listar comentários
-    def test_list_comments_view(self):
-        url = reverse('encyclopedia:list_comments')
-        response = self.client.get(url)
+    def test_list_artigos(self):
+        response = self.client.get(self.list_artigos_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        print("✅ test_list_artigos passed")
 
-    # Teste para deletar comentário
-    def test_delete_comment_view(self):
-        url = reverse('encyclopedia:delete_comment', args=[self.comentario.id])
-        response = self.client.delete(url)
+    def test_update_artigo(self):
+        self.client.force_authenticate(user=self.admin_user)
+        data = {'title': 'Updated Artigo'}
+        response = self.client.put(self.update_artigo_url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        print("✅ test_update_artigo passed")
 
-    # Teste para criar endereço
-    def test_create_endereco_view(self):
-        url = reverse('encyclopedia:create_endereco')
-        data = {'cidade': 'São Paulo', 'bairro': 'Jardins', 'rua': 'Rua B', 'numero': 123}
-        response = self.client.post(url, data)
+    def test_delete_artigo(self):
+        self.client.force_authenticate(user=self.admin_user)
+        response = self.client.delete(self.delete_artigo_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        print("✅ test_delete_artigo passed")
+
+
+from rest_framework.test import APIClient
+from rest_framework import status
+from django.test import TestCase
+from django.urls import reverse
+from encyclopedia.models import Endereco
+
+
+class EnderecoApiTestCase(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.endereco = Endereco.objects.create(cidade='São Paulo', bairro='Centro', rua='Rua A', numero='123')
+        
+        # URLs
+        self.create_endereco_url = reverse('encyclopedia:create_endereco')
+        self.list_enderecos_url = reverse('encyclopedia:list_enderecos')
+        self.update_endereco_url = reverse('encyclopedia:update_endereco', args=[self.endereco.id])
+        self.delete_endereco_url = reverse('encyclopedia:delete_endereco', args=[self.endereco.id])
+
+    def test_create_endereco(self):
+        data = {'cidade': 'Rio de Janeiro', 'bairro': 'Copacabana', 'rua': 'Rua B', 'numero': '456'}
+        response = self.client.post(self.create_endereco_url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        print("✅ test_create_endereco passed")
 
-    # Teste para listar endereços
-    def test_list_enderecos_view(self):
-        url = reverse('encyclopedia:list_enderecos')
-        response = self.client.get(url)
+    def test_list_enderecos(self):
+        response = self.client.get(self.list_enderecos_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        print("✅ test_list_enderecos passed")
 
-    # Teste para deletar endereço
-    def test_delete_endereco_view(self):
-        url = reverse('encyclopedia:delete_endereco', args=[self.endereco.id])
-        response = self.client.delete(url)
+    def test_update_endereco(self):
+        data = {'cidade': 'São Paulo', 'bairro': 'Vila Mariana'}
+        response = self.client.put(self.update_endereco_url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        print("✅ test_update_endereco passed")
 
-    # Teste para criar denúncia
-    def test_create_denuncia_view(self):
-        url = reverse('encyclopedia:create_denuncia')
-        data = {'title': 'Nova Denuncia', 'text': 'Texto de Denuncia', 'user': self.user_admin.id, 'endereco': self.endereco.id}
-        response = self.client.post(url, data)
+    def test_delete_endereco(self):
+        response = self.client.delete(self.delete_endereco_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        print("✅ test_delete_endereco passed")
+
+
+from rest_framework.test import APIClient
+from rest_framework import status
+from django.test import TestCase
+from django.urls import reverse
+from django.contrib.auth import get_user_model
+from encyclopedia.models import User
+
+
+class UserApiTestCase(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = get_user_model().objects.create_user(username='user', password='password', email='user@example.com')
+        self.admin_user = get_user_model().objects.create_user(username='admin', password='password', email='admin@example.com', is_staff=True)
+
+        # URLs
+        self.create_user_url = reverse('encyclopedia:create_user')
+        self.list_users_url = reverse('encyclopedia:list_user')
+        self.delete_user_url = reverse('encyclopedia:delete_user', args=[self.user.id])
+        self.update_user_url = reverse('encyclopedia:update_user', args=[self.user.id])
+
+    def test_create_user(self):
+        data = {'username': 'newuser', 'email': 'newuser@example.com', 'password': 'newpassword'}
+        response = self.client.post(self.create_user_url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        print("✅ test_create_user passed")
 
-    # Teste para listar denúncias
-    def test_list_denuncias_view(self):
-        url = reverse('encyclopedia:list_denuncias')
-        response = self.client.get(url)
+    def test_list_users(self):
+        self.client.force_authenticate(user=self.admin_user)
+        response = self.client.get(self.list_users_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)  # Deve listar 2 usuários
+        print("✅ test_list_users passed")
 
-    # Teste para deletar denúncia
-    def test_delete_denuncia_view(self):
-        url = reverse('encyclopedia:delete_denuncia', args=[self.denuncia.id])
-        response = self.client.delete(url)
+    def test_delete_user_as_admin(self):
+        self.client.force_authenticate(user=self.admin_user)
+        response = self.client.delete(self.delete_user_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        print("✅ test_delete_user_as_admin passed")
+
+    def test_update_user(self):
+        self.client.force_authenticate(user=self.admin_user)
+        data = {'username': 'updateduser'}
+        response = self.client.put(self.update_user_url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        print("✅ test_update_user passed")
+
+
+
+from rest_framework.test import APIClient
+from rest_framework import status
+from django.test import TestCase
+from django.urls import reverse
+from encyclopedia.models import Denuncia, User, Endereco
+
+
+class DenunciaApiTestCase(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_user(username='user', password='password', email='user@example.com')
+        self.admin_user = User.objects.create_user(username='admin', password='password', is_staff=True)
+
+        self.endereco = Endereco.objects.create(cidade='São Paulo', bairro='Centro', rua='Rua A', numero='123')
+        self.denuncia = Denuncia.objects.create(title='Test Denuncia', text='This is a test denuncia.', user=self.user, endereco=self.endereco)
+
+        # URLs
+        self.create_denuncia_url = reverse('encyclopedia:create_denuncia')
+        self.list_denuncias_url = reverse('encyclopedia:list_denuncias')
+        self.update_denuncia_url = reverse('encyclopedia:update_denuncia', args=[self.denuncia.id])
+        self.delete_denuncia_url = reverse('encyclopedia:delete_denuncia', args=[self.denuncia.id])
+
+    def test_create_denuncia(self):
+        self.client.force_authenticate(user=self.user)
+        data = {
+            'title': 'New Denuncia',
+            'text': 'This is a new denuncia.',
+            'endereco': {
+                'cidade': 'Rio de Janeiro',
+                'bairro': 'Copacabana',
+                'rua': 'Rua B',
+                'numero': '456'
+            }
+        }
+        response = self.client.post(self.create_denuncia_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        print("✅ test_create_denuncia passed")
+
+    def test_list_denuncias(self):
+        response = self.client.get(self.list_denuncias_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['title'], 'Test Denuncia')
+        print("✅ test_list_denuncias passed")
+
+    def test_update_denuncia_by_author(self):
+        self.client.force_authenticate(user=self.user)
+        data = {'title': 'Updated Denuncia'}
+        response = self.client.put(self.update_denuncia_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['title'], 'Updated Denuncia')
+        print("✅ test_update_denuncia_by_author passed")
+
+    def test_update_denuncia_by_non_author(self):
+        self.client.force_authenticate(user=self.admin_user)
+        data = {'title': 'Invalid Update'}
+        response = self.client.put(self.update_denuncia_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        print("✅ test_update_denuncia_by_non_author passed")
+
+    def test_delete_denuncia_by_author(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.delete(self.delete_denuncia_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        print("✅ test_delete_denuncia_by_author passed")
+
+    def test_delete_denuncia_by_admin(self):
+        self.client.force_authenticate(user=self.admin_user)
+        response = self.client.delete(self.delete_denuncia_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        print("✅ test_delete_denuncia_by_admin passed")
+
+    def test_delete_denuncia_by_non_author(self):
+        non_author = User.objects.create_user(username='non_author', password='password')
+        self.client.force_authenticate(user=non_author)
+        response = self.client.delete(self.delete_denuncia_url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        print("✅ test_delete_denuncia_by_non_author passed")
