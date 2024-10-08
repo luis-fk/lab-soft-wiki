@@ -29,6 +29,7 @@ class Denuncia(models.Model):
     text = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     endereco = models.ForeignKey(Endereco, on_delete=models.CASCADE)
+    validacao = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
