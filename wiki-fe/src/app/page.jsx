@@ -1,7 +1,7 @@
-import Body from "@/components/Body";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import Content from "@/components/Content";
+import Body from "@/app/_components/layout/Body";
+import Header from "@/app/_components/layout/Header";
+import Footer from "@/app/_components/layout/Footer";
+import Content from "@/app/_components/layout/Content";
 import loremIpsum from "@/assets/json/loremIpsum.json";
 import BackgroundImage from "@/components/BackgroundImage";
 import '@/styles/backgroundImage.css'

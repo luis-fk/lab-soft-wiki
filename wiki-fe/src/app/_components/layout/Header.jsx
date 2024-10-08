@@ -1,11 +1,14 @@
-import React from 'react'
-import '@/styles/header.css'
-import Image from 'next/image'
 import logo from '@/assets/images/logo.png'
 import Link from 'next/link'
+import React from 'react'
+import Image from 'next/image'
+import { getSession } from '@/app/_lib/session'
+import '@/styles/header.css'
 
-export default function Header() {
-  return (
+export default async function Header() {
+    const session = await getSession();
+
+    return (
     <>
         <div className="header-container">
             <Link href="/">
@@ -22,10 +25,16 @@ export default function Header() {
                 <Link href="/">Por que contribuir?</Link>
                 <Link href="/">Fórum</Link>
                 <Link href="/">Clima</Link>
-                <Link href="/cadastrar">Cadastrar</Link>
-                <Link href="/login">Entrar</Link>
+                
+                {session
+                ? <Link href="/logout">Sair</Link>
+                :   <>
+                        <Link href="/cadastrar">Cadastrar</Link> 
+                        <Link href="/login">Entrar</Link><p></p>
+                    </> 
+                }
             </div>               
         </div>
     </>
-  )
+    )
 }

@@ -1,5 +1,5 @@
-import Footer from '@/components/Footer';
-import SignUp from '@/components/SignUp';
+import Footer from '@/app/_components/layout/Footer';
+import SignUp from '@/components/auth/SignUp';
 
 export const metadata = {
   title: 'Cadastrar',
