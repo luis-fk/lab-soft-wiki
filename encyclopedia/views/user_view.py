@@ -17,23 +17,27 @@ def create_user(request):
     username = request.data.get('username')
     email = request.data.get('email')
     password = request.data.get('password')
+    cidade = request.data.get('cidade')
+    name = request.data.get('name')
 
     if not username or not email or not password:
-        return Response({"error": "Username, email, and password are required."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "É necessário ter nome de usuário, email e senha!"}, status=status.HTTP_400_BAD_REQUEST)
 
     if models.User.objects.filter(username=username).exists():
-        return Response({"error": "Username already exists."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "O nome do usuário já está em uso."}, status=status.HTTP_400_BAD_REQUEST)
 
     if models.User.objects.filter(email=email).exists():
-        return Response({"error": "Email already exists."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "O email já está em uso."}, status=status.HTTP_400_BAD_REQUEST)
 
     user = models.User.objects.create_user(
         username=username,
         email=email,
         password=password,
+        name = name,
+        cidade = cidade,
     )
     serializer = serializers.UserSerializer(user)
-    return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(status=status.HTTP_201_CREATED)
 
 # Listar todos os usuários da wiki
 @api_view(['GET'])
