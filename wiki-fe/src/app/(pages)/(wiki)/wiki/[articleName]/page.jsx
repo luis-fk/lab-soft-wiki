@@ -1,5 +1,5 @@
 import React from 'react'
-import Content from '@/components/Content'
+import Content from '@/app/_components/layout/Content'
 
 export let metadata = {
     title: 'Artigo',
