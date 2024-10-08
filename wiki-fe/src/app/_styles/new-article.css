@@ -1,0 +1,59 @@
+.text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 700px; 
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 8px; 
+  }
+
+
+.title-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .submitButton-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 20 px;
+  }
+
+  .create-article-container h2 {
+    margin-bottom: 20px;
+    color: white;
+  }
+
+  .text-container textarea{
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #000000;
+    border-radius: 3px;
+    height: 500px;
+    box-sizing: border-box;
+    resize: none;  
+
+  }
+
+.title-container {
+    display: flex;                /* Torna o container um flex container */
+    flex-direction: column;       /* Alinha os itens em coluna */
+    justify-content: center;      /* Alinha os itens verticalmente ao centro */
+    height: 300px;                /* Defina a altura desejada do container */
+}
+
+.title-container textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #000000;
+    border-radius: 3px;
+    box-sizing: border-box;
+    resize: none;
+}
