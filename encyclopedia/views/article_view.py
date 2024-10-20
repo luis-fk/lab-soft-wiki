@@ -14,7 +14,6 @@ def is_admin_or_staff(user):
 
 # Criar um novo artigo (requer que o usuário esteja logado como Admin ou Staff)
 @api_view(['POST'])
-@login_required(login_url='/login/')  # Redireciona para login se o usuário não estiver logado
 @user_passes_test(is_admin_or_staff)  # Verifica se o usuário é Admin ou Staff
 def create_artigo(request):
     serializer = serializers.ArtigoSerializer(data=request.data)
@@ -35,7 +34,6 @@ def list_artigo(request):
 
 # Deletar um artigo (requer login e ser Admin ou Staff)
 @api_view(['DELETE'])
-@login_required(login_url='/login/')  # Garante que o usuário esteja logado
 @user_passes_test(is_admin_or_staff)  # Verifica se o usuário é Admin ou Staff
 def delete_artigo(request, artigo_id):
     artigo = get_object_or_404(models.Artigo, id=artigo_id)
@@ -44,7 +42,6 @@ def delete_artigo(request, artigo_id):
 
 # Atualizar um artigo (requer login e ser Admin ou Staff)
 @api_view(['PUT'])
-@login_required(login_url='/login/')  # Garante que o usuário esteja logado
 @user_passes_test(is_admin_or_staff)  # Verifica se o usuário é Admin ou Staff
 def update_artigo(request, artigo_id):
     artigo = get_object_or_404(models.Artigo, id=artigo_id)

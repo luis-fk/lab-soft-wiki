@@ -84,7 +84,6 @@ def list_user(request, id=None):
 
 # Deletar um usuário da wiki usando o ID do usuário
 @api_view(['DELETE'])
-@login_required(login_url='/login/')  # Garante que o usuário esteja logado
 @user_passes_test(is_admin_or_staff)  # Verifica se o usuário é Admin ou Staff
 def delete_user(request, user_id):
     user = get_object_or_404(models.User, id=user_id)
@@ -93,7 +92,6 @@ def delete_user(request, user_id):
 
 # Atualizar informações de um usuário da wiki usando o ID do usuário
 @api_view(['PUT'])
-@login_required(login_url='/login/')  # Garante que o usuário esteja logado
 @user_passes_test(is_admin_or_staff)  # Verifica se o usuário é Admin ou Staff
 def update_user(request, user_id):
     user = get_object_or_404(models.User, id=user_id)
