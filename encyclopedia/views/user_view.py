@@ -15,6 +15,7 @@ def is_admin_or_staff(user):
 @api_view(['POST'])
 @permission_classes([permissions.AllowAny])
 def create_user(request):
+    username = request.data.get('email')
     email = request.data.get('email')
     password = request.data.get('password')
     city = request.data.get('city')
@@ -27,6 +28,7 @@ def create_user(request):
         return Response({"error": "O email já está em uso."}, status=status.HTTP_400_BAD_REQUEST)
 
     user = models.User.objects.create_user(
+        username=username,
         email=email,
         password=password,
         name = name,
