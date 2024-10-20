@@ -4,7 +4,7 @@ from .models import User, Endereco, Denuncia, Historico, Artigo, Comentario
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'name', 'cidade', 'role', 'date_joined')
+        fields = ('id', 'email', 'name', 'city', 'role', 'date_joined')
 
 class EnderecoSerializer(serializers.ModelSerializer):
     class Meta:

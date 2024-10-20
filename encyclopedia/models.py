@@ -8,8 +8,10 @@ class User(AbstractUser):
         ('admin', 'Admin'),
     ]
     name = models.CharField(max_length=255)
-    cidade = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=255, blank=True, null=True)
+    email = models.CharField(max_length=255)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='user')
+    password = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name

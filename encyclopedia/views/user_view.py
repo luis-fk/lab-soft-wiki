@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status, permissions
 from encyclopedia import serializers
 from encyclopedia import models
+from django.contrib.auth.hashers import check_password
 
 # Função auxiliar para verificar se o usuário é Admin ou Staff
 def is_admin_or_staff(user):
@@ -14,38 +15,69 @@ def is_admin_or_staff(user):
 @api_view(['POST'])
 @permission_classes([permissions.AllowAny])
 def create_user(request):
-    username = request.data.get('username')
     email = request.data.get('email')
     password = request.data.get('password')
-    cidade = request.data.get('cidade')
+    city = request.data.get('city')
     name = request.data.get('name')
 
-    if not username or not email or not password:
-        return Response({"error": "É necessário ter nome de usuário, email e senha!"}, status=status.HTTP_400_BAD_REQUEST)
-
-    if models.User.objects.filter(username=username).exists():
-        return Response({"error": "O nome do usuário já está em uso."}, status=status.HTTP_400_BAD_REQUEST)
+    if not email or not password:
+        return Response({"error": "É necessário fornecer o email e a senha!"}, status=status.HTTP_400_BAD_REQUEST)
 
     if models.User.objects.filter(email=email).exists():
         return Response({"error": "O email já está em uso."}, status=status.HTTP_400_BAD_REQUEST)
 
     user = models.User.objects.create_user(
-        username=username,
         email=email,
         password=password,
         name = name,
-        cidade = cidade,
+        city = city,
     )
     serializer = serializers.UserSerializer(user)
-    return Response(status=status.HTTP_201_CREATED)
+    return Response({"message": "Usuário criado com sucesso!"}, status=status.HTTP_201_CREATED)
 
-# Listar todos os usuários da wiki
+
+
+# Verificar autorização do usuário
+@api_view(['POST'])
+def check_login_user(request):
+    email = request.data.get('email')
+    password = request.data.get('password')
+
+    if not email or not password:
+        return Response({"error": "Email e a senha são obrigatórios!"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        # Busca o usuário pelo email
+        user = models.User.objects.get(email=email)
+    except models.User.DoesNotExist:
+        # Retorna erro se o usuário não for encontrado
+        return Response({"error": "Email ou senha incorretos!"}, status=status.HTTP_401_UNAUTHORIZED)
+
+    # Verifica se a senha fornecida corresponde à senha armazenada no banco (criptografada)
+    if user.check_password(password):
+        return Response({
+            "id": user.id,
+            "role": user.role
+            }, status=status.HTTP_200_OK)
+    else:
+        return Response({"error": "Email ou senha incorretos!"}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+# Listar todos os usuários da wiki ou um em específico.
 @api_view(['GET'])
-# @permission_classes([permissions.IsAuthenticated])  # Apenas usuários autenticados podem listar usuários
-def list_user(request):
+def list_user(request, id=None):
+    if id is not None:
+        try:
+            user = models.User.objects.get(id=id)
+            serializer = serializers.UserSerializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except models.User.DoesNotExist:
+            return Response({"error": "O Usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
+    
+    # Se não houver 'id', retorna a lista de todos os usuários
     users = models.User.objects.all()
     serializer = serializers.UserSerializer(users, many=True)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 # Deletar um usuário da wiki usando o ID do usuário
 @api_view(['DELETE'])
