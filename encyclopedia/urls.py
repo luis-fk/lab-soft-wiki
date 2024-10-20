@@ -25,6 +25,7 @@ urlpatterns = [
     path("user/list/", user_view.list_user, name="list_user"),
     path("user/delete/<int:user_id>/", user_view.delete_user, name="delete_user"),
     path("user/update/<int:user_id>/", user_view.update_user, name="update_user"),
+    path("user/verify_login_user/", user_view.verify_login_user, name='verify_login_user'),
 
     # URLs para Article (article_view.py)
     path("article/create/", article_view.create_artigo, name="create_artigo"),

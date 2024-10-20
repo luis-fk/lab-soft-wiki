@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status, permissions
 from encyclopedia import serializers
 from encyclopedia import models
+from django.contrib.auth.hashers import check_password
 
 # Função auxiliar para verificar se o usuário é Admin ou Staff
 def is_admin_or_staff(user):
@@ -33,6 +34,34 @@ def create_user(request):
     )
     serializer = serializers.UserSerializer(user)
     return Response({"message": "Usuário criado com sucesso!"}, status=status.HTTP_201_CREATED)
+
+
+
+# Verificar autorização do usuário
+@api_view(['POST'])
+def check_login_user(request):
+    email = request.data.get('email')
+    password = request.data.get('password')
+
+    if not email or not password:
+        return Response({"error": "Email e a senha são obrigatórios!"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        # Busca o usuário pelo email
+        user = models.User.objects.get(email=email)
+    except models.User.DoesNotExist:
+        # Retorna erro se o usuário não for encontrado
+        return Response({"error": "Email ou senha incorretos!"}, status=status.HTTP_401_UNAUTHORIZED)
+
+    # Verifica se a senha fornecida corresponde à senha armazenada no banco (criptografada)
+    if user.check_password(password):
+        return Response({
+            "id": user.id,
+            "role": user.role
+            }, status=status.HTTP_200_OK)
+    else:
+        return Response({"error": "Email ou senha incorretos!"}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 # Listar todos os usuários da wiki
 @api_view(['GET'])
