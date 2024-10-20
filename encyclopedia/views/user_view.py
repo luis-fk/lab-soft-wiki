@@ -63,13 +63,21 @@ def check_login_user(request):
         return Response({"error": "Email ou senha incorretos!"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-# Listar todos os usuários da wiki
+# Listar todos os usuários da wiki ou um em específico.
 @api_view(['GET'])
-# @permission_classes([permissions.IsAuthenticated])  # Apenas usuários autenticados podem listar usuários
-def list_user(request):
+def list_user(request, id=None):
+    if id is not None:
+        try:
+            user = models.User.objects.get(id=id)
+            serializer = serializers.UserSerializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except models.User.DoesNotExist:
+            return Response({"error": "O Usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
+    
+    # Se não houver 'id', retorna a lista de todos os usuários
     users = models.User.objects.all()
     serializer = serializers.UserSerializer(users, many=True)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 # Deletar um usuário da wiki usando o ID do usuário
 @api_view(['DELETE'])
