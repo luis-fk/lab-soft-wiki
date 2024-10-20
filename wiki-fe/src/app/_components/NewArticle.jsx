@@ -1,21 +1,37 @@
 "use client"
 import React, { useState } from 'react';
-// import "@/styles/new-article.css";
+import { getSession } from '@/lib/session';
 import "@/styles/new-article.css";
 
 export default function NewArticle() {
+    const roleAdmin = 'admin';
+
     const [text, setText] = useState('');
     const [title, setTitle] = useState('');
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            await fetch('http://127.0.0.1:8000/article/create/', { 
+            const session = await getSession();
+
+            if (!session) {
+                throw new Error("Sessão não encontrada.");
+            }
+
+            if (session.role !== roleAdmin) {
+                throw new Error("Você NÃO tem permissão de criar artigos.");
+                console.log("estou aq e tiaizi");
+            }
+
+            await fetch('http://127.0.0.1:8000/article/create/', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify({
                     title,
-                    text
+                    text,
+                    user_id: session.userId
                 }), 
             });
         } catch (error) {
@@ -25,7 +41,6 @@ export default function NewArticle() {
 
     return (
         <div className="create-article-container">
-            <h2> Novo artigo </h2>
             <form onSubmit={handleSubmit}>
                 <div className="title-container">
                     <label htmlFor="title">Título do artigo</label>
