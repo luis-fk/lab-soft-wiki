@@ -49,10 +49,14 @@ export default function Info() {
           <p><strong>Email:</strong> {user.email}</p>
           <p><strong>Cidade:</strong> {user.city ? user.city : 'Não informado'}</p>
 <<<<<<< HEAD
+<<<<<<< HEAD
           <p><strong>Permissão:</strong> {user.role.charAt(0).toUpperCase() + user.role.slice(1)}</p>
 =======
           <p><strong>Permissão:</strong> {user.role}</p>
 >>>>>>> e98d37f (integration changes)
+=======
+          <p><strong>Permissão:</strong> {user.role.charAt(0).toUpperCase() + user.role.slice(1)}</p>
+>>>>>>> aff970a (integration final changes)
           <p><strong>Data de inscrição:</strong> {new Date(user.date_joined).toLocaleDateString()}</p>
         </div>
     </div>

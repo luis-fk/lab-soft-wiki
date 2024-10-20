@@ -27,7 +27,7 @@ export default function SignUp() {
             setErrorMessage('As senhas devem ser iguais');
             return;
         }
-        console.log(formData.get('name'), formData.get('email'), formData.get('password'), formData.get('city'));
+
         try {
             const response = await fetch('http://127.0.0.1:8000/user/create/', { 
                 method: 'POST',
