@@ -1,9 +1,9 @@
 "use client"
 import "@/styles/auth/sign-up.css";
 import Link from 'next/link';
-import TermsBox from '@/app/_components/auth/TermsBox';
+import TermsBox from '@/components/auth/TermsBox';
 import ErrorMessage from './ErrorMessage';
-import { authenticate } from '@/app/_lib/session'
+import { authenticate } from '@/lib/session'
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
@@ -101,8 +101,8 @@ export default function SignUp() {
             
                 {showTerms && (
                     <div className="terms-modal">
-                    <TermsBox />
-                    <button onClick={toggleTerms}>Voltar ao Cadastro</button>
+                        <TermsBox />
+                        <button onClick={toggleTerms}>Voltar ao Cadastro</button>
                     </div>
                 )}
 
