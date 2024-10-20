@@ -57,15 +57,7 @@ export async function createSession(userId, role) {
 }
 
 export async function authenticate(formData) {
-<<<<<<< HEAD
-<<<<<<< HEAD
   const response = await fetch('http://127.0.0.1:8000/user/check_login_user/', { 
-=======
-  const response = await fetch('http://127.0.0.1:8000/user/verify_login_user/', { 
->>>>>>> e98d37f (integration changes)
-=======
-  const response = await fetch('http://127.0.0.1:8000/user/check_login_user/', { 
->>>>>>> aff970a (integration final changes)
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
