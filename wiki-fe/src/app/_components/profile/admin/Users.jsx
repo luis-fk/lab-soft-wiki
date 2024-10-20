@@ -57,7 +57,7 @@ export default function Users() {
             <tr key={user.id}>
               <td>{user.name}</td>
               <td>{user.email}</td>
-              <td>{user.cidade ? user.cidade : 'Não informado'}</td>
+              <td>{user.city ? user.city : 'Não informado'}</td>
               <td>{user.role.charAt(0).toUpperCase() + user.role.slice(1)}</td>
               <td>{formatDate(user.date_joined)}</td>
             </tr>
