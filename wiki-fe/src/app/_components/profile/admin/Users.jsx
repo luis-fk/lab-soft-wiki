@@ -45,7 +45,7 @@ export default function Users() {
       <table className="user-table">
         <thead>
           <tr>
-            <th>Nome de usuário</th>
+            <th>Nome</th>
             <th>Email</th>
             <th>Cidade</th>
             <th>Role</th>
@@ -55,7 +55,7 @@ export default function Users() {
         <tbody>
           {users.map((user) => (
             <tr key={user.id}>
-              <td>{user.username}</td>
+              <td>{user.name}</td>
               <td>{user.email}</td>
               <td>{user.cidade ? user.cidade : 'Não informado'}</td>
               <td>{user.role.charAt(0).toUpperCase() + user.role.slice(1)}</td>

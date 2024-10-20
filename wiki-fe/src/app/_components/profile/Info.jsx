@@ -11,8 +11,7 @@ export default function Info() {
     const fetchUser = async () => {
       try {
         const session = await getSession(); 
-
-        const response = await fetch(`http://127.0.0.1:8000/user/list/id=${session.userId}`, {
+        const response = await fetch(`http://127.0.0.1:8000/user/list/${session.userId}/`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
         });
@@ -24,6 +23,7 @@ export default function Info() {
 
         const data = await response.json();
         setUser(data);
+        console.log(data);
       } catch (error) {
         setError('Ocorreu um erro ao carregar as informações do usuário.');
       } 
@@ -37,13 +37,17 @@ export default function Info() {
     return <div className='profile-container'>{error}</div>; 
   }
 
+  if (!user) {
+    return <div className='profile-container'>Carregando informações do usuário...</div>; 
+  }
+
   return (
     <div className='profile-container'>
         <div>
           <h2>Informações do Usuário</h2>
           <p><strong>Nome:</strong> {user.name}</p>
           <p><strong>Email:</strong> {user.email}</p>
-          <p><strong>Cidade:</strong> {user.city}</p>
+          <p><strong>Cidade:</strong> {user.city ? user.city : 'Não informado'}</p>
           <p><strong>Permissão:</strong> {user.role}</p>
           <p><strong>Data de inscrição:</strong> {new Date(user.date_joined).toLocaleDateString()}</p>
         </div>
