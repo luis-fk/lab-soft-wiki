@@ -1,14 +1,3 @@
-/* .text-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%; 
-    margin: 20px auto;
-    padding: 20px;
-    border-radius: 8px; 
-} */
-
 .submitButton-container {
     display: flex;
     flex-direction: column;
