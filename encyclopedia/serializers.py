@@ -16,7 +16,7 @@ class ArtigoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Artigo
-        fields = ('id', 'title', 'text', 'views', 'user')
+        fields = ('id', 'title', 'text', 'views', 'user_id')
 
 class DenunciaSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)

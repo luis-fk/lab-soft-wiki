@@ -49,7 +49,7 @@ class Artigo(models.Model):
     title = models.CharField(max_length=255)
     text = models.TextField()
     views = models.IntegerField(default=0)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.IntegerField()  # Armazenando apenas o ID do usuário
 
     def __str__(self):
         return self.title
