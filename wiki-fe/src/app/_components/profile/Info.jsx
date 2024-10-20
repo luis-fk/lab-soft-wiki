@@ -48,7 +48,7 @@ export default function Info() {
           <p><strong>Nome:</strong> {user.name}</p>
           <p><strong>Email:</strong> {user.email}</p>
           <p><strong>Cidade:</strong> {user.city ? user.city : 'Não informado'}</p>
-          <p><strong>Permissão:</strong> {user.role}</p>
+          <p><strong>Permissão:</strong> {user.role.charAt(0).toUpperCase() + user.role.slice(1)}</p>
           <p><strong>Data de inscrição:</strong> {new Date(user.date_joined).toLocaleDateString()}</p>
         </div>
     </div>

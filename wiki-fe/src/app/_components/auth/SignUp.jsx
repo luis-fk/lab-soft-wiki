@@ -27,9 +27,9 @@ export default function SignUp() {
             setErrorMessage('As senhas devem ser iguais');
             return;
         }
-        console.log(formData.get('name'), formData.get('email'), formData.get('password'), formData.get('city'));
+
         try {
-            await fetch('http://127.0.0.1:8000/user/create/', { 
+            const response = await fetch('http://127.0.0.1:8000/user/create/', { 
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -39,6 +39,12 @@ export default function SignUp() {
                     city: formData.get('city'),
                 }), 
             });
+
+            if (!response.ok) {
+                const data = await response.json();
+                setErrorMessage(data.error);
+                return;
+              }
 
             await authenticate(formData);
             router.push('/');
