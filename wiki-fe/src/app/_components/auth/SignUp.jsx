@@ -22,7 +22,12 @@ export default function SignUp() {
         event.preventDefault();
 
         const formData = new FormData(event.target)
-        
+
+        if (formData.get('password') !== formData.get('confirmPassword')) {
+            setErrorMessage('As senhas devem ser iguais');
+            return;
+        }
+
         try {
             await fetch('http://127.0.0.1:8000/user/create/', { 
                 method: 'POST',
@@ -31,7 +36,7 @@ export default function SignUp() {
                     name: formData.get('name'),
                     email: formData.get('email'),
                     password: formData.get('password'),
-                    confirmPassword: formData.get('confirmPassword'),
+                    city: formData.get('city'),
                 }), 
             });
 

@@ -15,6 +15,11 @@ export default function Users() {
           headers: { 'Content-Type': 'application/json' },
         });
 
+        if (!response.ok) {
+          setError(response.error);
+          return;
+        }
+
         const data = await response.json();
         setUsers(data); 
       } catch (err) {
