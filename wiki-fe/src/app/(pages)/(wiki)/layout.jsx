@@ -2,7 +2,7 @@ import '@/styles/layout/layout.css'
 import Body from "@/components/layout/Body";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import BackgroundImage from '@/components/BackgroundImage';
+import BackgroundImage from '@/app/_components/layout/BackgroundImage';
 
 export const metadata = {
   title: 'Wiki Dengue',

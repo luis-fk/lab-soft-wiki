@@ -30,12 +30,12 @@ export default function Login() {
 
             <div>
                 <label htmlFor="email">Email</label>
-                <input type="email" name="email" placeholer="Email" required />
+                <input type="email" name="email" placeholder="Email" required />
             </div>
 
             <div>
                 <label htmlFor="password">Senha</label>
-                <input type="password" name="password" placeholer="Password" required />
+                <input type="password" name="password" placeholder="Password" required />
             </div>
 
             <div className="submitButton-container">

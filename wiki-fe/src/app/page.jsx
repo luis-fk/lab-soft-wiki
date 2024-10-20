@@ -3,7 +3,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Article from "@/components/layout/Article";
 import loremIpsum from "@/assets/json/loremIpsum.json";
-import BackgroundImage from "@/components/BackgroundImage";
+import BackgroundImage from "@/app/_components/layout/BackgroundImage";
 import '@/styles/layout/backgroundImage.css'
 import '@/styles/layout/layout.css'
 

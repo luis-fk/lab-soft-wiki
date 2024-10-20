@@ -1,7 +1,7 @@
 "use client"
 import "@/styles/auth/sign-up.css";
 import Link from 'next/link';
-import TermsBox from '@/components/TermsBox';
+import TermsBox from '@/app/_components/auth/TermsBox';
 import ErrorMessage from './ErrorMessage';
 import { authenticate } from '@/app/_lib/session'
 import { useRouter } from 'next/navigation';
@@ -66,7 +66,7 @@ export default function SignUp() {
 
                     <div>
                         <label htmlFor="confirmPassword">Confirme a senha</label>
-                        <input type="password" name="confirmPassword" placeholder="Confimer a senha" required />
+                        <input type="password" name="confirmPassword" placeholder="Confime a senha" required />
                     </div>
 
                     <div>
