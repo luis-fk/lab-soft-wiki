@@ -14,15 +14,31 @@ def is_admin_or_staff(user):
 
 # Criar um novo artigo (requer que o usuário esteja logado como Admin ou Staff)
 @api_view(['POST'])
-@user_passes_test(is_admin_or_staff)  # Verifica se o usuário é Admin ou Staff
 def create_artigo(request):
-    serializer = serializers.ArtigoSerializer(data=request.data)
-    
-    if serializer.is_valid():
-        # Set the 'user' field to the currently authenticated user
-        serializer.save(user=request.user)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # Extração dos campos necessários
+    user_id = request.data.get('user_id')
+    title = request.data.get('title')
+    text = request.data.get('text')
+
+    # Verificação dos campos obrigatórios
+    if not user_id or not title or not text:
+        return Response({
+            "error": "Os campos 'user_id', 'title' e 'text' são obrigatórios."
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    # Criação do artigo com os dados fornecidos
+    artigo = models.Artigo.objects.create(
+        user_id=user_id,
+        title=title,
+        text=text
+    )
+
+    # Resposta de sucesso ao front-end
+    return Response({
+        "message": "Artigo criado com sucesso!",
+        "artigo_id": artigo.id
+    }, status=status.HTTP_201_CREATED)
+
 
 # Listar todos os artigos
 @api_view(['GET'])
