@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import ErrorMessage from './ErrorMessage';
 import { authenticate } from '@/lib/session'
-import "@/styles/login.css";
+import "@/styles/auth/login.css";
 
 export default function Login() {
     const [errorMessage, setErrorMessage] = useState(null);
@@ -30,12 +30,12 @@ export default function Login() {
 
             <div>
                 <label htmlFor="email">Email</label>
-                <input type="email" name="email" placeholer="Email" required />
+                <input type="email" name="email" placeholder="Email" required />
             </div>
 
             <div>
                 <label htmlFor="password">Senha</label>
-                <input type="password" name="password" placeholer="Password" required />
+                <input type="password" name="password" placeholder="Password" required />
             </div>
 
             <div className="submitButton-container">

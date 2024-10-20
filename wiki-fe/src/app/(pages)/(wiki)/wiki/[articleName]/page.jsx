@@ -1,5 +1,5 @@
 import React from 'react'
-import Content from '@/app/_components/layout/Content'
+import Article from '@/app/_components/layout/Article'
 
 export let metadata = {
     title: 'Artigo',
@@ -12,12 +12,11 @@ export default async function page({params}) {
 
         metadata.title = posts[0].title;
         return (
-            <Content params={{title: posts[0].title, content: posts[0].text}}/>
+            <Article params={{title: posts[0].title, content: posts[0].text}}/>
         )
     }
 
     return (
-        <Content params={{title: "Artigo vazio", content: "Nada a comentar"}}/>
-
+        <Article params={{title: "Artigo vazio", content: "Nada a comentar"}}/>
     )
 }

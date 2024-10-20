@@ -37,7 +37,7 @@ def create_user(request):
 
 # Listar todos os usuários da wiki
 @api_view(['GET'])
-@permission_classes([permissions.IsAuthenticated])  # Apenas usuários autenticados podem listar usuários
+# @permission_classes([permissions.IsAuthenticated])  # Apenas usuários autenticados podem listar usuários
 def list_user(request):
     users = models.User.objects.all()
     serializer = serializers.UserSerializer(users, many=True)

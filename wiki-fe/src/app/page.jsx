@@ -1,11 +1,11 @@
-import Body from "@/app/_components/layout/Body";
-import Header from "@/app/_components/layout/Header";
-import Footer from "@/app/_components/layout/Footer";
-import Content from "@/app/_components/layout/Content";
+import Body from "@/components/layout/Body";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import Article from "@/components/layout/Article";
 import loremIpsum from "@/assets/json/loremIpsum.json";
-import BackgroundImage from "@/components/BackgroundImage";
-import '@/styles/backgroundImage.css'
-import '@/styles/layout.css'
+import BackgroundImage from "@/app/_components/layout/BackgroundImage";
+import '@/styles/layout/backgroundImage.css'
+import '@/styles/layout/layout.css'
 
 
 export default function Page() {
@@ -16,7 +16,7 @@ export default function Page() {
       <Header />
 
       <Body> 
-        <Content params={{title: "Bem vindo!", content: loremIpsum.lorem}} />
+        <Article params={{title: "Bem vindo!", content: loremIpsum.lorem}} />
       </Body>
 
       <Footer />

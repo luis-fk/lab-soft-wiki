@@ -1,5 +1,5 @@
-import '@/styles/layout.css'
-import BackgroundImage from "@/components/BackgroundImage";
+import '@/styles/layout/layout.css'
+import BackgroundImage from "@/app/_components/layout/BackgroundImage";
 
 export const metadata = {
   title: 'Wiki Dengue',

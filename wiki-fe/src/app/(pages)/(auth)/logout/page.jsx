@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import { useRouter } from 'next/navigation';
-import { terminateSession, getSession } from '@/app/_lib/session'
+import { terminateSession, getSession } from '@/lib/session'
 
 export default async function page() {
     const router = useRouter();

@@ -1,5 +1,5 @@
 import React from 'react'
-import '@/styles/body.css'
+import '@/styles/layout/body.css'
 import Link from 'next/link'
 
 export default function Body({ children }) {
