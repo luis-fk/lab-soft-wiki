@@ -20,7 +20,6 @@ export default async function Body({ children }) {
                 <>
                     <Link href="/admin/users">Usuários</Link>
                 </>
-
                 }
             </div>
 

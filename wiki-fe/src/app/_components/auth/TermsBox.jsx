@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import "@/styles/auth/terms-box.css";
 
 export default function TermsBox(){
@@ -67,7 +66,6 @@ export default function TermsBox(){
                 <li><strong>E-mail:</strong> [Seu E-mail]</li>
                 <li><strong>Telefone:</strong> [Seu Telefone]</li>
             </ul>
-        
         </div>        
     )
 }
