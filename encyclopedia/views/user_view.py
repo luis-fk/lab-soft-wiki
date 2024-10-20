@@ -6,6 +6,7 @@ from rest_framework import status, permissions
 from encyclopedia import serializers
 from encyclopedia import models
 from django.contrib.auth.hashers import check_password
+from django.views.decorators.csrf import csrf_exempt
 
 # Função auxiliar para verificar se o usuário é Admin ou Staff
 def is_admin_or_staff(user):
@@ -13,6 +14,7 @@ def is_admin_or_staff(user):
 
 # Criar o usuário da wiki
 @api_view(['POST'])
+@csrf_exempt
 @permission_classes([permissions.AllowAny])
 def create_user(request):
     username = request.data.get('email')
@@ -44,7 +46,6 @@ def create_user(request):
 def check_login_user(request):
     email = request.data.get('email')
     password = request.data.get('password')
-
     if not email or not password:
         return Response({"error": "Email e a senha são obrigatórios!"}, status=status.HTTP_400_BAD_REQUEST)
     

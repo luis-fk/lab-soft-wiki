@@ -57,7 +57,7 @@ export async function createSession(userId, role) {
 }
 
 export async function authenticate(formData) {
-  const response = await fetch('http://127.0.0.1:8000/', { 
+  const response = await fetch('http://127.0.0.1:8000/user/verify_login_user/', { 
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -69,7 +69,8 @@ export async function authenticate(formData) {
   if (response.status !== 200) {
     return {errorMessage: 'Credenciais inválidas, por favor tente novamente'}
   } else {
-    await createSession(response.userId, response.role);
+    const data = await response.json();
+    await createSession(data.id, data.role);
     return {}
   }
   
