@@ -1,4 +1,4 @@
-import '@/styles/layout.css'
+import '@/styles/layout/layout.css'
 import BackgroundImage from "@/components/BackgroundImage";
 
 export const metadata = {

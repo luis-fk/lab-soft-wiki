@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import "@/styles/terms-box.css";
+import "@/styles/auth/terms-box.css";
 
 export default function TermsBox(){
     return(

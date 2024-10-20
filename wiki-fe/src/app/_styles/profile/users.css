@@ -1,0 +1,25 @@
+.user-table {
+    width: 100%;
+    border-collapse: collapse; 
+    margin-top: 20px;
+  }
+  
+  .user-table th, .user-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .user-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+  }
+  
+  .user-table tr:nth-child(even) {
+    background-color: #f7f7f7;
+  }
+  
+  .user-table tr:nth-child(odd) {
+    background-color: #ffffff;
+  }
+  

@@ -1,6 +1,5 @@
 "use client"
-import "@/styles/sign-up.css";
-import "@/styles/terms-box.css";
+import "@/styles/auth/sign-up.css";
 import Link from 'next/link';
 import TermsBox from '@/components/TermsBox';
 import ErrorMessage from './ErrorMessage';

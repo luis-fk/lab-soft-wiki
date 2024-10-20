@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import saoJose from '@/assets/images/background.png'
-import '@/styles/backgroundImage.css'
+import '@/styles/layout/backgroundImage.css'
  
 export default function BackgroundImage() {
   return (

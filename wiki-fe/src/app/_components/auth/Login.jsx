@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import ErrorMessage from './ErrorMessage';
 import { authenticate } from '@/lib/session'
-import "@/styles/login.css";
+import "@/styles/auth/login.css";
 
 export default function Login() {
     const [errorMessage, setErrorMessage] = useState(null);

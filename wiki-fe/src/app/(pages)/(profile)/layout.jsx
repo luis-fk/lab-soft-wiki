@@ -1,7 +1,7 @@
 import '@/styles/layout/layout.css'
-import Body from "@/components/layout/Body";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import ProfileBody from "@/components/profile/Body";
 import BackgroundImage from '@/components/BackgroundImage';
 
 export const metadata = {
@@ -16,9 +16,9 @@ export default function RootLayout({ children }) {
         
         <Header />
 
-        <Body> 
+        <ProfileBody> 
           {children}
-        </Body>
+        </ProfileBody>
 
         <Footer />
       </body>

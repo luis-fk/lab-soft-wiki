@@ -2,8 +2,8 @@ import logo from '@/assets/images/logo.png'
 import Link from 'next/link'
 import React from 'react'
 import Image from 'next/image'
-import { getSession } from '@/app/_lib/session'
-import '@/styles/header.css'
+import { getSession } from '@/lib/session'
+import '@/styles/layout/header.css'
 
 export default async function Header() {
     const session = await getSession();
@@ -27,7 +27,11 @@ export default async function Header() {
                 <Link href="/">Clima</Link>
                 
                 {session
-                ? <Link href="/logout">Sair</Link>
+                ?   <>
+                        <Link href="/logout">Sair</Link>
+                        <Link href="/perfil">Perfil</Link>
+                    </>
+                
                 :   <>
                         <Link href="/cadastrar">Cadastrar</Link> 
                         <Link href="/login">Entrar</Link><p></p>
