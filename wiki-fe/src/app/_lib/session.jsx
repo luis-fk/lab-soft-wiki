@@ -57,12 +57,19 @@ export async function createSession(userId, role) {
 }
 
 export async function authenticate(formData) {
-  /* autentica credenciais no back */
-  console.log(formData.get('email'), formData.get('password'))
-  if (formData.get('email') === 'admin@email.com') {
+  const response = await fetch('http://127.0.0.1:8000/', { 
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        email: formData.get('email'),
+        password: formData.get('password'),
+    }), 
+});
+  
+  if (response.status !== 200) {
     return {errorMessage: 'Credenciais inválidas, por favor tente novamente'}
   } else {
-    await createSession('1', 'admin')
+    await createSession(response.userId, response.role);
     return {}
   }
   
