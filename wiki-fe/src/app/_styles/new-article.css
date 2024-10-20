@@ -1,59 +1,87 @@
-.text-container {
+/* .text-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 700px; 
+    width: 100%; 
     margin: 20px auto;
     padding: 20px;
     border-radius: 8px; 
-  }
+} */
 
-
-.title-container {
+.submitButton-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    text-align: center;
+    height: 20px;
   }
 
-  .submitButton-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 20 px;
-  }
-
-  .create-article-container h2 {
+.create-article-container h2 {
     margin-bottom: 20px;
-    color: white;
+    font-size: 30px;
+    color: black;
   }
 
-  .text-container textarea{
-    width: 100%;
-    padding: 8px;
+.create-article-container {
+    padding: 20px;
+    border-radius: 8px;
+    margin-right: 100px;
+    margin-left: 0px;
+    margin-bottom: 20px;
+    width: 80%;
+}
+
+.text-container textarea{
+    width: 80%;
     border: 1px solid #000000;
-    border-radius: 3px;
+    border-radius: 15px;
     height: 500px;
-    box-sizing: border-box;
+    font-size: 16px;
     resize: none;  
+    outline: none; 
+    font-family: 'Times New Roman';
+}
 
-  }
-
-.title-container {
-    display: flex;                /* Torna o container um flex container */
-    flex-direction: column;       /* Alinha os itens em coluna */
-    justify-content: center;      /* Alinha os itens verticalmente ao centro */
-    height: 300px;                /* Defina a altura desejada do container */
+.text-container label{
+  font-size: 25px;  
+}
+.text-container, .title-container {
+    display: flex;   
+    flex-direction: column;       
+    align-items: center;
+    padding: 10px;             
+    justify-content: center;      
+    margin: 20px auto;
+    text-align: center;
 }
 
 .title-container textarea {
-    width: 100%;
-    padding: 8px;
+    width: 80%; 
     border: 1px solid #000000;
-    border-radius: 3px;
-    box-sizing: border-box;
+    border-radius: 15px;
+    height: 15%;
+    align-content: center;
+    font-size: 20px;
     resize: none;
+    outline: none; 
+    font-family: 'Times New Roman'
 }
+
+.title-container label{   
+    font-size: 25px;         
+}
+
+.submitButton-container button[type="submit"] {
+  background-color: #182833; 
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.submitButton-container button:hover {
+  background-color: #1F4762;
+}    
