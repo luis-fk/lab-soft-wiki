@@ -20,7 +20,6 @@ export default function NewArticle() {
 
             if (session.role !== roleAdmin) {
                 throw new Error("Você NÃO tem permissão de criar artigos.");
-                console.log("estou aq e tiaizi");
             }
 
             await fetch('http://127.0.0.1:8000/article/create/', {
