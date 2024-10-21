@@ -1,0 +1,76 @@
+.submitButton-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 20px;
+  }
+
+.create-article-container h2 {
+    margin-bottom: 20px;
+    font-size: 30px;
+    color: black;
+  }
+
+.create-article-container {
+    padding: 20px;
+    border-radius: 8px;
+    margin-right: 100px;
+    margin-left: 0px;
+    margin-bottom: 20px;
+    width: 80%;
+}
+
+.text-container textarea{
+    width: 80%;
+    border: 1px solid #000000;
+    border-radius: 15px;
+    height: 500px;
+    font-size: 16px;
+    resize: none;  
+    outline: none; 
+    font-family: 'Times New Roman';
+}
+
+.text-container label{
+  font-size: 25px;  
+}
+.text-container, .title-container {
+    display: flex;   
+    flex-direction: column;       
+    align-items: center;
+    padding: 10px;             
+    justify-content: center;      
+    margin: 20px auto;
+    text-align: center;
+}
+
+.title-container textarea {
+    width: 80%; 
+    border: 1px solid #000000;
+    border-radius: 15px;
+    height: 15%;
+    align-content: center;
+    font-size: 20px;
+    resize: none;
+    outline: none; 
+    font-family: 'Times New Roman'
+}
+
+.title-container label{   
+    font-size: 25px;         
+}
+
+.submitButton-container button[type="submit"] {
+  background-color: #182833; 
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.submitButton-container button:hover {
+  background-color: #1F4762;
+}    
