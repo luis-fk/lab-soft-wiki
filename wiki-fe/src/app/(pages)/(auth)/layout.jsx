@@ -5,7 +5,7 @@ export const metadata = {
   title: 'Wiki Dengue',
 }
 
-export default function LoginLayout({ children }) {
+export default function AuthLayout({ children }) {
   return (
     <html lang="en">
       <body>

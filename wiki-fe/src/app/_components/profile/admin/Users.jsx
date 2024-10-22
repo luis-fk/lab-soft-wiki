@@ -6,7 +6,7 @@ import '@/styles/profile/users.css';
 export default function Users() {
   const [users, setUsers] = useState([]); 
   const [error, setError] = useState(null); 
-
+  
   useEffect(() => {
     const fetchUsers = async () => {
       try {

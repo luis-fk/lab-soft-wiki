@@ -8,7 +8,7 @@ export const metadata = {
   title: 'Wiki Dengue',
 }
 
-export default function RootLayout({ children }) {
+export default function WikiLayout({ children }) {
   return (
     <html lang="en">
       <body>

@@ -23,7 +23,6 @@ export default function Info() {
 
         const data = await response.json();
         setUser(data);
-        console.log(data);
       } catch (error) {
         setError('Ocorreu um erro ao carregar as informações do usuário.');
       } 
