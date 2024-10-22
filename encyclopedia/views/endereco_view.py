@@ -4,12 +4,11 @@ from rest_framework import status, permissions
 from django.shortcuts import get_object_or_404
 from encyclopedia import serializers
 from encyclopedia import models
+from user_view import check_role
 
 # CRUD para Endereco
-
 # Criar um novo endereço
 @api_view(['POST'])
-@permission_classes([permissions.IsAuthenticated])
 def create_endereco(request):
     serializer = serializers.EnderecoSerializer(data=request.data)
     if serializer.is_valid():
@@ -19,7 +18,6 @@ def create_endereco(request):
 
 # Listar todos os endereços
 @api_view(['GET'])
-@permission_classes([permissions.AllowAny])
 def list_enderecos(request):
     enderecos = models.Endereco.objects.all()
     serializer = serializers.EnderecoSerializer(enderecos, many=True)
@@ -27,7 +25,6 @@ def list_enderecos(request):
 
 # Atualizar um endereço (usando o ID do endereço)
 @api_view(['PUT'])
-@permission_classes([permissions.IsAuthenticated])
 def update_endereco(request, endereco_id):
     endereco = get_object_or_404(models.Endereco, id=endereco_id)
     serializer = serializers.EnderecoSerializer(endereco, data=request.data, partial=True)
@@ -38,7 +35,6 @@ def update_endereco(request, endereco_id):
 
 # Deletar um endereço (usando o ID do endereço)
 @api_view(['DELETE'])
-@permission_classes([permissions.IsAuthenticated])
 def delete_endereco(request, endereco_id):
     endereco = get_object_or_404(models.Endereco, id=endereco_id)
     endereco.delete()
