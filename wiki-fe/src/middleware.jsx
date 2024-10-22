@@ -5,16 +5,21 @@ export async function middleware(req) {
   const session = await getSession();
   const { pathname } = req.nextUrl;
 
-  const accessAdmin = pathname.startsWith('/admin') 
-  const accessCreateArticle = pathname.startsWith('/novo-artigo')
-  
-  if (accessAdmin || accessCreateArticle) {
-    if (!session || session.role === 'user') {
-      return NextResponse.redirect(new URL('/', req.url));
-    }
+  // Define the access control list, {route: [roles_with_access]}
+  const accessControl ={
+    '/admin': ['admin'],
+    '/novo-artigo': ['admin', 'staff']
+  };
+
+  const restrictedAccess = accessControl[pathname];
+
+  const notAccess = !restrictedAccess.includes(session.role);
+ 
+  if (restrictedAccess && (!session || notAccess)) {
+    return NextResponse.redirect(new URL('/', req.url));
   }
 
-  return NextResponse.next(); 
+  return NextResponse.next();
 }
 
 export const config = {
