@@ -4,12 +4,12 @@ from rest_framework import status, permissions
 from django.shortcuts import get_object_or_404
 from encyclopedia import serializers
 from encyclopedia import models
+from user_view import check_role
 
 # CRUD para Denuncia
 
 # Criar uma nova denúncia
 @api_view(['POST'])
-@permission_classes([permissions.IsAuthenticated])
 def create_denuncia(request):
     serializer = serializers.DenunciaSerializer(data=request.data)
     if serializer.is_valid():
@@ -19,7 +19,6 @@ def create_denuncia(request):
 
 # Listar todas as denúncias
 @api_view(['GET'])
-@permission_classes([permissions.AllowAny])
 def list_denuncias(request):
     denuncias = models.Denuncia.objects.all()
     serializer = serializers.DenunciaSerializer(denuncias, many=True)
@@ -27,7 +26,6 @@ def list_denuncias(request):
 
 # Atualizar uma denúncia (usando o ID da denúncia)
 @api_view(['PUT'])
-@permission_classes([permissions.IsAuthenticated])
 def update_denuncia(request, denuncia_id):
     denuncia = get_object_or_404(models.Denuncia, id=denuncia_id)
 
@@ -43,13 +41,14 @@ def update_denuncia(request, denuncia_id):
 
 # Deletar uma denúncia (usando o ID da denúncia)
 @api_view(['DELETE'])
-@permission_classes([permissions.IsAuthenticated])
 def delete_denuncia(request, denuncia_id):
-    denuncia = get_object_or_404(models.Denuncia, id=denuncia_id)
+    if check_role(request):
+        denuncia = get_object_or_404(models.Denuncia, id=denuncia_id)
+        # Verifica se o usuário que está fazendo a exclusão é o autor da denúncia ou um administrador
+        if request.user != denuncia.user and not request.user.is_staff:
+            return Response({"error": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)
 
-    # Verifica se o usuário que está fazendo a exclusão é o autor da denúncia ou um administrador
-    if request.user != denuncia.user and not request.user.is_staff:
-        return Response({"error": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)
-
-    denuncia.delete()
-    return Response({"message": "Denuncia deleted successfully."}, status=status.HTTP_200_OK)
+        denuncia.delete()
+        return Response({"message": "Denuncia deleted successfully."}, status=status.HTTP_200_OK)
+    else:
+        return Response({"error": "Permissão negada."}, status=status.HTTP_403_FORBIDDEN)
