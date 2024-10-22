@@ -6,10 +6,8 @@ export let metadata = {
 }
 
 export default function page() {
-
     return (
-        <>
-            <NewArticle />
-        </>
+        <NewArticle />
     )
+
 }

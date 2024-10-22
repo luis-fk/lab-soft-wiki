@@ -1,6 +1,7 @@
 "use client"
 import React, { useState } from 'react';
 import { getSession } from '@/lib/session';
+import { useRouter } from 'next/navigation';
 import "@/styles/new-article.css";
 
 export default function NewArticle() {
@@ -9,17 +10,15 @@ export default function NewArticle() {
     const [text, setText] = useState('');
     const [title, setTitle] = useState('');
 
+    const router = useRouter();
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
             const session = await getSession();
 
-            if (!session) {
-                throw new Error("Sessão não encontrada.");
-            }
-
-            if (session.role !== roleAdmin) {
-                throw new Error("Você NÃO tem permissão de criar artigos.");
+            if(session.role !== roleAdmin) {
+                return router.push('/');
             }
 
             await fetch('http://127.0.0.1:8000/article/create/', {
