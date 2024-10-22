@@ -4,7 +4,8 @@ from rest_framework import status, permissions
 from django.shortcuts import get_object_or_404
 from encyclopedia import serializers
 from encyclopedia import models
-from user_view import check_role
+from encyclopedia.helpers import check_role
+
 
 # CRUD para Endereco
 # Criar um novo endereço
