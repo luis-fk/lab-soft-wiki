@@ -7,11 +7,14 @@ export async function middleware(req) {
 
   // Define the access control list, {route: [roles_with_access]}
   const accessControl ={
-    '/admin': ['admin'],
-    '/novo-artigo': ['admin', 'staff']
+    'admin': ['admin'],
+    'novo-artigo': ['admin', 'staff']
   };
 
-  const restrictedAccess = accessControl[pathname];
+  // primeira palavra depois do '/'
+  const path = pathname.split('/')[1];
+  
+  const restrictedAccess = accessControl[path];
 
   const notAccess = !restrictedAccess.includes(session.role);
  
