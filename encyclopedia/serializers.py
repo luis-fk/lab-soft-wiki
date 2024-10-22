@@ -4,7 +4,8 @@ from .models import User, Endereco, Denuncia, Historico, Artigo, Comentario
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'email', 'name', 'city', 'role', 'date_joined')
+        fields = ('id', 'email', 'name', 'city', 'role', 'password', 'date_joined')
+        read_only_fields = ['password']  # Tornar 'password' somente de leitura
 
 class EnderecoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,7 +17,7 @@ class ArtigoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Artigo
-        fields = ('id', 'title', 'text', 'views', 'user_id')
+        fields = ('id', 'title', 'text', 'views', 'user')
 
 class DenunciaSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)

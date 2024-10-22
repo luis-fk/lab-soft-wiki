@@ -17,6 +17,8 @@ def is_admin_or_staff(user):
 def create_artigo(request):
     # Extração dos campos necessários
     user_id = request.data.get('user_id')
+    user_role = request.data.get('user_role')
+    
     title = request.data.get('title')
     text = request.data.get('text')
 
