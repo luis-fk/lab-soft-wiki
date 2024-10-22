@@ -23,7 +23,7 @@ export default function NewArticle() {
                 return router.push('/');
             }
 
-            await fetch('http://127.0.0.1:8000/article/create/', {
+            const response = await fetch('http://127.0.0.1:8000/article/create/', {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',
@@ -34,6 +34,14 @@ export default function NewArticle() {
                     user_id: session.userId
                 }), 
             });
+
+            
+            if (!response.ok) {
+                const data = await response.json();
+                setErrorMessage(data.error);
+                return;
+            }
+
         } catch (error) {
             const data = await response.json();
             setErrorMessage(data.error);
