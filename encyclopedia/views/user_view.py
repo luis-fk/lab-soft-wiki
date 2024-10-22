@@ -12,10 +12,19 @@ from django.views.decorators.csrf import csrf_exempt
 def is_admin_or_staff(user):
     return user.is_authenticated and (user.is_staff or user.is_superuser)
 
+# Função auxiliar para verificar se o usuário tem o role necessário
+def check_role(request):
+    user_id  = request.data.get('user_id')
+    user_role = request.data.get('user_role')
+    user = get_object_or_404(models.User, id=user_id)
+    if user.role == user_role:
+        return True
+    else:
+        return False
+
 # Criar o usuário da wiki
 @api_view(['POST'])
 @csrf_exempt
-@permission_classes([permissions.AllowAny])
 def create_user(request):
     username = request.data.get('email')
     email = request.data.get('email')

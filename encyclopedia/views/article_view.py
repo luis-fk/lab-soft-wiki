@@ -6,21 +6,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status, permissions
 from encyclopedia import serializers
 from encyclopedia import models
-
+from user_view import check_role
 
 # Função auxiliar para verificar se o usuário é Admin ou Staff
 def is_admin_or_staff(user):
     return user.is_authenticated and (user.is_staff or user.is_superuser)
-
-# Função auxiliar para verificar se o usuário tem o role necessário
-def check_role(request):
-    user_id  = request.data.get('user_id')
-    user_role = request.data.get('user_role')
-    user = get_object_or_404(models.User, id=user_id)
-    if user.role == user_role:
-        return True
-    else:
-        return False
 
 # Criar um novo artigo (requer que o usuário esteja logado como Admin ou Staff)
 @api_view(['POST'])
