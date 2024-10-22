@@ -9,5 +9,4 @@ export default function page() {
     return (
         <NewArticle />
     )
-
 }

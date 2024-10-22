@@ -3,12 +3,14 @@ import React, { useState } from 'react';
 import { getSession } from '@/lib/session';
 import { useRouter } from 'next/navigation';
 import "@/styles/new-article.css";
+import ErrorMessage from "./auth/ErrorMessage";
 
 export default function NewArticle() {
     const roleAdmin = 'admin';
 
     const [text, setText] = useState('');
     const [title, setTitle] = useState('');
+    const [errorMessage, setErrorMessage] = useState(null);
 
     const router = useRouter();
 
@@ -33,7 +35,9 @@ export default function NewArticle() {
                 }), 
             });
         } catch (error) {
-            console.log(error);
+            const data = await response.json();
+            setErrorMessage(data.error);
+            return;
         }
     };
 
@@ -63,6 +67,8 @@ export default function NewArticle() {
                 <div className="submitButton-container">
                     <button type="submit">Criar artigo</button>
                 </div>
+
+                <ErrorMessage message={errorMessage} /> 
             </form>
         </div>
     )
