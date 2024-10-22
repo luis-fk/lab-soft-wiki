@@ -1,5 +1,5 @@
 import React from 'react'
-import NewArticle from '@/components/NewArticle';
+import NewArticle from '@/components/wiki/NewArticle';
 
 export let metadata = {
     title: 'Criar Artigo',
