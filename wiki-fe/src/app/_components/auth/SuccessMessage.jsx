@@ -1,11 +1,11 @@
 import React from 'react';
-import '@/styles/auth/errorMessage.css';
+import '@/styles/auth/successMessage.css';
 
-export default function ErrorMessage({ message }) {
+export default function SuccessMessage({ message }) {
     return (
         <>
             {message && (
-                <div className="error-message">
+                <div className="success-message">
                     {message}
                 </div>
             )}

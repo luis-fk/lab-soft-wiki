@@ -9,3 +9,27 @@
     opacity: 0.7;
     width: 80%;
 }
+
+.data-input {
+    width: 200px;
+    padding: 6px;
+    padding-right: 10px;
+  }
+  
+  .update-button {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #0070f3;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+
+  .data-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 20px;
+    gap: 10px;
+  }

@@ -2,10 +2,16 @@
 import React, { useEffect, useState } from 'react';
 import '@/styles/profile/profile-info.css';
 import { getSession } from '@/lib/session';
+import SuccessMessage from '@/components/auth/SuccessMessage'
+import ErrorMessage from '@/components/auth/ErrorMessage'
+
 
 export default function Info() {
   const [user, setUser] = useState(null); 
   const [error, setError] = useState(null); 
+  const [name, setName] = useState('');
+  const [city, setCity] = useState('');
+  const [success, setSuccess] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -23,6 +29,8 @@ export default function Info() {
 
         const data = await response.json();
         setUser(data);
+        setName(data.name);
+        setCity(data.city);
       } catch (error) {
         setError('Ocorreu um erro ao carregar as informações do usuário.');
       } 
@@ -31,9 +39,28 @@ export default function Info() {
     fetchUser();
   }, []); 
 
+  const handleSubmit = async () => {
+    try {
+      const session = await getSession(); 
+      const response = await fetch(`http://127.0.0.1:8000/user/update/${session.userId}/`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, city }),
+      });
+
+      if (!response.ok) {
+        setError('Erro ao atualizar a informação.');
+        return;
+      }
+
+      setSuccess('Informação atualizada com sucesso!');
+    } catch (error) {
+      setError('Ocorreu um erro ao atualizar o nome.');
+    }
+  };
 
   if (error) {
-    return <div className='profile-container'>{error}</div>; 
+    return <ErrorMessage message={error} />; 
   }
 
   if (!user) {
@@ -43,12 +70,32 @@ export default function Info() {
   return (
     <div className='profile-container'>
         <div>
-          <h2>Informações do Usuário</h2>
-          <p><strong>Nome:</strong> {user.name}</p>
-          <p><strong>Email:</strong> {user.email}</p>
-          <p><strong>Cidade:</strong> {user.city ? user.city : 'Não informado'}</p>
-          <p><strong>Permissão:</strong> {user.role.charAt(0).toUpperCase() + user.role.slice(1)}</p>
-          <p><strong>Data de inscrição:</strong> {new Date(user.date_joined).toLocaleDateString()}</p>
+          <h2>Informações da Conta</h2>
+
+          <div className="data-container">
+            <p><strong>Nome: </strong></p>
+            <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="data-input" />
+          </div>
+
+          <div className="data-container">
+            <p><strong>Email: </strong> {user.email}</p>
+          </div>
+  
+          <div className="data-container">
+            <p><strong>Cidade:</strong></p>
+            <input type="text" value={city} onChange={(e) => setCity(e.target.value)} className="data-input" />
+          </div>
+
+          <div className="data-container">
+            <p><strong>Permissão:</strong> {user.role.charAt(0).toUpperCase() + user.role.slice(1)}</p>
+          </div>
+
+          <div className="data-container">
+            <p><strong>Data de inscrição:</strong> {new Date(user.date_joined).toLocaleDateString()}</p>
+          </div>
+
+          <button onClick={handleSubmit} className="update-button">Atualizar</button>
+          <SuccessMessage message={success} />
         </div>
     </div>
   );
