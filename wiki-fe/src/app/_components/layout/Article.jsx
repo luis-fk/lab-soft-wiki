@@ -1,5 +1,5 @@
 import React from 'react'
-import '@/styles/article.css'
+import '@/styles/wiki/article.css'
 
 export default async function Article({params}) {
   return (
