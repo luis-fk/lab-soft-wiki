@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import { getSession } from '@/lib/session';
 import { useRouter } from 'next/navigation';
-import "@/styles/new-article.css";
-import ErrorMessage from "./auth/ErrorMessage";
+import "@/styles/wiki/new-article.css";
+import ErrorMessage from "@/app/_components/error/ErrorMessage";
 
 export default function NewArticle() {
     const roleAdmin = 'admin';

@@ -1,7 +1,7 @@
 'use client'
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import ErrorMessage from './ErrorMessage';
+import ErrorMessage from '../error/ErrorMessage';
 import { authenticate } from '@/lib/session'
 import "@/styles/auth/login.css";
 
