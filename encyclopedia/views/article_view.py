@@ -12,34 +12,46 @@ from encyclopedia import models
 def is_admin_or_staff(user):
     return user.is_authenticated and (user.is_staff or user.is_superuser)
 
+# Função auxiliar para verificar se o usuário tem o role necessário
+def check_role(request):
+    user_id  = request.data.get('user_id')
+    user_role = request.data.get('user_role')
+    user = get_object_or_404(models.User, id=user_id)
+    if user.role == user_role:
+        return True
+    else:
+        return False
+
 # Criar um novo artigo (requer que o usuário esteja logado como Admin ou Staff)
 @api_view(['POST'])
 def create_artigo(request):
-    # Extração dos campos necessários
-    user_id = request.data.get('user_id')
-    user_role = request.data.get('user_role')
-    
-    title = request.data.get('title')
-    text = request.data.get('text')
+    if check_role(request):
+        # Extração dos campos necessários
+        user_id = request.data.get('user_id')
+        title = request.data.get('title')
+        text = request.data.get('text')
+        # Verificação dos campos obrigatórios
+        if not user_id or not title or not text:
+            return Response({
+                "error": "Os campos 'user_id', 'title' e 'text' são obrigatórios."
+            }, status=status.HTTP_400_BAD_REQUEST)
 
-    # Verificação dos campos obrigatórios
-    if not user_id or not title or not text:
+        # Criação do artigo com os dados fornecidos
+        artigo = models.Artigo.objects.create(
+            user_id=user_id,
+            title=title,
+            text=text
+        )
+
+        # Resposta de sucesso ao front-end
         return Response({
-            "error": "Os campos 'user_id', 'title' e 'text' são obrigatórios."
+            "message": "Artigo criado com sucesso!",
+            "artigo_id": artigo.id
+        }, status=status.HTTP_201_CREATED)
+    else:
+        return Response({
+            "error": "O usuário não tem permissão para criar artigos."
         }, status=status.HTTP_400_BAD_REQUEST)
-
-    # Criação do artigo com os dados fornecidos
-    artigo = models.Artigo.objects.create(
-        user_id=user_id,
-        title=title,
-        text=text
-    )
-
-    # Resposta de sucesso ao front-end
-    return Response({
-        "message": "Artigo criado com sucesso!",
-        "artigo_id": artigo.id
-    }, status=status.HTTP_201_CREATED)
 
 
 # Listar todos os artigos
