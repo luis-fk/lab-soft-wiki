@@ -3,10 +3,9 @@ import '@/styles/layout/body.css'
 import Link from 'next/link'
 import { getSession } from '@/lib/session'
 
-
 export default async function Body({ children }) {
   const session = await getSession();
-
+  
   return (
     <>
         <div className="body-container">
