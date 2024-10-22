@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import '@/styles/profile/profile-info.css';
 import { getSession } from '@/lib/session';
 import SuccessMessage from '@/components/auth/SuccessMessage'
+import ErrorMessage from '@/components/auth/ErrorMessage'
+
 
 export default function Info() {
   const [user, setUser] = useState(null); 
@@ -57,7 +59,7 @@ export default function Info() {
   };
 
   if (error) {
-    return <div className='profile-container'>{error}</div>; 
+    return <ErrorMessage message={error} />; 
   }
 
   if (!user) {
