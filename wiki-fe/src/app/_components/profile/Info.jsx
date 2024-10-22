@@ -30,6 +30,7 @@ export default function Info() {
         const data = await response.json();
         setUser(data);
         setName(data.name);
+        setCity(data.city);
       } catch (error) {
         setError('Ocorreu um erro ao carregar as informações do usuário.');
       } 
