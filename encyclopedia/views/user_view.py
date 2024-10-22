@@ -7,20 +7,12 @@ from encyclopedia import serializers
 from encyclopedia import models
 from django.contrib.auth.hashers import check_password
 from django.views.decorators.csrf import csrf_exempt
+from encyclopedia.helpers import check_role
+
 
 # Função auxiliar para verificar se o usuário é Admin ou Staff
 def is_admin_or_staff(user):
     return user.is_authenticated and (user.is_staff or user.is_superuser)
-
-# Função auxiliar para verificar se o usuário tem o role necessário
-def check_role(request):
-    user_id  = request.data.get('user_id')
-    user_role = request.data.get('user_role')
-    user = get_object_or_404(models.User, id=user_id)
-    if user.role == user_role:
-        return True
-    else:
-        return False
 
 # Criar o usuário da wiki
 @api_view(['POST'])

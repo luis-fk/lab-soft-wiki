@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status, permissions
 from encyclopedia import serializers
 from encyclopedia import models
-from user_view import check_role
+from encyclopedia.helpers import check_role
 
 # Função auxiliar para verificar se o usuário é Admin ou Staff
 def is_admin_or_staff(user):
