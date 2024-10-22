@@ -12,10 +12,19 @@ from django.views.decorators.csrf import csrf_exempt
 def is_admin_or_staff(user):
     return user.is_authenticated and (user.is_staff or user.is_superuser)
 
+# Função auxiliar para verificar se o usuário tem o role necessário
+def check_role(request):
+    user_id  = request.data.get('user_id')
+    user_role = request.data.get('user_role')
+    user = get_object_or_404(models.User, id=user_id)
+    if user.role == user_role:
+        return True
+    else:
+        return False
+
 # Criar o usuário da wiki
 @api_view(['POST'])
 @csrf_exempt
-@permission_classes([permissions.AllowAny])
 def create_user(request):
     username = request.data.get('email')
     email = request.data.get('email')
@@ -92,12 +101,42 @@ def delete_user(request, user_id):
 
 # Atualizar informações de um usuário da wiki usando o ID do usuário
 @api_view(['PUT'])
-@user_passes_test(is_admin_or_staff)  # Verifica se o usuário é Admin ou Staff
 def update_user(request, user_id):
     user = get_object_or_404(models.User, id=user_id)
-    serializer = serializers.UserSerializer(user, data=request.data, partial=True)  # partial=True permite atualização parcial
-
+    data = request.data.copy()
+    data.pop('password', None)  # Remove 'password' se estiver presente
+    serializer = serializers.UserSerializer(user, data=data, partial=True)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+@api_view(['PUT'])
+def update_user_password(request, user_id):
+    # Obtém o usuário ou retorna 404 se não encontrado
+    user = get_object_or_404(models.User, id=user_id)
+    
+    # Extrai as senhas do corpo da requisição
+    password = request.data.get('password')
+    new_password = request.data.get('new_password')
+    
+    # Verifica se a senha atual foi fornecida
+    if not password:
+        return Response("A senha atual é necessária.", status=status.HTTP_400_BAD_REQUEST)
+    
+    # Verifica se a nova senha foi fornecida
+    if not new_password:
+        return Response("A nova senha não pode ser vazia.", status=status.HTTP_400_BAD_REQUEST)
+    
+    # Verifica se a senha atual está correta
+    if not user.check_password(password):
+        return Response("A senha fornecida está incorreta.", status=status.HTTP_400_BAD_REQUEST)
+    
+    # Verifica se a nova senha é diferente da senha atual
+    if user.check_password(new_password):
+        return Response("A nova senha não pode ser igual à anterior.", status=status.HTTP_400_BAD_REQUEST)
+    
+    # Atualiza a senha do usuário de forma segura
+    user.set_password(new_password)
+    user.save()
+    
+    return Response("Senha atualizada com sucesso.", status=status.HTTP_200_OK)
