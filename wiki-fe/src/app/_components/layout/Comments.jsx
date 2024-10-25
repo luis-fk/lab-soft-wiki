@@ -1,13 +1,17 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import ErrorMessage from "@/components/auth/ErrorMessage";
+import SuccessMessage from "@/components/auth/SuccessMessage";
 import '@/styles/article.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 
 export default function Comments({ params }) {
   const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const characterLimit = 1000;
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -36,6 +40,39 @@ export default function Comments({ params }) {
 
     fetchComments();
   }, []);
+
+  const handleCommentSubmit = async () => {
+    if (!newComment.trim()) {
+      setErrorMessage('O comentário não pode estar vazio.');
+      return;
+    }
+
+    if (newComment.length() > 1000) {
+      setErrorMessage('O comentário deve ter no maximo 1000 caracteres.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/comentary/create/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: newComment })
+      });
+
+      if (!response.ok) {
+        setErrorMessage('Um erro ocorreu ao tentar enviar o comentário.');
+        return;
+      }
+
+      const createdComment = await response.json();
+      setComments([...comments, createdComment]); 
+      setNewComment(''); 
+      setSuccessMessage('Comentário enviado com sucesso!');
+      setTimeout(() => setSuccessMessage(''), 3000);
+    } catch (err) {
+      setErrorMessage('Um erro ocorreu ao tentar enviar o comentário.');
+    }
+  };
 
   const handleLike = async (commentId, currentLikes, isLiked) => {
     const updatedComments = comments.map((comment) =>
@@ -66,6 +103,24 @@ export default function Comments({ params }) {
       <h1 style={{ paddingBottom: '0px' }}>Comentários</h1>
       <div style={{ display: 'flex', justifyContent: 'flex-start', paddingLeft: '20px' }}>
         <ErrorMessage message={errorMessage} />
+        <SuccessMessage message={successMessage} />
+      </div>
+
+      <div className="comment-input-section" style={{ padding: '20px' }}>
+        <textarea
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+          placeholder="Escreva seu comentário..."
+          rows="3"
+          style={{ width: '100%', padding: '10px', fontSize: '16px' }}
+          maxLength={characterLimit}
+        />
+        <div style={{ textAlign: 'left', fontSize: '14px', color: newComment.length >= characterLimit - 100 ? 'red' : 'gray' }}>
+          {newComment.length} / {characterLimit} caracteres
+        </div>
+        <button onClick={handleCommentSubmit} style={{ marginTop: '10px', padding: '10px 20px' }}>
+          Enviar Comentário
+        </button>
       </div>
 
       {comments.length > 0 ? (
@@ -93,6 +148,6 @@ export default function Comments({ params }) {
           </div>
         ))
       ) : <></>}
-    </div>
+    </>
   );
 }
