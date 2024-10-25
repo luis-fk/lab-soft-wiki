@@ -13,7 +13,7 @@ export default async function Body({ children }) {
                 <h2>Navegação</h2>
 
                 <Link href="/">Início</Link>
-                <Link href="/">Informações da conta</Link>
+                <Link href="/perfil">Informações da conta</Link>
 
                 {session.role === 'admin' &&
                 <>
