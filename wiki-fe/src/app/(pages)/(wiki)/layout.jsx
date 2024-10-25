@@ -15,7 +15,7 @@ export default function WikiLayout({ children }) {
         <BackgroundImage />
         
         <Header />
-
+        
         <Body> 
           {children}
         </Body>

@@ -1,5 +1,5 @@
 import React from 'react'
-import Article from '@/app/_components/layout/Article'
+import Article from '@/components/layout/Article'
 
 export let metadata = {
     title: 'Artigo',
@@ -7,12 +7,12 @@ export let metadata = {
 
 export default async function page({params}) {
     if (params.articleName === "dengue") {
-        let data = await fetch('http://127.0.0.1:8000/random')
-        let posts = await data.json()
+        const data = await fetch('http://127.0.0.1:8000/random')
+        const posts = await data.json()
 
         metadata.title = posts[0].title;
         return (
-            <Article params={{title: posts[0].title, content: posts[0].text}}/>
+            <Article params={{title: posts[0].title, content: posts[0].text, articleId: posts[0].id}}/>
         )
     }
 
