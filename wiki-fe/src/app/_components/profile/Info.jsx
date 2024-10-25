@@ -18,6 +18,12 @@ export default function Info() {
   const [changePasswordSucces, setChangePasswordSuccess] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
+  const roleTranslations = {
+    'admin': 'Administrador',
+    'user': 'Usuário',
+    'staff': 'Pesquisador'
+  };
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -116,7 +122,7 @@ export default function Info() {
           </div>
 
           <div className="data-container">
-            <p><strong>Permissão:</strong> {user.role.charAt(0).toUpperCase() + user.role.slice(1)}</p>
+            <p><strong>Permissão:</strong> {roleTranslations[user.role]}</p>
           </div>
 
           <div className="data-container">
