@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 class User(AbstractUser):
     ROLE_CHOICES = [
@@ -47,7 +48,7 @@ class Artigo(models.Model):
     title = models.CharField(max_length=255)
     text = models.TextField()
     views = models.IntegerField(default=0)
-    user_id = models.IntegerField()  # Armazenando apenas o ID do usuário
+    user_id = models.IntegerField(default=0)  # Armazenando apenas o ID do usuário
 
     def __str__(self):
         return self.title
@@ -56,6 +57,6 @@ class Comentario(models.Model):
     text = models.TextField()
     likes = models.IntegerField(default=0)
     edited = models.BooleanField(default=False)
-    user_id = models.IntegerField()
-    article_id = models.IntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    user_id = models.IntegerField(default=0)
+    article_id = models.IntegerField(default=0)
+    created_at = models.DateTimeField(default=timezone.now)

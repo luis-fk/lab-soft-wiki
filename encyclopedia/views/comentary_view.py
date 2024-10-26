@@ -10,6 +10,8 @@ from encyclopedia.helpers import check_role
 
 @api_view(['POST'])
 def create_comentary(request):
+    created_at = models.DateTimeField(auto_now_add=True)
+    request.data['created_at'] = created_at
     serializer = serializers.ComentarioSerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
         serializer.save()
@@ -25,21 +27,20 @@ def list_comments(request):
 # Listar todos os comentários de um artigo por ID de artigo.
 @api_view(['GET'])
 def list_comments_by_article(request, article_id):
-    if article_id is not None:
-        try:
-            article = models.Artigo.objects.get(id=article_id)
-            serializer = serializers.UserSerializer(article)
-            try:
-                comentarios = models.Comentario.objects.filter(article_id=article_id)
-                serializer = serializers.ComentarioSerializer(comentarios, many=True)
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            except models.Comments.DoesNotExist:
-                return Response("Nenhum comentário foi encontrado.", status=status.HTTP_200_OK)
-        except models.Artigo.DoesNotExist:
-            return Response({"error": "O Artigo não foi encontrado."}, status=status.HTTP_404_NOT_FOUND)
+    try:
+        # Busca pelo artigo
+        article = models.Artigo.objects.get(id=article_id)
+    except models.Artigo.DoesNotExist:
+        return Response({"error": "O Artigo não foi encontrado."}, status=status.HTTP_404_NOT_FOUND)
 
+    # Busca pelos comentários relacionados ao artigo
+    comentarios = models.Comentario.objects.filter(article_id=article_id)
+    
+    if comentarios.exists():
+        serializer = serializers.ComentarioSerializer(comentarios, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     else:
-        return Response({"error": "O ID do Artigo não foi enviado."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": "Nenhum comentário foi encontrado."}, status=status.HTTP_200_OK)
     
 # Deletar um comentário (requer login e ser Admin ou Staff) - usa o ID do comentário.
 @api_view(['DELETE'])
