@@ -42,7 +42,16 @@ class HistoricoSerializer(serializers.ModelSerializer):
         fields = ('id', 'num_changes', 'text_changes', 'edited_by', 'article')
 
 class ComentarioSerializer(serializers.ModelSerializer):
+    user_name = serializers.SerializerMethodField()
+
     class Meta:
         model = Comentario
-        fields = ['id', 'text', 'likes', 'edited', 'user_name', 'article_id', 'created_at']
-        read_only_fields = ['id', 'created_at']
+        fields = ['id', 'text', 'likes', 'edited', 'user_id', 'article_id', 'created_at', 'user_name']
+        read_only_fields = ['id', 'created_at', 'user_name']
+
+    def get_user_name(self, obj):
+        try:
+            user = User.objects.get(id=obj.user_id)
+            return user.name
+        except User.DoesNotExist:
+            return None

@@ -25,17 +25,6 @@ def create_comentary(request):
     except models.User.DoesNotExist:
         return Response({"error": "O Usuário não foi encontrado."}, status=status.HTTP_404_NOT_FOUND)
     
-    # Obter o nome do usuário
-    user_name = user.name
-    # Adicionar user_name ao request.data
-    request.data['user_name'] = user_name
-    print(f"Nome do usuário: {user_name}")
-
-
-    # Remover user_id do request.data, já que não existe mais esse campo no modelo
-    if 'user_id' in request.data:
-        del request.data['user_id']
-
     # Verifica se o article_id foi fornecido
     article_id = request.data.get('article_id')
     if not article_id:
@@ -59,7 +48,6 @@ def create_comentary(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 # Listar todos os comentários
 @api_view(['GET'])
@@ -92,6 +80,7 @@ def list_comments_by_article(request, article_id):
         return Response(serializer.data, status=status.HTTP_200_OK)
     else:
         return Response({"message": "Nenhum comentário foi encontrado."}, status=status.HTTP_200_OK)
+
 
     
 # Deletar um comentário (requer login e ser Admin ou Staff) - usa o ID do comentário.
