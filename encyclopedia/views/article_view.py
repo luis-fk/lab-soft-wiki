@@ -52,9 +52,9 @@ def list_artigo(request):
 
 # Deletar um artigo (requer login e ser Admin ou Staff)
 @api_view(['DELETE'])
-def delete_artigo(request, artigo_id):
+def delete_artigo(request, article_id):
     if check_role(request):
-        artigo = get_object_or_404(models.Artigo, id=artigo_id)
+        artigo = get_object_or_404(models.Artigo, id=article_id)
         artigo.delete()
         return Response({"message": "Artigo deleted successfully."}, status=status.HTTP_200_OK)
     else:
@@ -64,9 +64,9 @@ def delete_artigo(request, artigo_id):
 
 # Atualizar um artigo (requer login e ser Admin ou Staff)
 @api_view(['PUT'])
-def update_artigo(request, artigo_id):
+def update_artigo(request, article_id):
     if check_role(request):
-        artigo = get_object_or_404(models.Artigo, id=artigo_id)
+        artigo = get_object_or_404(models.Artigo, id=article_id)
         serializer = serializers.ArtigoSerializer(artigo, data=request.data, partial=True)  # partial=True para permitir atualização parcial
 
         if serializer.is_valid():

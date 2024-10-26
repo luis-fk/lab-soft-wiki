@@ -37,9 +37,10 @@ urlpatterns = [
 
     # URLs para Comentary (comentary_view.py)
     path("comentary/create/", comentary_view.create_comentary, name="create_comentary"),
-    path("comentary/list/", comentary_view.list_comments, name="list_comments"),
+    path('comentary/list/<int:article_id>/', user_view.list_comments_by_article, name='list_user_with_id'),  # Com ID, mostra um usuário específico
     path("comentary/delete/<int:commentary_id>/", comentary_view.delete_comment, name="delete_comment"),
     path("comentary/update/<int:commentary_id>/", comentary_view.update_comment, name="update_comment"),
+    
 
     # URLs para Endereco (endereco_view.py)
     path("endereco/create/", endereco_view.create_endereco, name="create_endereco"),

@@ -24,25 +24,23 @@ def list_comments(request):
 
 # Listar todos os comentários de um artigo por ID de artigo.
 @api_view(['GET'])
-def list_user(request, id=None):
-    if id is not None:
+def list_comments_by_article(request, article_id):
+    if article_id is not None:
         try:
-            user = models.User.objects.get(id=id)
-            serializer = serializers.UserSerializer(user)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except models.User.DoesNotExist:
-            return Response({"error": "O Usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
+            article = models.Artigo.objects.get(id=article_id)
+            serializer = serializers.UserSerializer(article)
+            try:
+                comentarios = models.Comentario.objects.filter(article_id=article_id)
+                serializer = serializers.ComentarioSerializer(comentarios, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except models.Comments.DoesNotExist:
+                return Response("Nenhum comentário foi encontrado.", status=status.HTTP_200_OK)
+        except models.Artigo.DoesNotExist:
+            return Response({"error": "O Artigo não foi encontrado."}, status=status.HTTP_404_NOT_FOUND)
+
+    else:
+        return Response({"error": "O ID do Artigo não foi enviado."}, status=status.HTTP_400_BAD_REQUEST)
     
-    # Se não houver 'id', retorna a lista de todos os usuários
-    users = models.User.objects.all()
-    serializer = serializers.UserSerializer(users, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-
-
-
-
 # Deletar um comentário (requer login e ser Admin ou Staff) - usa o ID do comentário.
 @api_view(['DELETE'])
 def delete_comment(request, commentary_id):
