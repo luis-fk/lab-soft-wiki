@@ -24,8 +24,8 @@ def create_user(request):
     city = request.data.get('city')
     name = request.data.get('name')
 
-    if not email or not password:
-        return Response({"error": "É necessário fornecer o email e a senha!"}, status=status.HTTP_400_BAD_REQUEST)
+    if not email or not password or not name:
+        return Response({"error": "É necessário fornecer o email, o nome e a senha!"}, status=status.HTTP_400_BAD_REQUEST)
 
     if models.User.objects.filter(email=email).exists():
         return Response({"error": "O email já está em uso."}, status=status.HTTP_400_BAD_REQUEST)

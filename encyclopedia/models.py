@@ -57,6 +57,7 @@ class Comentario(models.Model):
     text = models.TextField()
     likes = models.IntegerField(default=0)
     edited = models.BooleanField(default=False)
-    user_id = models.IntegerField(default=0)
+    user_name = models.CharField(max_length=255, default="Tadaki")  # Novo campo para armazenar o nome do usuário
     article_id = models.IntegerField(default=0)
     created_at = models.DateTimeField(default=timezone.now)
+

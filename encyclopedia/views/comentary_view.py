@@ -25,6 +25,17 @@ def create_comentary(request):
     except models.User.DoesNotExist:
         return Response({"error": "O Usuário não foi encontrado."}, status=status.HTTP_404_NOT_FOUND)
     
+    # Obter o nome do usuário
+    user_name = user.name
+    # Adicionar user_name ao request.data
+    request.data['user_name'] = user_name
+    print(f"Nome do usuário: {user_name}")
+
+
+    # Remover user_id do request.data, já que não existe mais esse campo no modelo
+    if 'user_id' in request.data:
+        del request.data['user_id']
+
     # Verifica se o article_id foi fornecido
     article_id = request.data.get('article_id')
     if not article_id:
@@ -42,12 +53,13 @@ def create_comentary(request):
         return Response({"error": "O 'text' é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
     
     # Serializa os dados recebidos e cria o comentário
-    serializer = serializers.ComentarioSerializer(data=request.data, context={'request': request})
+    serializer = serializers.ComentarioSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # Listar todos os comentários
 @api_view(['GET'])

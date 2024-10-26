@@ -44,5 +44,5 @@ class HistoricoSerializer(serializers.ModelSerializer):
 class ComentarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comentario
-        fields = ['id', 'text', 'likes', 'edited', 'user_id', 'article_id', 'created_at']
+        fields = ['id', 'text', 'likes', 'edited', 'user_name', 'article_id', 'created_at']
         read_only_fields = ['id', 'created_at']
