@@ -6,17 +6,49 @@ from rest_framework import status, permissions
 from encyclopedia import serializers
 from encyclopedia import models
 from encyclopedia.helpers import check_role
+from django.utils import timezone
 
 
 @api_view(['POST'])
 def create_comentary(request):
-    created_at = models.DateTimeField(auto_now_add=True)
-    request.data['created_at'] = created_at
+    # Adiciona o campo created_at ao request data com a data e hora atuais
+    request.data['created_at'] = timezone.now()
+
+    # Verifica se o user_id foi fornecido
+    user_id = request.data.get('user_id')
+    if not user_id:
+        return Response({"error": "O 'user_id' é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Tenta encontrar o usuário, retornando erro caso não exista
+    try:
+        user = models.User.objects.get(id=user_id)
+    except models.User.DoesNotExist:
+        return Response({"error": "O Usuário não foi encontrado."}, status=status.HTTP_404_NOT_FOUND)
+    
+    # Verifica se o article_id foi fornecido
+    article_id = request.data.get('article_id')
+    if not article_id:
+        return Response({"error": "O 'article_id' é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Tenta encontrar o artigo, retornando erro caso não exista
+    try:
+        article = models.Artigo.objects.get(id=article_id)
+    except models.Artigo.DoesNotExist:
+        return Response({"error": "O Artigo não foi encontrado."}, status=status.HTTP_404_NOT_FOUND)
+    
+    # Verifica se o texto foi fornecido
+    text = request.data.get('text')
+    if not text:
+        return Response({"error": "O 'text' é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Serializa os dados recebidos e cria o comentário
     serializer = serializers.ComentarioSerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 # Listar todos os comentários
 @api_view(['GET'])
 def list_comments(request):
