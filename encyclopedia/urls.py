@@ -37,7 +37,7 @@ urlpatterns = [
 
     # URLs para Commentary (comentary_view.py)
     path("commentary/create/", comentary_view.create_comentary, name="create_comentary"),
-    path('commentary/list/<int:article_id>/', comentary_view.list_comments_by_article, name='list_comments_by_article'),  # Com ID, mostra um usuário específico
+    path("commentary/list/<int:article_id>/", comentary_view.list_comments_by_article, name='list_comments_by_article'),  # Com ID, mostra um usuário específico
     path("commentary/delete/<int:commentary_id>/", comentary_view.delete_comment, name="delete_comment"),
     path("commentary/update/<int:commentary_id>/", comentary_view.update_comment, name="update_comment"),
     
