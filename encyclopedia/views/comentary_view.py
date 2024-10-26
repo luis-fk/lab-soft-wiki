@@ -60,19 +60,27 @@ def list_comments(request):
 @api_view(['GET'])
 def list_comments_by_article(request, article_id):
     try:
-        # Busca pelo artigo
-        article = models.Artigo.objects.get(id=article_id)
+        # Converte o article_id para inteiro
+        article_id = int(article_id)
+    except ValueError:
+        return Response({"error": "ID do Artigo inválido."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Verifica se o artigo existe
+    try:
+        models.Artigo.objects.get(id=article_id)
     except models.Artigo.DoesNotExist:
         return Response({"error": "O Artigo não foi encontrado."}, status=status.HTTP_404_NOT_FOUND)
 
-    # Busca pelos comentários relacionados ao artigo
+    # Busca pelos comentários relacionados ao ID do artigo
     comentarios = models.Comentario.objects.filter(article_id=article_id)
-    
+
+    # Verifica se existem comentários
     if comentarios.exists():
         serializer = serializers.ComentarioSerializer(comentarios, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     else:
         return Response({"message": "Nenhum comentário foi encontrado."}, status=status.HTTP_200_OK)
+
     
 # Deletar um comentário (requer login e ser Admin ou Staff) - usa o ID do comentário.
 @api_view(['DELETE'])
@@ -97,3 +105,9 @@ def update_comment(request, commentary_id):
         return Response({
             "error": "O usuário não tem permissão para criar artigos."
         }, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
