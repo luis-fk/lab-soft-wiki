@@ -32,14 +32,15 @@ urlpatterns = [
     # URLs para Article (article_view.py)
     path("article/create/", article_view.create_artigo, name="create_artigo"),
     path("article/list/", article_view.list_artigo, name="list_artigo"),
-    path("article/delete/<int:artigo_id>/", article_view.delete_artigo, name="delete_artigo"),
-    path("article/update/<int:artigo_id>/", article_view.update_artigo, name="update_artigo"),
+    path("article/delete/<int:article_id>/", article_view.delete_artigo, name="delete_artigo"),
+    path("article/update/<int:article_id>/", article_view.update_artigo, name="update_artigo"),
 
-    # URLs para Comentary (comentary_view.py)
-    path("comentary/create/", comentary_view.create_comentary, name="create_comentary"),
-    path("comentary/list/", comentary_view.list_comments, name="list_comments"),
-    path("comentary/delete/<int:commentary_id>/", comentary_view.delete_comment, name="delete_comment"),
-    path("comentary/update/<int:commentary_id>/", comentary_view.update_comment, name="update_comment"),
+    # URLs para Commentary (comentary_view.py)
+    path("commentary/create/", comentary_view.create_comentary, name="create_comentary"),
+    path("commentary/list/<int:article_id>/", comentary_view.list_comments_by_article, name='list_comments_by_article'),  # Com ID, mostra um usuário específico
+    path("commentary/delete/<int:commentary_id>/", comentary_view.delete_comment, name="delete_comment"),
+    path("commentary/update/<int:commentary_id>/", comentary_view.update_comment, name="update_comment"),
+    
 
     # URLs para Endereco (endereco_view.py)
     path("endereco/create/", endereco_view.create_endereco, name="create_endereco"),
