@@ -32,6 +32,8 @@ export default function Comments({ params }) {
           liked: false,
         }));
 
+        commentsWithLikes.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
         setComments(commentsWithLikes);
       } catch (err) {
         setErrorMessage('Um erro ocorreu ao tentar carregar os comentários.');
@@ -47,25 +49,26 @@ export default function Comments({ params }) {
       return;
     }
 
-    if (newComment.length() > 1000) {
+    if (newComment.length > 1000) {
       setErrorMessage('O comentário deve ter no maximo 1000 caracteres.');
       return;
     }
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/comentary/create/`, {
+      const response = await fetch(`http://127.0.0.1:8000/commentary/create/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: newComment })
+        body: JSON.stringify({ text: newComment, user_id: params.userId, article_id: params.articleId }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        setErrorMessage('Um erro ocorreu ao tentar enviar o comentário.');
+        setErrorMessage(data.error);
         return;
       }
 
-      const createdComment = await response.json();
-      setComments([...comments, createdComment]); 
+      setComments([data, ...comments]); 
       setNewComment(''); 
       setSuccessMessage('Comentário enviado com sucesso!');
       setTimeout(() => setSuccessMessage(''), 3000);
@@ -106,7 +109,8 @@ export default function Comments({ params }) {
         <SuccessMessage message={successMessage} />
       </div>
 
-      <div className="comment-input-section" style={{ padding: '20px' }}>
+      {params.userId ? (
+        <div className="comment-input-section" style={{ padding: '20px' }}>
         <textarea
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
@@ -122,7 +126,8 @@ export default function Comments({ params }) {
           Enviar Comentário
         </button>
       </div>
-
+      ) : <></>}
+      
       {comments.length > 0 ? (
         comments.map((comment) => (
           <div key={comment.id} className="comment">
@@ -148,6 +153,6 @@ export default function Comments({ params }) {
           </div>
         ))
       ) : <></>}
-    </>
+    </div>
   );
 }
