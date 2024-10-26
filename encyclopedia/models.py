@@ -56,8 +56,6 @@ class Comentario(models.Model):
     text = models.TextField()
     likes = models.IntegerField(default=0)
     edited = models.BooleanField(default=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    article = models.ForeignKey(Artigo, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"Comment on {self.article.title} by {self.user.name}"
+    user_id = models.IntegerField()
+    article_id = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)

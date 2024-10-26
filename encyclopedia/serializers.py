@@ -44,11 +44,5 @@ class HistoricoSerializer(serializers.ModelSerializer):
 class ComentarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comentario
-        fields = ['id', 'text', 'article']
-        read_only_fields = ['id', 'article', 'user']
-
-
-    def create(self, validated_data):
-        user = self.context['request'].user
-        comentario = Comentario.objects.create(user=user, **validated_data)
-        return comentario
+        fields = ['id', 'text', 'likes', 'edited', 'user_id', 'article_id', 'created_at']
+        read_only_fields = ['id', 'created_at', 'user_id', 'article_id']
