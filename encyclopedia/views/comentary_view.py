@@ -93,19 +93,16 @@ def delete_comment(request, commentary_id):
 # Atualizar um comentário (requer login e ser Admin ou Staff), além de usar o ID do comentário.
 @api_view(['PUT'])
 def update_comment(request, commentary_id):
-    if check_role(request):
-        comentario = get_object_or_404(models.Comentario, id=commentary_id)
-        serializer = serializers.ComentarioSerializer(
-            comentario, data=request.data, partial=True, context={'request': request}
-        )
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        return Response({
-            "error": "O usuário não tem permissão para criar artigos."
-        }, status=status.HTTP_400_BAD_REQUEST)
+    print(request.data)
+    comentario = get_object_or_404(models.Comentario, id=commentary_id)
+    serializer = serializers.ComentarioSerializer(
+        comentario, data=request.data, partial=True, context={'request': request}
+    )
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 

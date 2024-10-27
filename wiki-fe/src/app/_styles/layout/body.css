@@ -1,10 +1,9 @@
 
 .body-container {
     display: flex;
-    justify-content: center;
+    flex-direction: row;
     margin-top: 20px;
     padding-left: 20px;
-    justify-content: space-between;    
 }
 
 .sidebar {
