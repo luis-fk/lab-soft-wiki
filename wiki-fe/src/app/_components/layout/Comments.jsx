@@ -22,9 +22,16 @@ export default function Comments({ params }) {
         });
         
         const data = await response.json();
-
         if (!response.ok) {
           setErrorMessage(data.error);
+          return;
+        }
+
+        if (data.message.length > 0) {
+          console.log(data.message);
+
+          setErrorMessage(data.message);
+          return;
         }
 
         const commentsWithLikes = data.map((comment) => ({

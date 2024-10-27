@@ -6,8 +6,11 @@ import ErrorMessage from '@/components/auth/ErrorMessage'
 
 export default function Users() {
   const [users, setUsers] = useState([]); 
+  const [originalUsers, setOriginalUsers] = useState([]);
   const [error, setError] = useState(''); 
   const [success, setSuccess] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchActive, setIsSearchActive] = useState(false);
 
   const roleTranslations = {
     'admin': 'Administrador',
@@ -25,13 +28,15 @@ export default function Users() {
           headers: { 'Content-Type': 'application/json' },
         });
 
+        const data = await response.json();
+
         if (!response.ok) {
-          setError(response.error);
+          setError(data.error);
           return;
         }
 
-        const data = await response.json();
         setUsers(data); 
+        setOriginalUsers(data);
       } catch {
         setError('Um erro ocorreu ao tentar carregar os usuarios. Por favor tente novamente.');
       } 
@@ -48,8 +53,10 @@ export default function Users() {
         body: JSON.stringify({ role: newRole })
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        setError('Um erro ocorreu ao tentar atualizar a permissão do usuário.');
+        setError(data.error);
         return;
       }
 
@@ -66,6 +73,41 @@ export default function Users() {
     }
   };
 
+  const handleSearch = async () => {
+    if (isSearchActive) {
+      setUsers(originalUsers); 
+      setSearchQuery('');
+      setIsSearchActive(false);
+      setError('');
+      return;
+    }
+
+    if (!searchQuery) {
+      setError('Por favor, insira um email para busca.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/user/list/${1}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!response.ok) {
+        setError('Usuário não encontrado.');
+        setUsers([]); // Clear users if not found
+        return;
+      }
+
+      const data = await response.json();
+      setUsers([data]); // Set only the searched user
+      setError('');
+      setIsSearchActive(true);
+    } catch {
+      setError('Um erro ocorreu ao tentar buscar o usuário. Por favor tente novamente.');
+    }
+  };
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toISOString().split('T')[0];
@@ -75,6 +117,16 @@ export default function Users() {
     <>
       <div className='users-container'>
         <h2>Usuários</h2>
+
+        <div>
+          <input type="text" placeholder="Buscar por email" value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)} className="search-input"
+          />
+
+          <button onClick={handleSearch} className="search-button">
+            {isSearchActive ? 'Limpar' : 'Buscar'}
+          </button>
+        </div>
 
         <SuccessMessage message={success} />
         <ErrorMessage message={error} />
