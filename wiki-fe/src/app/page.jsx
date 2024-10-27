@@ -1,7 +1,7 @@
 import Body from "@/components/layout/Body";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import Article from "@/components/layout/Article";
+import Welcome from "@/components/layout/Welcome";
 import loremIpsum from "@/assets/json/loremIpsum.json";
 import BackgroundImage from "@/app/_components/layout/BackgroundImage";
 import '@/styles/layout/backgroundImage.css'
@@ -16,7 +16,7 @@ export default function Page() {
       <Header />
 
       <Body> 
-        <Article params={{title: "Bem vindo!", content: loremIpsum.lorem}} />
+        <Welcome params={{title: "Bem vindo!", content: loremIpsum.lorem}} />
       </Body>
 
       <Footer />
