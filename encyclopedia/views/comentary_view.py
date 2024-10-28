@@ -81,8 +81,6 @@ def list_comments_by_article(request, article_id):
     else:
         return Response({"message": "Nenhum comentário foi encontrado."}, status=status.HTTP_200_OK)
 
-
-    
 # Deletar um comentário (requer login e ser Admin ou Staff) - usa o ID do comentário.
 @api_view(['DELETE'])
 def delete_comment(request, commentary_id):
