@@ -11,7 +11,7 @@ export default async function Article({params}) {
         <h1>{params?.title}</h1>
         <p>{params?.content}</p>
 
-        <Comments params={{ articleId: params?.articleId, userId: session?.userId }} />
+        {params.isValidArticle ? <Comments params={{ articleId: params?.articleId, userId: session?.userId}}></Comments> : null}
       </div>
   );
 }
