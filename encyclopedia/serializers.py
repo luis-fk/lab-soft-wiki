@@ -50,15 +50,23 @@ class HistoricoSerializer(serializers.ModelSerializer):
 
 class ComentarioSerializer(serializers.ModelSerializer):
     user_name = serializers.SerializerMethodField()
+    user_role = serializers.SerializerMethodField()  # Novo campo para a role do usuário
 
     class Meta:
         model = Comentario
-        fields = ['id', 'text', 'likes', 'edited', 'user_id', 'article_id', 'created_at', 'user_name']
-        read_only_fields = ['id', 'created_at', 'user_name']
+        fields = ['id', 'text', 'likes', 'edited', 'user_id', 'article_id', 'created_at', 'user_name', 'user_role']
+        read_only_fields = ['id', 'created_at', 'user_name', 'user_role']
 
     def get_user_name(self, obj):
         try:
             user = User.objects.get(id=obj.user_id)
             return user.name
+        except User.DoesNotExist:
+            return None
+
+    def get_user_role(self, obj):
+        try:
+            user = User.objects.get(id=obj.user_id)
+            return user.role
         except User.DoesNotExist:
             return None
