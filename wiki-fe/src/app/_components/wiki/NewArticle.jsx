@@ -13,7 +13,30 @@ export default function NewArticle() {
     const [errorMessage, setErrorMessage] = useState(null);
 
     const router = useRouter();
-    const sd = new Showdown.Converter();
+    const sd = new Showdown.Converter(
+        {
+            tables: true,
+            tasklists: true,
+            strikethrough: true,
+            emoji: true,
+            simpleLineBreaks: true,
+            openLinksInNewWindow: true,
+            backslashEscapesHTMLTags: true,
+            smoothLivePreview: true,
+            simplifiedAutoLink: true,
+            simpleLineBreaks: true,
+            requireSpaceBeforeHeadingText: true,
+            ghMentions: true,
+            ghMentionsLink: '/user/{u}',
+            ghCodeBlocks: true,
+            emoji: true,
+            underline: true,
+            completeHTMLDocument: true,
+            metadata: true,
+            parseImgDimensions: true,
+            encodeEmails: true,
+            openLinksInNewWindow: true
+        });
 
     const previewRef = useRef(null);
     
