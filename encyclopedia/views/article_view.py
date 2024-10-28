@@ -52,7 +52,7 @@ def list_articles(request, quantity=20):
         return Response({"error": "Quantidade inválida."}, status=status.HTTP_400_BAD_REQUEST)
 
     # Ordenar por número de likes (decrescente), depois por data de criação (mais recente primeiro)
-    artigos = models.Artigo.objects.all().order_by('-likes', '-created_at')[:quantity]
+    artigos = models.Artigo.objects.all().order_by('-views', '-created_at')[:quantity]
     serializer = serializers.ArtigoSerializer(artigos, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
