@@ -40,8 +40,6 @@ def create_user(request):
     serializer = serializers.UserSerializer(user)
     return Response({"message": "Usuário criado com sucesso!"}, status=status.HTTP_201_CREATED)
 
-
-
 # Verificar autorização do usuário
 @api_view(['POST'])
 def check_login_user(request):
@@ -66,26 +64,41 @@ def check_login_user(request):
     else:
         return Response({"error": "Email ou senha incorretos!"}, status=status.HTTP_401_UNAUTHORIZED)
 
-
-# Listar todos os usuários da wiki ou um em específico.
+# Listar usuários com limite e ordenar por data de registro (mais recentes)
 @api_view(['GET'])
-def list_user(request, id=None):
-    if id is not None:
-        try:
-            user = models.User.objects.get(id=id)
-            serializer = serializers.UserSerializer(user)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except models.User.DoesNotExist:
-            return Response({"error": "O Usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
+def list_users(request, quantity=20):
+    try:
+        quantity = int(quantity)
+    except ValueError:
+        return Response({"error": "Quantidade inválida."}, status=status.HTTP_400_BAD_REQUEST)
     
-    # Se não houver 'id', retorna a lista de todos os usuários
-    users = models.User.objects.all()
+    users = models.User.objects.order_by('-date_joined')[:quantity]
     serializer = serializers.UserSerializer(users, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+# Obter usuário por email
+@api_view(['GET'])
+def get_user_by_email(request, email):
+    try:
+        user = models.User.objects.get(email=email)
+        serializer = serializers.UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except models.User.DoesNotExist:
+        return Response({"error": "O Usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
+    
+    
+# Obter usuário por ID
+@api_view(['GET'])
+def get_user_by_id(request, id):
+    try:
+        user = models.User.objects.get(id=id)
+        serializer = serializers.UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except models.User.DoesNotExist:
+        return Response({"error": "O Usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
+
 # Deletar um usuário da wiki usando o ID do usuário
 @api_view(['DELETE'])
-@user_passes_test(is_admin_or_staff)  # Verifica se o usuário é Admin ou Staff
 def delete_user(request, user_id):
     user = get_object_or_404(models.User, id=user_id)
     user.delete()

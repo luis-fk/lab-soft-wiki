@@ -48,7 +48,9 @@ class Artigo(models.Model):
     title = models.CharField(max_length=255)
     text = models.TextField()
     views = models.IntegerField(default=0)
+    likes = models.IntegerField(default=0)
     user_id = models.IntegerField(default=0)  # Armazenando apenas o ID do usuário
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.title
