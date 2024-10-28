@@ -1,7 +1,6 @@
 .user-table {
     width: 100%;
     border-collapse: collapse; 
-    margin-top: 20px;
   }
   
   .user-table th, .user-table td {
@@ -26,8 +25,9 @@
   .users-container {
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
     padding: 20px;
-    gap: 20%;
+    gap: 10px;
     border-radius: 8px;
     margin-left: 20px;
     margin-right: 20px;
@@ -36,5 +36,20 @@
     background-color: white;
     opacity: 0.7;
     width: 80%;
+}
+
+.search-input {
+    width: 200px;
+    padding: 6px;
+    padding-right: 10px;
+  }
+  
+  .search-button {
+    margin-left: 10px;
+    padding: 8px 16px;
+    background-color: #0070f3;
+    color: white;
+    border: none;
+    cursor: pointer;
 }
   
