@@ -82,16 +82,12 @@ def delete_artigo(request, article_id):
 # Atualizar um artigo (requer login e ser Admin ou Staff)
 @api_view(['PUT'])
 def update_artigo(request, article_id):
-    if check_role(request):
-        artigo = get_object_or_404(models.Artigo, id=article_id)
-        serializer = serializers.ArtigoSerializer(artigo, data=request.data, partial=True)  # partial=True para permitir atualização parcial
+    artigo = get_object_or_404(models.Artigo, id=article_id)
+    serializer = serializers.ArtigoSerializer(artigo, data=request.data, partial=True)  # partial=True para permitir atualização parcial
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        return Response({
-            "error": "O usuário não tem permissão para atualizar artigos."
-        }, status=status.HTTP_400_BAD_REQUEST)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 

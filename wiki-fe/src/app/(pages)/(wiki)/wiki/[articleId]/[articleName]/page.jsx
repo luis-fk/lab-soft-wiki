@@ -7,20 +7,22 @@ export let metadata = {
 
 export default async function Page({ params }) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/article/detail/${params.articleId}`);
+        const response = await fetch(`http://127.0.0.1:8000/article/detail/${params.articleId}`, {
+            method: 'GET',
+            cache: 'no-store',
+        });
         
-        if (!response.ok) {
-            throw new Error('Artigo não encontrado');
-        }
-
         const article = await response.json();
+
         metadata.title = article.title;
+
         return (
             <Article
                 params={{
                     title: article.title,
                     content: article.text,
                     articleId: article.id,
+                    articleViews: article.views,
                     isValidArticle: true,
                 }}
             />
