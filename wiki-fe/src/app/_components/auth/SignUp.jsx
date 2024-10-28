@@ -2,7 +2,7 @@
 import "@/styles/auth/sign-up.css";
 import Link from 'next/link';
 import TermsBox from '@/components/auth/TermsBox';
-import ErrorMessage from '../error/ErrorMessage';
+import ErrorMessage from './ErrorMessage';
 import { authenticate } from '@/lib/session'
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
