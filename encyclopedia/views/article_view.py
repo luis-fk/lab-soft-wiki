@@ -43,12 +43,29 @@ def create_artigo(request):
             "error": "O usuário não tem permissão para criar artigos."
         }, status=status.HTTP_400_BAD_REQUEST)
 
-# Listar todos os artigos
+# Listar artigos com limite e ordenação
 @api_view(['GET'])
-def list_artigo(request):
-    artigos = models.Artigo.objects.all()
+def list_articles(request, quantity=20):
+    try:
+        quantity = int(quantity)
+    except ValueError:
+        return Response({"error": "Quantidade inválida."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Ordenar por número de likes (decrescente), depois por data de criação (mais recente primeiro)
+    artigos = models.Artigo.objects.all().order_by('-likes', '-created_at')[:quantity]
     serializer = serializers.ArtigoSerializer(artigos, many=True)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+# Obter artigo por ID
+@api_view(['GET'])
+def get_article_by_id(request, id):
+    try:
+        artigo = models.Artigo.objects.get(id=id)
+        serializer = serializers.ArtigoSerializer(artigo)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except models.Artigo.DoesNotExist:
+        return Response({"error": "O Artigo não foi encontrado."}, status=status.HTTP_404_NOT_FOUND)
+    
 
 # Deletar um artigo (requer login e ser Admin ou Staff)
 @api_view(['DELETE'])
@@ -56,7 +73,7 @@ def delete_artigo(request, article_id):
     if check_role(request):
         artigo = get_object_or_404(models.Artigo, id=article_id)
         artigo.delete()
-        return Response({"message": "Artigo deleted successfully."}, status=status.HTTP_200_OK)
+        return Response({"message": "Artigo deletado com sucesso."}, status=status.HTTP_200_OK)
     else:
         return Response({
             "error": "O usuário não tem permissão para deletar artigos."
@@ -73,9 +90,8 @@ def update_artigo(request, article_id):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
     else:
         return Response({
-            "error": "O usuário não tem permissão para criar artigos."
+            "error": "O usuário não tem permissão para atualizar artigos."
         }, status=status.HTTP_400_BAD_REQUEST)
 

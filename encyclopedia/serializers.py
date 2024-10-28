@@ -13,11 +13,18 @@ class EnderecoSerializer(serializers.ModelSerializer):
         fields = ('id', 'cidade', 'bairro', 'rua', 'numero', 'complemento')
 
 class ArtigoSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+    user_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Artigo
-        fields = ('id', 'title', 'text', 'views', 'user')
+        fields = ('id', 'title', 'text', 'views', 'likes', 'user_id', 'user_name', 'created_at')
+
+    def get_user_name(self, obj):
+        try:
+            user = User.objects.get(id=obj.user_id)
+            return user.name
+        except User.DoesNotExist:
+            return None
 
 class DenunciaSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
