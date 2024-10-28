@@ -4,7 +4,6 @@ import { getSession } from '@/lib/session';
 import { useRouter } from 'next/navigation';
 import "@/styles/wiki/new-article.css";
 import ErrorMessage from "@/app/_components/auth/ErrorMessage";
-
 import Showdown from "showdown";
 
 export default function NewArticle() {
@@ -13,6 +12,7 @@ export default function NewArticle() {
     const [errorMessage, setErrorMessage] = useState(null);
 
     const router = useRouter();
+
     const sd = new Showdown.Converter(
         {
             tables: true,
@@ -64,13 +64,14 @@ export default function NewArticle() {
                 }), 
             });
 
+            const data = await response.json();
             
             if (!response.ok) {
-                const data = await response.json();
                 setErrorMessage(data.error);
                 return;
-            }
+            }       
 
+            router.push(`/wiki/${data.artigo_id}/${title.split(' ').join('-')}`);
         } catch (error) {
             const data = await response.json();
             setErrorMessage(data.error);
@@ -124,5 +125,3 @@ export default function NewArticle() {
         </div>
     )
 }
-
-
