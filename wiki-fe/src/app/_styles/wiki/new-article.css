@@ -8,8 +8,9 @@
 
 .create-article-container h2 {
     margin-bottom: 20px;
-    font-size: 30px;
+    font-size: 25px;
     color: black;
+    font-weight: normal;
   }
 
 .create-article-container {
@@ -22,7 +23,8 @@
 }
 
 .text-container textarea{
-    width: 80%;
+    width: 500px;
+    height: 200px;
     border: 1px solid #000000;
     border-radius: 15px;
     height: 500px;
@@ -33,17 +35,55 @@
     font-family: 'Times New Roman';
 }
 
+.editor {
+  margin-left: 100px;
+}
+
+.preview-text{
+  margin-top: -20px;
+  font-size: 18px;
+  text-align: justify;
+  word-wrap: break-word;
+  overflow-y: auto;
+  font-family: 'Times New Roman';
+}
+
+.preview-container {
+  width: 500px;
+  height: 500px;
+  overflow-y: auto;
+  border: 1px solid #000000;
+  background-color: rgb(255, 255, 255);
+  border-radius: 15px;
+  padding: 10px;
+  font-size: 18px;
+  resize: none;  
+  outline: none;   
+}
+
 .text-container label{
   font-size: 25px;  
 }
-.text-container, .title-container {
+
+.text-container{
+  display: flex;   
+  flex-direction: row;       
+  align-items: center;
+  padding: 5px;             
+  justify-content: center;      
+  margin: 20px auto;
+  text-align: center; 
+}
+
+.title-container {
+
     display: flex;   
     flex-direction: column;       
     align-items: center;
-    padding: 10px;             
-    justify-content: center;      
-    margin: 20px auto;
     text-align: center;
+    justify-content: center;      
+    padding: 5px;             
+    margin: 20px auto;
 }
 
 .title-container textarea {
