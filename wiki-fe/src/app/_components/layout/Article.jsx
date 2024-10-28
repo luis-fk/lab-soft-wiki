@@ -1,5 +1,5 @@
 import React from 'react'
-import '@/styles/article.css'
+import '@/styles/wiki/article.css'
 import Comments from '@/components/layout/Comments'
 import { getSession } from '@/lib/session'
 

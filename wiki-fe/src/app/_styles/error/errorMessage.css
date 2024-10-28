@@ -1,0 +1,7 @@
+.error-message {
+    text-align: left;
+    color: rgb(224, 0, 0);
+    font-weight: bold;
+    font-size: 20px;
+    margin-top: 10px;
+}
