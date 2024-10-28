@@ -3,11 +3,9 @@ import React, { useState } from 'react';
 import { getSession } from '@/lib/session';
 import { useRouter } from 'next/navigation';
 import "@/styles/wiki/new-article.css";
-import ErrorMessage from "@/components/error/ErrorMessage";
+import ErrorMessage from "@/app/_components/auth/ErrorMessage";
 
 export default function NewArticle() {
-    const roleAdmin = 'admin';
-
     const [text, setText] = useState('');
     const [title, setTitle] = useState('');
     const [errorMessage, setErrorMessage] = useState(null);
@@ -19,10 +17,6 @@ export default function NewArticle() {
         try {
             const session = await getSession();
 
-            if(session.role !== roleAdmin) {
-                return router.push('/');
-            }
-
             const response = await fetch('http://127.0.0.1:8000/article/create/', {
                 method: 'POST',
                 headers: { 
@@ -31,7 +25,8 @@ export default function NewArticle() {
                 body: JSON.stringify({
                     title,
                     text,
-                    user_id: session.userId
+                    user_id: session.userId,
+                    user_role: session.role
                 }), 
             });
 
