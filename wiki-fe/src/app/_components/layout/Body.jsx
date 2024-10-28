@@ -16,7 +16,6 @@ export default function Body({ children }) {
                 
                 const data = await response.json();
 
-                console.log(data);
                 if (!response.ok) {
                     setErrorMessage(data.error);
                     return;

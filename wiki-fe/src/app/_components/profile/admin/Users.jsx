@@ -34,6 +34,8 @@ export default function Users() {
           setError(data.error);
           return;
         }
+        
+        data.sort((a, b) => new Date(b.date_joined) - new Date(a.date_joined));
 
         setUsers(data); 
         setOriginalUsers(data);
@@ -88,7 +90,7 @@ export default function Users() {
     }
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/user/list/${1}`, {
+      const response = await fetch(`http://127.0.0.1:8000/user/detail/email/${searchQuery}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -98,7 +100,7 @@ export default function Users() {
         setUsers([]); // Clear users if not found
         return;
       }
-
+      
       const data = await response.json();
       setUsers([data]); // Set only the searched user
       setError('');

@@ -7,7 +7,7 @@ export let metadata = {
 
 export default async function Page({ params }) {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/article/list/${params.articleId}`);
+        const response = await fetch(`http://127.0.0.1:8000/article/detail/${params.articleId}`);
         
         if (!response.ok) {
             throw new Error('Artigo não encontrado');

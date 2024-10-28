@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import ErrorMessage from "@/components/auth/ErrorMessage";
 import SuccessMessage from "@/components/auth/SuccessMessage";
-import '@/styles/article.css';
+import '@/styles/wiki/article.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 
@@ -11,6 +11,7 @@ export default function Comments({ params }) {
   const [newComment, setNewComment] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+
   const characterLimit = 1000;
 
   useEffect(() => {
@@ -26,14 +27,7 @@ export default function Comments({ params }) {
           setErrorMessage(data.error);
           return;
         }
-
-        if (data.message.length > 0) {
-          console.log(data.message);
-
-          setErrorMessage(data.message);
-          return;
-        }
-
+        
         const commentsWithLikes = data.map((comment) => ({
           ...comment,
           liked: false,
@@ -43,7 +37,7 @@ export default function Comments({ params }) {
 
         setComments(commentsWithLikes);
       } catch (err) {
-        setErrorMessage('Um erro ocorreu ao tentar carregar os comentários.');
+        return;
       }
     };
 
@@ -102,7 +96,7 @@ export default function Comments({ params }) {
         body: JSON.stringify({ likes: newLikes })
       });
     } catch (err) {
-      setErrorMessage('Um erro ocorreu ao tentar enviar o like.');
+      setErrorMessage('Um erro ocorreu2 ao tentar enviar o like.');
     }
   };
 
@@ -111,6 +105,7 @@ export default function Comments({ params }) {
       <hr style={{ border: 'none', borderTop: '1px solid #333', width: '95%', margin: '20px auto' }} />
 
       <h1 style={{ paddingBottom: '0px' }}>Comentários</h1>
+
       <div style={{ display: 'flex', justifyContent: 'flex-start', paddingLeft: '20px' }}>
         <ErrorMessage message={errorMessage} />
         <SuccessMessage message={successMessage} />

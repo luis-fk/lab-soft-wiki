@@ -28,7 +28,7 @@ export default function Info() {
     const fetchUser = async () => {
       try {
         const session = await getSession(); 
-        const response = await fetch(`http://127.0.0.1:8000/user/list/${session.userId}/`, {
+        const response = await fetch(`http://127.0.0.1:8000/user/detail/${session.userId}/`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
         });
