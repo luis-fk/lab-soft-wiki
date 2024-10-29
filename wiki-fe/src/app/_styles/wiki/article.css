@@ -9,3 +9,31 @@
     opacity: 0.7;
     width: 80%;
 }
+
+.header-article {
+    display: flex;
+    align-items: center;
+    margin-top: -20px;
+}
+
+.delete-link {
+    width: 100px;
+    padding: 10px;
+    background-color: red;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    color: white;
+}
+
+.delete-link:hover {
+    background-color: rgb(149, 3, 3);
+}
+
+.article-content {
+    margin-top: 10px;
+}
+
+.delete-article-container{
+    margin-left: auto
+}
