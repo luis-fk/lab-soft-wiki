@@ -1,9 +1,10 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { getSession } from '@/lib/session';
 import { useRouter } from 'next/navigation';
 import "@/styles/wiki/new-article.css";
 import ErrorMessage from "@/app/_components/auth/ErrorMessage";
+import Showdown from "showdown";
 
 export default function NewArticle() {
     const [text, setText] = useState('');
@@ -12,6 +13,39 @@ export default function NewArticle() {
 
     const router = useRouter();
 
+    const sd = new Showdown.Converter(
+        {
+            tables: true,
+            tasklists: true,
+            strikethrough: true,
+            emoji: true,
+            simpleLineBreaks: true,
+            openLinksInNewWindow: true,
+            backslashEscapesHTMLTags: true,
+            smoothLivePreview: true,
+            simplifiedAutoLink: true,
+            simpleLineBreaks: true,
+            requireSpaceBeforeHeadingText: true,
+            ghMentions: true,
+            ghMentionsLink: '/user/{u}',
+            ghCodeBlocks: true,
+            emoji: true,
+            underline: true,
+            completeHTMLDocument: true,
+            metadata: true,
+            parseImgDimensions: true,
+            encodeEmails: true,
+            openLinksInNewWindow: true
+        });
+
+    const previewRef = useRef(null);
+    
+    const setPreview = (text) => {
+        if (previewRef.current) {
+            previewRef.current.innerHTML = sd.makeHtml(text);
+        }
+    }
+    
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -30,13 +64,14 @@ export default function NewArticle() {
                 }), 
             });
 
+            const data = await response.json();
             
             if (!response.ok) {
-                const data = await response.json();
                 setErrorMessage(data.error);
                 return;
-            }
+            }       
 
+            router.push(`/wiki/${data.artigo_id}/${title.split(' ').join('-')}`);
         } catch (error) {
             const data = await response.json();
             setErrorMessage(data.error);
@@ -57,15 +92,29 @@ export default function NewArticle() {
                             required
                     />
                 </div>
+
                 <div className="text-container">
-                    <label htmlFor="text">Conteúdo do artigo</label>
+                    <div>
+                    <h2>Conteúdo do artigo</h2>
                         <textarea 
                             type="text"
                             id="text"
                             value={text}
-                            onChange={(e) => setText(e.target.value)}
+                            onChange={(e) => 
+                                {
+                                    setText(e.target.value)
+                                    setPreview(e.target.value)
+                                }}
                             required
                         />
+                    </div>
+                <div className="editor">
+
+                    <h2>Prévia do artigo</h2>
+                    <div className="preview-container">
+                        <div ref={previewRef} className="preview-text"></div>
+                    </div>
+                </div>
                 </div>
                 <div className="submitButton-container">
                     <button type="submit">Criar artigo</button>
