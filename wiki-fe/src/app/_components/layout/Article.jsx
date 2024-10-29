@@ -6,7 +6,7 @@ import Comments from '@/components/layout/Comments';
 import { getSession } from '@/lib/session';
 import Showdown from "showdown";
 
-export default async function Article({ params }) {
+export default function Article({ params }) {
     const [session, setSession] = useState(null);
     const textView = useRef(null);
 
@@ -45,16 +45,6 @@ export default async function Article({ params }) {
             textView.current.innerHTML = sd.makeHtml(params?.content);
         }
     }, [params]);
-
-    try {
-        await fetch(`http://127.0.0.1:8000/article/update/${params.articleId}/`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ views: params.articleViews + 1 }),
-      });   
-      } catch {}
 
     return (
         <div className='article-container'>

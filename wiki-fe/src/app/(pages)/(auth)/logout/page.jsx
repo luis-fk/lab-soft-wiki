@@ -1,16 +1,24 @@
-'use client'
-import React from 'react'
+'use client';
+
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { terminateSession, getSession } from '@/lib/session'
+import { terminateSession, getSession } from '@/lib/session';
 
-export default async function page() {
+export default function Page() {
     const router = useRouter();
-    const session = getSession();
 
-    if(session){
-        await terminateSession();
-        router.push('/');
-    }
+    useEffect(() => {
+        const session = getSession();
 
-    return <></>
+        if (session) {
+            const logout = async () => {
+                await terminateSession();
+                router.push('/');
+            };
+
+            logout();
+        }
+    }, [router]);
+
+    return <></>;
 }

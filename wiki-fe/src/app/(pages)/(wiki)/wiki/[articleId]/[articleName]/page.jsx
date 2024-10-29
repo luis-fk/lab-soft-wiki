@@ -16,6 +16,16 @@ export default async function Page({ params }) {
 
         metadata.title = article.title;
 
+        try {
+            await fetch(`http://127.0.0.1:8000/article/update/${article.id}/`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ views: article.views + 1 }),
+          });   
+          } catch {}
+
         return (
             <Article
                 params={{
