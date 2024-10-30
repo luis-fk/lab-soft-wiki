@@ -27,17 +27,6 @@
     text-decoration: none; 
 }
 
-.search {
-    width: 600px;
-    font-size: 15px;
-    line-height: 15px;
-    border-radius: 25px;
-    padding: 10px 15px;
-    margin-left: auto;
-    margin-right: auto;
-    border: 1px solid #ccc;
-}
-
 .header-links {
     display: flex;
     margin-left: auto;
