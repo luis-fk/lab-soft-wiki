@@ -1,6 +1,6 @@
 import React from 'react'
 import Info from '@/components/info/Info'
-import Terms from '@/assets/json/privacy-policy.json'
+import About from '@/assets/json/about.json'
 
 export const metadata = {
   title: 'Sobre a WikiDengue',
@@ -8,6 +8,6 @@ export const metadata = {
 
 export default function page() {
   return (
-    <Info params={{ content: Terms.terms}} />
+    <Info params={{ content: About.about}} />
   )
 }

@@ -95,8 +95,7 @@ export default function Header() {
             />
 
             <div className="header-links">
-                <Link href="/">Por que contribuir?</Link>
-                <Link href="/">Fórum</Link>
+                <Link href="/porque-contribuir">Por que contribuir?</Link>
                 <Link href="/">Clima</Link>
 
                 {session ? (
