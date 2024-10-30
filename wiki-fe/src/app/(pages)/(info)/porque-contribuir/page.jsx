@@ -1,13 +1,13 @@
 import React from 'react'
 import Info from '@/components/info/Info'
-import Terms from '@/assets/json/privacy-policy.json'
+import HowToHelp from '@/assets/json/how-to-help.json'
 
 export const metadata = {
-  title: 'Sobre a WikiDengue',
+  title: 'Por que contribuir?',
 }
 
 export default function page() {
   return (
-    <Info params={{ content: Terms.terms}} />
+    <Info params={{ content: HowToHelp.content}} />
   )
 }
