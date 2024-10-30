@@ -9,7 +9,7 @@ export async function POST(req, res) {
     });
 
     const sentFrom = new Sender("MS_Z8gxHh@trial-0r83ql31emzgzw1j.mlsender.net", email);
-    const recipients = [new Recipient("felipekorbes@live.br", "Felipe Korbes")];
+    const recipients = [new Recipient("felipekorbes@usp.br", "Felipe Korbes")];
 
     const emailParams = new EmailParams()
         .setFrom(sentFrom)

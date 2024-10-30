@@ -2,11 +2,12 @@
 import "@/styles/info/contact-form.css";
 import ErrorMessage from '@/components/auth/ErrorMessage';
 import SuccessMessage from '@/components/auth/SuccessMessage';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef  } from 'react';
 
 export default function ContactForm() {
     const [errorMessage, setErrorMessage] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
+    const formRef = useRef(null);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -38,12 +39,13 @@ export default function ContactForm() {
             });
 
             const message = await response.json();
-            if (!response.ok || message.message.includes("Ocorreu algum erro")) {
-                setErrorMessage(message.message);
+            if (message.message.includes("Ocorreu algum erro")) {
+                setErrorMessage("Ocorreu um erro ao enviar o email, por favor tente novamente mais tarde!");
                 return;
             }
             
             setSuccessMessage(message.message);
+            formRef.current.reset();
         } catch (error) {
             setErrorMessage("Ocorreu um erro ao enviar o email, por favor tente novamente mais tarde!");
         }
@@ -52,7 +54,7 @@ export default function ContactForm() {
     return (
         <div className="contact-container">
             <h2>Entre em contato</h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} ref={formRef}>
                 <div>
                     <label htmlFor="subject">Assunto</label>
                     <input type="text" name="subject" placeholder="Assunto" required />
