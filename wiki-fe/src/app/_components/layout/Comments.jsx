@@ -33,7 +33,12 @@ export default function Comments({ params }) {
           liked: false,
         }));
 
-        commentsWithLikes.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        commentsWithLikes.sort((a, b) => {
+          if (b.likes !== a.likes) {
+              return b.likes - a.likes;
+          }
+          return new Date(b.created_at) - new Date(a.created_at);
+      });
 
         setComments(commentsWithLikes);
       } catch (err) {
