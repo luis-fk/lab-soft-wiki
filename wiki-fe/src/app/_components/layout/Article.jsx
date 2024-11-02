@@ -64,9 +64,8 @@ export default function Article({ params }) {
                 }), 
             });
 
-            const message = await response.json();
             if (!response.ok) {
-                setErrorMessage(message.message || "Ocorreu um erro ao deletar o artigo.");
+                setErrorMessage("Ocorreu um erro ao deletar o artigo.");
                 return;
             }
             router.push('/');     
