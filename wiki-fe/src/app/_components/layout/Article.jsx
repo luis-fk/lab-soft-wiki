@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect  } from 'react';
 import ErrorMessage from '@/components/auth/ErrorMessage';
 import Comments from '@/components/layout/Comments';
 import '@/styles/wiki/article.css'; 
@@ -80,22 +80,32 @@ export default function Article({ params }) {
                 {errorMessage && <ErrorMessage message={errorMessage} />}
                 <div className="header-article">
                     <h1>{params?.title}</h1>
-                    <div className="delete-article-container">
-                        {session?.role !== 'user' && session && (
-                            <Link 
-                                href="#" 
-                                onClick={(e) => { 
-                                    const confirmed = confirm('Você tem certeza que deseja deletar o artigo?');
-                                    e.preventDefault();
+                    <div className="modify-article-container">
+                        {
+                        session?.role !== 'user' && session && (
+                            <div className='box-modify'>
+                                <button 
+                                    onClick={(e) => {
+                                        router.push(`/editar-artigo/${params?.articleId}`);
+                                    }}                                    
+                                    className="edit-article">
+                                    <h1>Editar</h1>
+                                </button>
+                                <button
+                                    onClick={(e) => {
+                                        const confirmed = confirm('Você tem certeza que deseja deletar o artigo?');
+                                        e.preventDefault();
 
-                                    if (confirmed) {
-                                        handleDelete(e);
-                                    }
-                                }}
-                                className="delete-link">
-                                Deletar Artigo
-                            </Link>
-                        )}
+                                        if (confirmed) {
+                                            handleDelete(e);
+                                        }
+                                    } }
+                                    className="delete-link">
+                                        <h1>Deletar</h1>
+                                    </button>
+                            </div>
+                        )
+                        }
                     </div>
                 </div>
                 <p className="article-content" ref={textView}></p>

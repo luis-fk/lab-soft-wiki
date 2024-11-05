@@ -45,13 +45,19 @@
 }
 
 .delete-link {
-    width: 100px;
+    width: 100px;   
     padding: 10px;
     background-color: red;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-decoration: none;
     color: white;
+}
+
+.delete-link h1 {
+    font-size: 14px;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
 }
 
 .delete-link:hover {
@@ -62,6 +68,34 @@
     margin-top: 10px;
 }
 
-.delete-article-container{
+.modify-article-container{
     margin-left: auto
+}
+
+.box-modify{
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit-article{
+    margin-right: 15px;
+
+    width: 100px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    color: white;
+}
+
+.edit-article h1 {
+    font-size: 14px;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+}
+
+.edit-article:hover {
+    background-color: rgb(226, 226, 226);
 }
