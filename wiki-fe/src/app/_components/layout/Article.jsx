@@ -1,14 +1,16 @@
 'use client';
 import Link from 'next/link';
 import React, { useState, useRef, useEffect } from 'react';
-import '@/styles/wiki/article.css';
+import ErrorMessage from '@/components/auth/ErrorMessage';
 import Comments from '@/components/layout/Comments';
+import '@/styles/wiki/article.css'; 
 import { getSession } from '@/lib/session';
 import { useRouter } from 'next/navigation';
 import Showdown from "showdown";
 
 export default function Article({ params }) {
     const [session, setSession] = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
     const textView = useRef(null);
     const router = useRouter();
 
@@ -62,48 +64,41 @@ export default function Article({ params }) {
                 }), 
             });
 
-            if (response.ok) {
-                router.push('/'); 
-            } else {
-                console.error('Erro ao deletar o artigo:', response.statusText);
+            if (!response.ok) {
+                setErrorMessage("Ocorreu um erro ao deletar o artigo.");
+                return;
             }
+            router.push('/');     
         } catch (error) {
-            console.error(error);
+            setErrorMessage("Não foi possível deletar o artigo.");
         }
     };
 
     return (
         <>
             <div className='article-container'>
-                <div className="header-article" style={{ display: 'flex', alignItems: 'center', marginTop: '-20px' }}>
+                {errorMessage && <ErrorMessage message={errorMessage} />}
+                <div className="header-article">
                     <h1>{params?.title}</h1>
-                    <div style={{ marginLeft: 'auto' }}>
+                    <div className="delete-article-container">
                         {session?.role !== 'user' && session && (
-                            <Link style={{  
-                                width: '100px',
-                                padding: '10px',
-                                backgroundColor: 'red',
-                                borderRadius: '8px',
-                                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-                                textDecoration: 'none',
-                                color:'white'
-                            }}
-                            href="#" 
-                            onClick={(e) => { 
-                                const confirmed = confirm('Você tem certeza que deseja deletar o artigo?');
-                                e.preventDefault();
+                            <Link 
+                                href="#" 
+                                onClick={(e) => { 
+                                    const confirmed = confirm('Você tem certeza que deseja deletar o artigo?');
+                                    e.preventDefault();
 
-                                if(confirmed) {
-                                    handleDelete(e);
-                                }
-                            }}
-                            className="delete-link">
+                                    if (confirmed) {
+                                        handleDelete(e);
+                                    }
+                                }}
+                                className="delete-link">
                                 Deletar Artigo
                             </Link>
                         )}
                     </div>
                 </div>
-                <p style={{ marginTop: '20px' }} ref={textView}></p>
+                <p className="article-content" ref={textView}></p>
 
                 {params.isValidArticle && (
                     <Comments params={{ articleId: params?.articleId, userId: session?.userId }} />
