@@ -5,8 +5,8 @@ export let metadata = {
     title: 'Criar Artigo',
 }
 
-export default function page({params}) {
+export default function page() {
     return (
-        <EditArticle articleId={params.articleId}/>
+        <EditArticle/>
     )
 }

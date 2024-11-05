@@ -1,18 +1,34 @@
 "use client"
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { getSession } from '@/lib/session';
 import { useRouter } from 'next/navigation';
 import "@/styles/wiki/new-article.css";
 import ErrorMessage from "@/app/_components/auth/ErrorMessage";
 import Showdown from "showdown";
-import {useParams} from 'react-router-dom';
 
-export default function EditArticle({articleId}) {
+// Importes do Context 
+import { ArticleContext } from '@/app/contexts/articleProvider';
+import { useContext } from 'react';
+
+export default function EditArticle() {
     const router = useRouter();
     const [text, setText] = useState('');
     const [title, setTitle] = useState('');
+    const [articleId, setArticleId] = useState('');
     const [errorMessage, setErrorMessage] = useState(null);
-    console.log(articleId)
+
+    // utilizo { article } pra pegar um dos parametros do contexto que estão no ArticleProvider
+    const { article } = useContext(ArticleContext);
+
+    // executa apenas uma vez ao carregar a página
+    useEffect(() =>{
+        setArticleId(article.articleId);
+        setText(article.text);
+        setTitle(article.title);
+        //renderiza
+        setPreview(article.text);
+
+    }, []);
 
 
     const sd = new Showdown.Converter(
@@ -53,7 +69,7 @@ export default function EditArticle({articleId}) {
         try {
             const session = await getSession();
 
-            const response = await fetch('http://127.0.0.1:8000/article/create/', {
+            const response = await fetch('http://127.0.0.1:8000/article/update/', {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',
@@ -61,7 +77,7 @@ export default function EditArticle({articleId}) {
                 body: JSON.stringify({
                     title,
                     text,
-                    user_id: session.userId,
+                    article_id: articleId,
                     user_role: session.role
                 }), 
             });

@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import React, { useState, useRef, useEffect  } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import ErrorMessage from '@/components/auth/ErrorMessage';
 import Comments from '@/components/layout/Comments';
 import '@/styles/wiki/article.css'; 
@@ -8,11 +8,19 @@ import { getSession } from '@/lib/session';
 import { useRouter } from 'next/navigation';
 import Showdown from "showdown";
 
+// Importes do Context: o contexto ArticleContext e o ArticleProvider
+import { useContext } from 'react';
+import { ArticleContext } from '../../contexts/articleProvider';
+import ArticleProvider from '@/app/contexts/articleProvider';
+
 export default function Article({ params }) {
     const [session, setSession] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
     const textView = useRef(null);
     const router = useRouter();
+
+    // Utiliza o contexto para pegar a função handleArticle
+    const { handleArticle } = useContext(ArticleContext);
 
     const sd = new Showdown.Converter({
         tables: true,
@@ -75,7 +83,6 @@ export default function Article({ params }) {
     };
 
     return (
-        <>
             <div className='article-container'>
                 {errorMessage && <ErrorMessage message={errorMessage} />}
                 <div className="header-article">
@@ -86,6 +93,8 @@ export default function Article({ params }) {
                             <div className='box-modify'>
                                 <button 
                                     onClick={(e) => {
+                                        // Utiliza a função
+                                        handleArticle(params?.title, params?.content, params?.articleId);
                                         router.push(`/editar-artigo/${params?.articleId}`);
                                     }}                                    
                                     className="edit-article">
@@ -114,6 +123,5 @@ export default function Article({ params }) {
                     <Comments params={{ articleId: params?.articleId, userId: session?.userId }} />
                 )}
             </div>
-        </>
     );
 }
