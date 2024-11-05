@@ -59,8 +59,10 @@ export default function Body({ children }) {
                 ))}
 
           </div>
-
-          {children}
+          
+          <div className="body-children">
+            {children}
+          </div>
       </div>
   )
 }
