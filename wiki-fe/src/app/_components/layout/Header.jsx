@@ -25,11 +25,6 @@ export default function Header() {
         fetchSession();
     }, []);
 
-    useEffect(() => {
-        console.log("Updated allArticles:", allArticles);
-    }, [allArticles]);
-    
-
     const fetchAllArticles = async () => {
         try {
             const response = await fetch(`http://127.0.0.1:8000/article/list/`);
@@ -100,6 +95,7 @@ export default function Header() {
 
                 {session ? (
                     <>
+                        <Link href="/denuncia">Denuncia</Link>
                         <Link href="/logout">Sair</Link>
                         <Link href="/perfil">Perfil</Link>
                     </>
