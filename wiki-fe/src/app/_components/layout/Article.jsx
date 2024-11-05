@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React, { useState, useRef, useEffect } from 'react';
 import ErrorMessage from '@/components/auth/ErrorMessage';
 import Comments from '@/components/layout/Comments';
-import '@/styles/wiki/article.css'; // Certifique-se de que o caminho esteja correto
+import '@/styles/wiki/article.css'; 
 import { getSession } from '@/lib/session';
 import { useRouter } from 'next/navigation';
 import Showdown from "showdown";
