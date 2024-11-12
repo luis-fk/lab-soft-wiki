@@ -31,3 +31,8 @@
     text-decoration: underline;
 }
 
+.body-children {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+}
