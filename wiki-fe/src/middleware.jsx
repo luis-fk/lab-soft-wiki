@@ -14,7 +14,8 @@ export async function middleware(req) {
   // Define the access control list, {route: [roles_with_access]}
   const accessControl ={
     'admin': ['admin'],
-    'novo-artigo': ['admin', 'staff']
+    'novo-artigo': ['admin', 'staff'],
+    'editar-artigo': ['admin', 'staff']
   };
 
   // primeira palavra depois do '/'
@@ -32,5 +33,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/novo-artigo'],
+  matcher: ['/admin/:path*', '/novo-artigo', '/editar-artigo/:path*'],
 };

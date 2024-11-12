@@ -8,11 +8,19 @@ import { getSession } from '@/lib/session';
 import { useRouter } from 'next/navigation';
 import Showdown from "showdown";
 
+// Importes do Context: o contexto ArticleContext e o ArticleProvider
+import { useContext } from 'react';
+import { ArticleContext } from '../../contexts/articleProvider';
+import ArticleProvider from '@/app/contexts/articleProvider';
+
 export default function Article({ params }) {
     const [session, setSession] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
     const textView = useRef(null);
     const router = useRouter();
+
+    // Utiliza o contexto para pegar a função handleArticle
+    const { handleArticle } = useContext(ArticleContext);
 
     const sd = new Showdown.Converter({
         tables: true,
@@ -75,27 +83,38 @@ export default function Article({ params }) {
     };
 
     return (
-        <>
             <div className='article-container'>
                 {errorMessage && <ErrorMessage message={errorMessage} />}
                 <div className="header-article">
                     <h1>{params?.title}</h1>
-                    <div className="delete-article-container">
-                        {session?.role !== 'user' && session && (
-                            <Link 
-                                href="#" 
-                                onClick={(e) => { 
-                                    const confirmed = confirm('Você tem certeza que deseja deletar o artigo?');
-                                    e.preventDefault();
+                    <div className="modify-article-container">
+                        {
+                        session?.role !== 'user' && session && (
+                            <div className='box-modify'>
+                                <button 
+                                    onClick={(e) => {
+                                        // Utiliza a função
+                                        handleArticle(params?.title, params?.content, params?.articleId);
+                                        router.push(`/editar-artigo/${params?.articleId}`);
+                                    }}                                    
+                                    className="edit-article">
+                                    <h1>Editar</h1>
+                                </button>
+                                <button
+                                    onClick={(e) => {
+                                        const confirmed = confirm('Você tem certeza que deseja deletar o artigo?');
+                                        e.preventDefault();
 
-                                    if (confirmed) {
-                                        handleDelete(e);
-                                    }
-                                }}
-                                className="delete-link">
-                                Deletar Artigo
-                            </Link>
-                        )}
+                                        if (confirmed) {
+                                            handleDelete(e);
+                                        }
+                                    } }
+                                    className="delete-link">
+                                        <h1>Deletar</h1>
+                                    </button>
+                            </div>
+                        )
+                        }
                     </div>
                 </div>
                 <p className="article-content" ref={textView}></p>
@@ -104,6 +123,5 @@ export default function Article({ params }) {
                     <Comments params={{ articleId: params?.articleId, userId: session?.userId }} />
                 )}
             </div>
-        </>
     );
 }
