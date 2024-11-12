@@ -37,6 +37,7 @@ export default function Report() {
             const formData = new FormData(event.target);
 
             const reportData = {
+                state: formData.get('state'),
                 city: formData.get('city'),
                 district: formData.get('district'),
                 street: formData.get('street'),
@@ -73,6 +74,11 @@ export default function Report() {
         <div className="contact-container">
             <h2>Faça uma denúncia sobre um caso de dengue na sua região</h2>
             <form onSubmit={handleSubmit} ref={formRef}>
+                <div>
+                    <label htmlFor="state">Estado</label>
+                    <input type="text" name="state" placeholder="Estado" required />
+                </div>
+
                 <div>
                     <label htmlFor="city">Cidade</label>
                     <input type="text" name="city" placeholder="Cidade" required />
