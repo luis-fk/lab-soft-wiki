@@ -1,7 +1,7 @@
 "use client"
 import "@/styles/auth/sign-up.css";
 import Link from 'next/link';
-import TermsBox from '@/components/auth/TermsBox';
+import TermsBox from '@/components/info/Terms';
 import ErrorMessage from './ErrorMessage';
 import { authenticate } from '@/lib/session'
 import { useRouter } from 'next/navigation';
