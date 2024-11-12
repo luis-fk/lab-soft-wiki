@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
 class EnderecoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Endereco
-        fields = ('id', 'cidade', 'bairro', 'rua', 'numero', 'complemento')
+        fields = ('id', 'estado','cidade', 'bairro', 'rua', 'numero', 'complemento')
 
 class ArtigoSerializer(serializers.ModelSerializer):
     user_name = serializers.SerializerMethodField()
@@ -32,7 +32,7 @@ class DenunciaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Denuncia
-        fields = ('id', 'title', 'text', 'user', 'endereco')
+        fields = ('id', 'text', 'user', 'endereco')
 
     def create(self, validated_data):
         endereco_data = validated_data.pop('endereco')

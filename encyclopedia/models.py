@@ -16,6 +16,7 @@ class User(AbstractUser):
         return self.name
 
 class Endereco(models.Model):
+    estado = models.CharField(max_length=255, default="São Paulo")
     cidade = models.CharField(max_length=255)
     bairro = models.CharField(max_length=255)
     rua = models.CharField(max_length=255)
@@ -26,7 +27,6 @@ class Endereco(models.Model):
         return f"{self.rua}, {self.numero}, {self.cidade}"
 
 class Denuncia(models.Model):
-    title = models.CharField(max_length=255)
     text = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     endereco = models.ForeignKey(Endereco, on_delete=models.CASCADE)
