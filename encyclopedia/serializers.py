@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
 class EnderecoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Endereco
-        fields = ('id', 'cidade', 'bairro', 'rua', 'numero', 'complemento')
+        fields = ('id', 'estado','cidade', 'bairro', 'rua', 'numero', 'complemento')
 
 class ArtigoSerializer(serializers.ModelSerializer):
     user_name = serializers.SerializerMethodField()

@@ -16,6 +16,7 @@ class User(AbstractUser):
         return self.name
 
 class Endereco(models.Model):
+    estado = models.CharField(max_length=255, default="São Paulo")
     cidade = models.CharField(max_length=255)
     bairro = models.CharField(max_length=255)
     rua = models.CharField(max_length=255)
