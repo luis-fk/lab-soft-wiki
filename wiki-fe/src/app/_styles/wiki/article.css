@@ -62,6 +62,7 @@
 
 .delete-link:hover {
     background-color: rgb(149, 3, 3);
+    cursor: pointer;
 }
 
 .article-content {
@@ -98,4 +99,5 @@
 
 .edit-article:hover {
     background-color: rgb(226, 226, 226);
+    cursor: pointer;
 }

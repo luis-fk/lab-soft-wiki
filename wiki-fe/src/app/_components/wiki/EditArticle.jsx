@@ -68,9 +68,9 @@ export default function EditArticle() {
         event.preventDefault();
         try {
             const session = await getSession();
-
-            const response = await fetch('http://127.0.0.1:8000/article/update/', {
-                method: 'POST',
+            
+            const response = await fetch(`http://127.0.0.1:8000/article/update/${articleId}/`, {
+                method: 'PUT',
                 headers: { 
                     'Content-Type': 'application/json',
                 },
@@ -81,25 +81,29 @@ export default function EditArticle() {
                     user_role: session.role
                 }), 
             });
-
-            const data = await response.json();
             
             if (!response.ok) {
-                setErrorMessage(data.error);
+                setErrorMessage("Não foi possivel editar o artigo!");
                 return;
             }       
 
-            router.push(`/wiki/${data.artigo_id}/${title.split(' ').join('-')}`);
+            router.push(`/wiki/${articleId}/${title.split(' ').join('-')}`);
         } catch (error) {
-            const data = await response.json();
-            setErrorMessage(data.error);
-            return;
+            setErrorMessage("Não foi possivel editar o artigo!");
+            console.log(error);
         }
     };
 
     return (
         <div className="create-article-container">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={(e) => {
+                const confirmed = confirm('Você confirma as atualizações?');
+                e.preventDefault();
+
+                if (confirmed) {
+                    handleSubmit(e);
+                }
+            }}>
                 <div className="title-container">
                     <label htmlFor="title">Título do artigo</label>
                         <textarea 
