@@ -28,6 +28,7 @@
 }
 
 .header-links {
+    align-items: center;
     display: flex;
     margin-left: auto;
     gap: 20px;
