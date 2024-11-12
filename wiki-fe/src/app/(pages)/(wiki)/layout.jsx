@@ -19,11 +19,10 @@ export default function WikiLayout({ children }) {
         
         <Header />
         {/* ArticleProvider recebe todos os parametros de children */}
-        <ArticleProvider> 
+
           <Body> 
             {children}
           </Body>
-        </ArticleProvider>
 
         <Footer />
       </body>
