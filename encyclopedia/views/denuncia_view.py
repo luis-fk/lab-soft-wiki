@@ -10,13 +10,48 @@ from encyclopedia.helpers import check_role
 # CRUD para Denuncia
 
 # Criar uma nova denúncia
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from django.shortcuts import get_object_or_404
+from encyclopedia.models import Denuncia, Endereco, User
+from encyclopedia.serializers import DenunciaSerializer
+
+# Criar uma nova denúncia, instanciando já o endereço dela
 @api_view(['POST'])
 def create_denuncia(request):
-    serializer = serializers.DenunciaSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save(user=request.user)  # Define o usuário logado como o autor da denúncia
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # Extrai os dados do JSON recebido
+    user_id = request.data.get('id')
+    state = request.data.get('state')
+    city = request.data.get('city')
+    district = request.data.get('district')
+    street = request.data.get('street')
+    number = request.data.get('number')
+    text = request.data.get('text')
+
+    # Verifica se o usuário existe
+    user = get_object_or_404(User, id=user_id)
+
+    # Cria o endereço com os dados fornecidos
+    endereco = Endereco.objects.create(
+        estado=state,
+        cidade=city,
+        bairro=district,
+        rua=street,
+        numero=number
+    )
+
+    # Cria a denúncia associada ao usuário e ao endereço
+    denuncia = Denuncia.objects.create(
+        text=text,
+        user=user,
+        endereco=endereco
+    )
+
+    # Serializa a denúncia para retornar a resposta
+    serializer = DenunciaSerializer(denuncia)
+    return Response("Denuncia criada com sucesso!", status=status.HTTP_201_CREATED)
+
 
 # Listar todas as denúncias
 @api_view(['GET'])
