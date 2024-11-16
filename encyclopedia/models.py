@@ -65,3 +65,8 @@ class Comentario(models.Model):
 
     def __str__(self):
         return f"Comment by User {self.user_id} on Article {self.article_id}"
+
+class SiteInfo(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    text = models.TextField()

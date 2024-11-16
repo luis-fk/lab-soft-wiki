@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Endereco, Denuncia, Historico, Artigo, Comentario
+from .models import User, Endereco, Denuncia, Historico, Artigo, Comentario, SiteInfo
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -70,3 +70,13 @@ class ComentarioSerializer(serializers.ModelSerializer):
             return user.role
         except User.DoesNotExist:
             return None
+        
+class SiteInfoSerializer(serializers.ModelSerializer):
+    title = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
+    text = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = SiteInfo
+        fields = ['id', 'text', 'title', 'description']
+        read_only_fields = ['id']
