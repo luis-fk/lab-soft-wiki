@@ -7,6 +7,7 @@ from .views import (
     denuncia_view,
     endereco_view,
     user_view,
+    siteinfo_view,
     view  # Certifique-se de que `view.py` está corretamente importado
 )
 
@@ -57,4 +58,10 @@ urlpatterns = [
     path("denuncia/list/", denuncia_view.list_denuncias, name="list_denuncias"),
     path("denuncia/update/<int:denuncia_id>/", denuncia_view.update_denuncia, name="update_denuncia"),
     path("denuncia/delete/<int:denuncia_id>/", denuncia_view.delete_denuncia, name="delete_denuncia"),
+    
+    #URLs para SiteInfo (siteinfo_view.py)
+    path("siteinfo/", siteinfo_view.list_siteinfos, name="list_siteinfos"),
+    path("siteinfo/create/", siteinfo_view.create_siteinfo, name="create_siteinfo"),
+    path("siteinfo/update/<int:siteinfo_id>/", siteinfo_view.update_siteinfo, name="update_siteinfo"),
+    path("siteinfo/delete/<int:siteinfo_id>/", siteinfo_view.delete_siteinfo, name="delete_siteinfo"),
 ]

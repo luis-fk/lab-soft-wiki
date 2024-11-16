@@ -72,11 +72,7 @@ class ComentarioSerializer(serializers.ModelSerializer):
             return None
         
 class SiteInfoSerializer(serializers.ModelSerializer):
-    title = serializers.SerializerMethodField()
-    description = serializers.SerializerMethodField()
-    text = serializers.SerializerMethodField()
-    
     class Meta:
         model = SiteInfo
-        fields = ['id', 'text', 'title', 'description']
+        fields = ['id', 'title', 'description', 'text']
         read_only_fields = ['id']

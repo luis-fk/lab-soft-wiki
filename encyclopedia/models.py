@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
+from django.utils.timezone import now
 
 class User(AbstractUser):
     ROLE_CHOICES = [
@@ -70,3 +71,5 @@ class SiteInfo(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     text = models.TextField()
+    created_at = models.DateTimeField(default=now, editable=False)
+    updated_at = models.DateTimeField(auto_now=True)
