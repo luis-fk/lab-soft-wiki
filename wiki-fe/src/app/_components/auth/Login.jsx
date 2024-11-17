@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import ErrorMessage from './ErrorMessage';
 import { authenticate } from '@/lib/session'
 import "@/styles/auth/login.css";
+import Link from 'next/link';
 
 export default function Login() {
     const [errorMessage, setErrorMessage] = useState(null);
@@ -37,6 +38,8 @@ export default function Login() {
                 <label htmlFor="password">Senha</label>
                 <input type="password" name="password" placeholder="Password" required />
             </div>
+
+            <p>Ainda nao possui uma conta? <Link href="/cadastrar">Cadastre-se</Link></p>
 
             <div className="submitButton-container">
                 <button type="submit">Entrar</button>

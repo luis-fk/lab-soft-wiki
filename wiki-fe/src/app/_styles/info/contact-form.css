@@ -1,6 +1,9 @@
 /* styles/contact/contact-form.css */
 
 .contact-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
     padding: 20px;
     border-radius: 8px;
     margin-left: 20px;
