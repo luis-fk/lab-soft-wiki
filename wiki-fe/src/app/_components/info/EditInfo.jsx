@@ -1,11 +1,11 @@
 "use client"
 import "@/styles/info/edit-info.css";
 import ErrorMessage from "@/components/auth/ErrorMessage";
-import Showdown from "showdown";
 import { useRouter } from 'next/navigation';
 import { useContext } from 'react';
 import { InfoContext } from '@/contexts/infoProvider';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import useMarkdownToHtml from '@/hooks/markdownToHtml';
 
 export default function EditArticle() {
     const router = useRouter();
@@ -20,41 +20,7 @@ export default function EditArticle() {
         setInfoId(info.id);
         setText(info.text);
         setTitle(info.title);
-        setPreview(info.text);
     }, []);
-
-    const sd = new Showdown.Converter(
-        {
-            tables: true,
-            tasklists: true,
-            strikethrough: true,
-            emoji: true,
-            simpleLineBreaks: true,
-            openLinksInNewWindow: true,
-            backslashEscapesHTMLTags: true,
-            smoothLivePreview: true,
-            simplifiedAutoLink: true,
-            simpleLineBreaks: true,
-            requireSpaceBeforeHeadingText: true,
-            ghMentions: true,
-            ghMentionsLink: '/user/{u}',
-            ghCodeBlocks: true,
-            emoji: true,
-            underline: true,
-            completeHTMLDocument: true,
-            metadata: true,
-            parseImgDimensions: true,
-            encodeEmails: true,
-            openLinksInNewWindow: true
-        });
-
-    const previewRef = useRef(null);
-    
-    const setPreview = (text) => {
-        if (previewRef.current) {
-            previewRef.current.innerHTML = sd.makeHtml(text);
-        }
-    }
     
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -113,7 +79,6 @@ export default function EditArticle() {
                             onChange={(e) => 
                                 {
                                     setText(e.target.value)
-                                    setPreview(e.target.value)
                                 }}
                             required
                         />
@@ -122,7 +87,7 @@ export default function EditArticle() {
 
                     <h2>Prévia do texto</h2>
                     <div className="preview-container">
-                        <div ref={previewRef} className="preview-text"></div>
+                        <div ref={useMarkdownToHtml(text)} className="preview-text"></div>
                     </div>
                 </div>
                 </div>

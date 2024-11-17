@@ -2,34 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import '@/styles/layout/trending-topics.css';
 import Link from 'next/link';
-import Showdown from 'showdown';
+import sd from '@/hooks/Showdown';
 
 export default function TrendingTopics() {
     const [articles, setArticles] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
 
     const CHARACTER_LIMIT = 100; 
-
-    const sd = new Showdown.Converter({
-        tables: true,
-        tasklists: true,
-        strikethrough: true,
-        emoji: true,
-        simpleLineBreaks: true,
-        openLinksInNewWindow: true,
-        backslashEscapesHTMLTags: true,
-        smoothLivePreview: true,
-        simplifiedAutoLink: true,
-        requireSpaceBeforeHeadingText: true,
-        ghMentions: true,
-        ghMentionsLink: '/user/{u}',
-        ghCodeBlocks: true,
-        underline: true,
-        completeHTMLDocument: true,
-        metadata: true,
-        parseImgDimensions: true,
-        encodeEmails: true
-    });
 
     useEffect(() => {
         const fetchArticles = async () => {

@@ -1,45 +1,24 @@
 'use client';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import ErrorMessage from '@/components/auth/ErrorMessage';
 import Comments from '@/components/layout/Comments';
 import '@/styles/wiki/article.css'; 
 import { getSession } from '@/lib/session';
 import { useRouter } from 'next/navigation';
-import Showdown from "showdown";
 
 // Importes do Context: o contexto ArticleContext e o ArticleProvider
 import { useContext } from 'react';
 import { ArticleContext } from '@/contexts/articleProvider';
 
+import useMarkdownToHtml from '@/hooks/markdownToHtml';
+
 export default function Article({ params }) {
     const [session, setSession] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
-    const textView = useRef(null);
     const router = useRouter();
 
     // Utiliza o contexto para pegar a função handleArticle
     const { handleArticle } = useContext(ArticleContext);
-
-    const sd = new Showdown.Converter({
-        tables: true,
-        tasklists: true,
-        strikethrough: true,
-        emoji: true,
-        simpleLineBreaks: true,
-        openLinksInNewWindow: true,
-        backslashEscapesHTMLTags: true,
-        smoothLivePreview: true,
-        simplifiedAutoLink: true,
-        requireSpaceBeforeHeadingText: true,
-        ghMentions: true,
-        ghMentionsLink: '/user/{u}',
-        ghCodeBlocks: true,
-        underline: true,
-        completeHTMLDocument: true,
-        metadata: true,
-        parseImgDimensions: true,
-        encodeEmails: true
-    });
 
     useEffect(() => {
         async function fetchSession() {
@@ -49,12 +28,6 @@ export default function Article({ params }) {
 
         fetchSession();
     }, []);
-
-    useEffect(() => {
-        if (textView.current) {
-            textView.current.innerHTML = sd.makeHtml(params?.content);
-        }
-    }, [params]);
 
     const handleDelete = async (event) => {
         event?.preventDefault(); 
@@ -115,7 +88,7 @@ export default function Article({ params }) {
                         }
                     </div>
                 </div>
-                <p className="article-content" ref={textView}></p>
+                <p className="article-content" ref={useMarkdownToHtml(params?.content)}></p>
 
                 {params.isValidArticle && (
                     <Comments params={{ articleId: params?.articleId, userId: session?.userId }} />
