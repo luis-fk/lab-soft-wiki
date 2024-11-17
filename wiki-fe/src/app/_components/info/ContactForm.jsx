@@ -53,7 +53,6 @@ export default function ContactForm() {
 
     return (
         <div className="contact-container">
-            <h2>Entre em contato</h2>
             <form onSubmit={handleSubmit} ref={formRef}>
                 <div>
                     <label htmlFor="subject">Assunto</label>

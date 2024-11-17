@@ -8,8 +8,17 @@ from encyclopedia.serializers import SiteInfoSerializer
 # Listar todos os SiteInfos
 @api_view(['GET'])
 def list_siteinfos(request):
-    siteinfos = SiteInfo.objects.all()
-    serializer = SiteInfoSerializer(siteinfos, many=True)
+    site_id = request.query_params.get('id')  
+    if site_id:  
+        try:
+            siteinfo = SiteInfo.objects.get(id=site_id) 
+            serializer = SiteInfoSerializer(siteinfo) 
+        except SiteInfo.DoesNotExist:
+            return Response({"error": "SiteInfo with this ID does not exist."}, status=status.HTTP_404_NOT_FOUND)
+    else:
+        siteinfos = SiteInfo.objects.all()  
+        serializer = SiteInfoSerializer(siteinfos, many=True)
+
     return Response(serializer.data)
 
 # Criar um novo SiteInfo

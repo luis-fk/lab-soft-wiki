@@ -3,7 +3,7 @@ import { Card, CardContent, Typography, Grid, Box, Divider } from '@mui/material
 
 export default function Weather({ forecast, error }) {
   return (
-    <Box sx={{ paddingLeft: 40, paddingRight: 40, paddingBottom: 2 }}>
+    <Box sx={{ paddingLeft: 5, paddingRight: 5, width: '70%', paddingBottom: 2 }}>
             <Typography variant="h4" component="h1" gutterBottom>
                 Temperatura nos próximo 5 dias
             </Typography>

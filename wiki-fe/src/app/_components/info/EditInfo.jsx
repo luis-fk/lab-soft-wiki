@@ -1,35 +1,27 @@
 "use client"
-import React, { useState, useRef, useEffect } from 'react';
-import { getSession } from '@/lib/session';
-import { useRouter } from 'next/navigation';
-import "@/styles/wiki/new-article.css";
-import ErrorMessage from "@/app/_components/auth/ErrorMessage";
+import "@/styles/info/edit-info.css";
+import ErrorMessage from "@/components/auth/ErrorMessage";
 import Showdown from "showdown";
-
-// Importes do Context 
-import { ArticleContext } from '@/app/contexts/articleProvider';
+import { useRouter } from 'next/navigation';
 import { useContext } from 'react';
+import { InfoContext } from '@/contexts/infoProvider';
+import React, { useState, useRef, useEffect } from 'react';
 
 export default function EditArticle() {
     const router = useRouter();
     const [text, setText] = useState('');
     const [title, setTitle] = useState('');
-    const [articleId, setArticleId] = useState('');
+    const [infoId, setInfoId] = useState('');
     const [errorMessage, setErrorMessage] = useState(null);
 
-    // utilizo { article } pra pegar um dos parametros do contexto que estão no ArticleProvider
-    const { article } = useContext(ArticleContext);
+    const { info } = useContext(InfoContext);
 
-    // executa apenas uma vez ao carregar a página
     useEffect(() =>{
-        setArticleId(article.articleId);
-        setText(article.text);
-        setTitle(article.title);
-        //renderiza
-        setPreview(article.text);
-
+        setInfoId(info.id);
+        setText(info.text);
+        setTitle(info.title);
+        setPreview(info.text);
     }, []);
-
 
     const sd = new Showdown.Converter(
         {
@@ -67,9 +59,7 @@ export default function EditArticle() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const session = await getSession();
-            
-            const response = await fetch(`http://127.0.0.1:8000/article/update/${articleId}/`, {
+            const response = await fetch(`http://127.0.0.1:8000/siteinfo/update/${infoId}/`, {
                 method: 'PUT',
                 headers: { 
                     'Content-Type': 'application/json',
@@ -77,25 +67,23 @@ export default function EditArticle() {
                 body: JSON.stringify({
                     title,
                     text,
-                    article_id: articleId,
-                    user_role: session.role
+                    siteinfo_id: infoId,
                 }), 
             });
             
             if (!response.ok) {
-                setErrorMessage("Não foi possivel editar o artigo!");
+                setErrorMessage("Não foi possivel editar a informação!");
                 return;
             }       
 
-            router.push(`/wiki/${articleId}/${title.split(' ').join('-')}`);
+            router.back();
         } catch (error) {
-            setErrorMessage("Não foi possivel editar o artigo!");
-            console.log(error);
+            setErrorMessage("Não foi possivel editar a informação!");
         }
     };
 
     return (
-        <div className="create-article-container">
+        <div className="edit-info-container">
             <form onSubmit={(e) => {
                 const confirmed = confirm('Você confirma as atualizações?');
                 e.preventDefault();
@@ -105,7 +93,7 @@ export default function EditArticle() {
                 }
             }}>
                 <div className="title-container">
-                    <label htmlFor="title">Título do artigo</label>
+                    <label htmlFor="title">Título da informação</label>
                         <textarea 
                             type="text"
                             id="title"
@@ -117,7 +105,7 @@ export default function EditArticle() {
 
                 <div className="text-container">
                     <div>
-                    <h2>Conteúdo do artigo</h2>
+                    <h2>Conteúdo do texto</h2>
                         <textarea 
                             type="text"
                             id="text"
@@ -132,14 +120,14 @@ export default function EditArticle() {
                     </div>
                 <div className="editor">
 
-                    <h2>Prévia do artigo</h2>
+                    <h2>Prévia do texto</h2>
                     <div className="preview-container">
                         <div ref={previewRef} className="preview-text"></div>
                     </div>
                 </div>
                 </div>
-                <div className="submitButton-container" style={{ marginTop: '20px' }}>
-                    <button type="submit">Atualizar artigo</button>
+                <div className="submitButton-container" style={{ marginTop: '20px', marginBottom: '20px' }}>
+                    <button type="submit">Atualizar informação</button>
                 </div>
 
                 <ErrorMessage message={errorMessage} /> 
