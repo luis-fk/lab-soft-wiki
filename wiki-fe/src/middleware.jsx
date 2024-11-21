@@ -16,7 +16,7 @@ export async function middleware(req) {
     'admin': ['admin'],
     'novo-artigo': ['admin', 'staff'],
     'editar-artigo': ['admin', 'staff'],
-    'editar-info': ['admin', 'staff']
+    'editar-info': ['admin']
   };
 
   // primeira palavra depois do '/'

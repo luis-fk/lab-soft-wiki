@@ -3,11 +3,23 @@ import "@/styles/info/contact-form.css";
 import ErrorMessage from '@/components/auth/ErrorMessage';
 import SuccessMessage from '@/components/auth/SuccessMessage';
 import React, { useState, useEffect, useRef  } from 'react';
+import { getSession } from '@/lib/session';
+import Link from "next/link";
 
 export default function ContactForm() {
     const [errorMessage, setErrorMessage] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
+    const [session, setSession] = useState(null);
     const formRef = useRef(null);
+
+    useEffect(() => {
+        async function fetchSession() {
+            const sessionData = await getSession();
+            setSession(sessionData);
+        }
+
+        fetchSession();
+    }, [])
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -69,9 +81,15 @@ export default function ContactForm() {
                     <textarea name="content" placeholder="Deixe sua mensagem aqui..." rows="5" required></textarea>
                 </div>
 
-                <div className="submitButton-container">
-                    <button type="submit">Enviar Email</button>
-                </div>
+                {
+                    (session?.userId && session) 
+                    ? (
+                        <div className="submitButton-container">
+                            <button type="submit">Enviar Email</button>
+                        </div>
+                    ) 
+                    : <p>Para entrar em contato é necessario <Link href="/login">entrar na sua conta</Link>.</p>
+                }
 
                 {errorMessage && <ErrorMessage message={errorMessage} />}
                 {successMessage && <SuccessMessage message={successMessage} />}

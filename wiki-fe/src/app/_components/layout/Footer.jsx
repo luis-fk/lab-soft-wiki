@@ -6,7 +6,7 @@ export default function Footer() {
   return (
     <div className="footer-content">
         <p>&copy; 2024 WikiDengue. Todos os direitos reservados.</p>
-        <p><Link href="/">Inicio</Link> | <Link href="/contato">Contato</Link> | <Link href="/sobre">Sobre</Link> | <Link href="/terms">Políticas de Privacidade</Link></p>
+        <p><Link href="/">Inicio</Link> | <Link href="/contato">Contato</Link> | <Link href="/sobre">Sobre</Link> | <Link href="/termos">Políticas de Privacidade</Link></p>
     </div>
   )
 }

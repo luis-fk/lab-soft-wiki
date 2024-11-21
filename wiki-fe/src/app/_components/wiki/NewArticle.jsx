@@ -3,8 +3,8 @@ import React, { useState, useRef } from 'react';
 import { getSession } from '@/lib/session';
 import { useRouter } from 'next/navigation';
 import "@/styles/wiki/new-article.css";
-import ErrorMessage from "@/app/_components/auth/ErrorMessage";
-import Showdown from "showdown";
+import ErrorMessage from "@/components/auth/ErrorMessage";
+import useMarkdownToHtml from '@/hooks/markdownToHtml';
 
 export default function NewArticle() {
     const [text, setText] = useState('');
@@ -12,39 +12,6 @@ export default function NewArticle() {
     const [errorMessage, setErrorMessage] = useState(null);
 
     const router = useRouter();
-
-    const sd = new Showdown.Converter(
-        {
-            tables: true,
-            tasklists: true,
-            strikethrough: true,
-            emoji: true,
-            simpleLineBreaks: true,
-            openLinksInNewWindow: true,
-            backslashEscapesHTMLTags: true,
-            smoothLivePreview: true,
-            simplifiedAutoLink: true,
-            simpleLineBreaks: true,
-            requireSpaceBeforeHeadingText: true,
-            ghMentions: true,
-            ghMentionsLink: '/user/{u}',
-            ghCodeBlocks: true,
-            emoji: true,
-            underline: true,
-            completeHTMLDocument: true,
-            metadata: true,
-            parseImgDimensions: true,
-            encodeEmails: true,
-            openLinksInNewWindow: true
-        });
-
-    const previewRef = useRef(null);
-    
-    const setPreview = (text) => {
-        if (previewRef.current) {
-            previewRef.current.innerHTML = sd.makeHtml(text);
-        }
-    }
     
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -103,7 +70,6 @@ export default function NewArticle() {
                             onChange={(e) => 
                                 {
                                     setText(e.target.value)
-                                    setPreview(e.target.value)
                                 }}
                             required
                         />
@@ -112,7 +78,7 @@ export default function NewArticle() {
 
                     <h2>Prévia do artigo</h2>
                     <div className="preview-container">
-                        <div ref={previewRef} className="preview-text"></div>
+                        <div ref={useMarkdownToHtml(text)} className="preview-text"></div>
                     </div>
                 </div>
                 </div>

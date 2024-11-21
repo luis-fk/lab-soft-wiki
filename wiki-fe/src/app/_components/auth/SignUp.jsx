@@ -1,11 +1,11 @@
 "use client"
 import "@/styles/auth/sign-up.css";
 import Link from 'next/link';
-import TermsBox from '@/components/info/Terms';
 import ErrorMessage from './ErrorMessage';
 import { authenticate } from '@/lib/session'
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
+import TermsBox from '@/components/info/Terms';
 
 export default function SignUp() {
     const [termsAccepted, setTermsAccepted] = useState(false);
@@ -53,6 +53,10 @@ export default function SignUp() {
             setErrorMessage(error.error);
         }
     };
+
+    function handleReturn() {
+        router.push('/');
+    }
 
     return (
     <>
@@ -105,6 +109,7 @@ export default function SignUp() {
 
                     <div className="submitButton-container">
                         <button type="submit">Cadastrar</button>
+                        <button type="button" style={{ backgroundColor: '#7e7e7e' }} onClick={handleReturn}>Voltar</button>
                     </div>
 
                     <ErrorMessage message={errorMessage} />
@@ -112,7 +117,7 @@ export default function SignUp() {
             
                 {showTerms && (
                     <div className="terms-modal">
-                        <TermsBox />
+                        <TermsBox/>
                         <button onClick={toggleTerms}>Voltar ao Cadastro</button>
                     </div>
                 )}

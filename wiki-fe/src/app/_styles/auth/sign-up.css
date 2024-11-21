@@ -14,7 +14,8 @@
   
   .submitButton-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    gap: 15px;
     align-items: center;
     justify-content: center;
   }
@@ -43,7 +44,8 @@
     box-sizing: border-box;
   }
   
-  .signup-container button[type="submit"] {
+  .signup-container button[type="submit"],
+  .signup-container button[type="button"] {
     background-color: #182833; 
     color: white;
     padding: 10px 15px;

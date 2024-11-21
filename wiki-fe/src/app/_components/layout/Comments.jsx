@@ -5,6 +5,7 @@ import SuccessMessage from "@/components/auth/SuccessMessage";
 import '@/styles/wiki/article.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import Link from 'next/link';
 
 export default function Comments({ params }) {
   const [comments, setComments] = useState([]);
@@ -133,7 +134,7 @@ export default function Comments({ params }) {
           Enviar Comentário
         </button>
       </div>
-      ) : <></>}
+      ) : <p>Para comentar é necessario <Link href="/login">entrar na sua conta</Link>.</p>}
       
       {comments.length > 0 ? (
         comments.map((comment) => (
