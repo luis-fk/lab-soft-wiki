@@ -1,10 +1,17 @@
 'use client';
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import '@/styles/info/info.css';
 import Showdown from "showdown";
+import { getSession } from '@/lib/session';
+import { useContext } from 'react';
+import { InfoContext } from '@/contexts/infoProvider';
+import { useRouter } from 'next/navigation';
 
-export default function Info({ params }) {
+export default function Info({ text, title, id, error }) {
     const textView = useRef(null);
+    const { handleInfo } = useContext(InfoContext);
+    const [session, setSession] = useState(null);
+    const router = useRouter();
 
     const sd = new Showdown.Converter({
         tables: true,
@@ -26,15 +33,39 @@ export default function Info({ params }) {
         parseImgDimensions: true,
         encodeEmails: true
     });
+    
+    useEffect(() => {
+        async function fetchSession() {
+            const sessionData = await getSession();
+            setSession(sessionData);
+        }
+
+        fetchSession();
+    }, []);
 
     useEffect(() => {
         if (textView.current) {
-            textView.current.innerHTML = sd.makeHtml(params?.content);
+            textView.current.innerHTML = sd.makeHtml(text);
         }
-    }, [params]);
+    }, [text]);
 
     return (
         <div className='info-container'>
+            <div className="info-header">
+                <h1>{title}</h1>
+                {
+                session?.role !== 'user' && session && (
+                    <button 
+                        type="submit"
+                        onClick={() => {
+                            handleInfo(title, text, id);
+                            router.push(`/editar-info`);
+                        }}                                    
+                        className="edit-info">
+                        <h2>Editar</h2>
+                    </button>)
+                }
+            </div>
             <p style={{ marginTop: '20px' }} ref={textView}></p>
         </div>
     );

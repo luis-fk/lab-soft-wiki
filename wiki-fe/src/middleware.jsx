@@ -15,7 +15,8 @@ export async function middleware(req) {
   const accessControl ={
     'admin': ['admin'],
     'novo-artigo': ['admin', 'staff'],
-    'editar-artigo': ['admin', 'staff']
+    'editar-artigo': ['admin', 'staff'],
+    'editar-info': ['admin', 'staff']
   };
 
   // primeira palavra depois do '/'
@@ -33,5 +34,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/novo-artigo', '/editar-artigo/:path*'],
+  matcher: ['/admin/:path*', '/novo-artigo', '/editar-artigo/:path*', '/editar-info'],
 };

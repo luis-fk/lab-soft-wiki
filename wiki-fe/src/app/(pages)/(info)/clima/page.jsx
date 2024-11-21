@@ -1,22 +1,26 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import Weather from '@/app/_components/info/Weather';
+import Info from '@/components/info/Info'
+import { infoIds } from "@/assets/misc/InfoIds";
+import useFetchInfo from '@/hooks/fetchInfo';
 
 export default function Page() {
     const [forecast, setForecast] = useState(null);
     const [error, setError] = useState(null);
-    
+
+    const { info, errorMessage } = useFetchInfo(infoIds[3].effectOfTheRain);
+
     useEffect(() => {
         const fetchForecast = async () => {
             const lat = -20.8197;
             const lon = -49.3794;
             const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY}&units=metric&lang=pt`;
 
-
             try {
                 const response = await fetch(url);
                 if (!response.ok) {
-                    throw new Error('Failed to fetch forecast data');
+                    setError('Failed to fetch forecast data');
                 }
                 const data = await response.json();
                 const groupedData = groupByDay(data.list);
@@ -46,6 +50,15 @@ export default function Page() {
     };
 
     return (
-        <Weather forecast={forecast} error={error}/>
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
+            <Weather forecast={forecast} error={error}/>
+
+            <Info
+                text={info?.text || 'Carregando...'}
+                title={info?.title || 'Carregando...'}
+                id={infoIds[3].effectOfTheRain}
+                error={errorMessage}
+            />
+        </div>
     );
 }

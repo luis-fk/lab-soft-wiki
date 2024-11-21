@@ -1,5 +1,4 @@
 'use client';
-import Link from 'next/link';
 import React, { useState, useRef, useEffect } from 'react';
 import ErrorMessage from '@/components/auth/ErrorMessage';
 import Comments from '@/components/layout/Comments';
@@ -10,8 +9,7 @@ import Showdown from "showdown";
 
 // Importes do Context: o contexto ArticleContext e o ArticleProvider
 import { useContext } from 'react';
-import { ArticleContext } from '../../contexts/articleProvider';
-import ArticleProvider from '@/app/contexts/articleProvider';
+import { ArticleContext } from '@/contexts/articleProvider';
 
 export default function Article({ params }) {
     const [session, setSession] = useState(null);

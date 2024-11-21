@@ -1,13 +1,22 @@
-import React from 'react'
+'use client'
+import React, { useEffect } from 'react';
 import Info from '@/components/info/Info'
-import HowToHelp from '@/assets/json/how-to-help.json'
-
-export const metadata = {
-  title: 'Por que contribuir?',
-}
+import { infoIds } from "@/assets/misc/InfoIds";
+import useFetchInfo from '@/hooks/fetchInfo';
 
 export default function page() {
+  const { info, errorMessage } = useFetchInfo(infoIds[2].howToHelp);
+
+  useEffect(() => {
+    document.title = 'Porque contribuir?';
+  }, []);
+
   return (
-    <Info params={{ content: HowToHelp.content}} />
+    <Info
+      text={info?.text || 'Carregando...'}
+      title={info?.title || 'Carregando...'}
+      id={infoIds[2].howToHelp}
+      error={errorMessage}
+    />
   )
 }

@@ -12,15 +12,15 @@ export default function InfoLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <BackgroundImage />
-        
-        <Header />
+          <BackgroundImage />
+          
+          <Header />
 
-        <Body> 
-          {children}
-        </Body>
+          <Body> 
+            {children}
+          </Body>
 
-        <Footer />
+          <Footer />
       </body>
     </html>
   )

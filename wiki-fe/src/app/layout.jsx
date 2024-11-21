@@ -1,4 +1,5 @@
 import ArticleProvider from "./contexts/articleProvider"
+import InfoProvider from "@/contexts/infoProvider"
 
 export const metadata = {
   title: 'Wiki Dengue',
@@ -9,7 +10,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <ArticleProvider>
-          {children}
+          <InfoProvider>
+            {children}
+          </InfoProvider>
         </ArticleProvider>
       </body>
     </html>
