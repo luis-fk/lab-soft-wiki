@@ -23,27 +23,31 @@ export default function Login() {
         }
       }
 
+    function handleReturn() {
+        router.push('/');
+    }
+
     return (
     <>
         <div className="login-container">
             <h2>Entrar</h2>
             <form onSubmit={handleSubmit}>
+                <div>
+                    <label htmlFor="email">Email</label>
+                    <input type="email" name="email" placeholder="Email" required />
+                </div>
 
-            <div>
-                <label htmlFor="email">Email</label>
-                <input type="email" name="email" placeholder="Email" required />
-            </div>
+                <div>
+                    <label htmlFor="password">Senha</label>
+                    <input type="password" name="password" placeholder="Password" required />
+                </div>
 
-            <div>
-                <label htmlFor="password">Senha</label>
-                <input type="password" name="password" placeholder="Password" required />
-            </div>
+                <p>Ainda nao possui uma conta? <Link href="/cadastrar">Cadastre-se</Link></p>
 
-            <p>Ainda nao possui uma conta? <Link href="/cadastrar">Cadastre-se</Link></p>
-
-            <div className="submitButton-container">
-                <button type="submit">Entrar</button>
-            </div>
+                <div className="submitButton-container">
+                    <button type="submit">Entrar</button>
+                    <button type="button" style={{ backgroundColor: '#7e7e7e' }} onClick={handleReturn}>Voltar</button>
+                </div>
             </form>
             
             <ErrorMessage message={errorMessage} />

@@ -54,6 +54,10 @@ export default function SignUp() {
         }
     };
 
+    function handleReturn() {
+        router.push('/');
+    }
+
     return (
     <>
         {
@@ -105,6 +109,7 @@ export default function SignUp() {
 
                     <div className="submitButton-container">
                         <button type="submit">Cadastrar</button>
+                        <button type="button" style={{ backgroundColor: '#7e7e7e' }} onClick={handleReturn}>Voltar</button>
                     </div>
 
                     <ErrorMessage message={errorMessage} />
