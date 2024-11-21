@@ -1,42 +1,30 @@
 'use client';
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import '@/styles/auth/terms-box.css';
-import Showdown from "showdown";
-import PrivacyPolicy from "@/assets/json/privacy-policy.json";
+import { infoIds } from "@/assets/misc/InfoIds";
+import useFetchInfo from '@/hooks/fetchInfo';
+import useMarkdownToHtml from '@/hooks/markdownToHtml';
 
 export default function Terms() {
-    const textView = useRef(null);
-
-    const sd = new Showdown.Converter({
-        tables: true,
-        tasklists: true,
-        strikethrough: true,
-        emoji: true,
-        simpleLineBreaks: true,
-        openLinksInNewWindow: true,
-        backslashEscapesHTMLTags: true,
-        smoothLivePreview: true,
-        simplifiedAutoLink: true,
-        requireSpaceBeforeHeadingText: true,
-        ghMentions: true,
-        ghMentionsLink: '/user/{u}',
-        ghCodeBlocks: true,
-        underline: true,
-        completeHTMLDocument: true,
-        metadata: true,
-        parseImgDimensions: true,
-        encodeEmails: true
-    });
-
-    useEffect(() => {
-        if (textView.current) {
-            textView.current.innerHTML = sd.makeHtml(PrivacyPolicy?.terms);
-        }
-    }, []);
+    const { info, errorMessage } = useFetchInfo(infoIds[0].termsOfUse);
+    const htmlContent = useMarkdownToHtml(
+        typeof info?.text === 'string' ? info.text : JSON.stringify(info?.text || '')
+    );
 
     return (
         <div className='terms-container'>
-            <p style={{ marginTop: '20px' }} ref={textView}></p>
+            {errorMessage ? (
+                <p style={{ marginTop: '20px', color: 'red' }}>{errorMessage}</p>
+            ) : (
+                <div>
+                    <h1>Termos de uso</h1>
+                    <p  
+                    ref={htmlContent}
+                    ></p>
+                </div>
+                
+                
+            )}
         </div>
     );
 }
