@@ -14,5 +14,8 @@ export const infoIds = [
     {
       getInContact: 5
     },
+    {
+      welcome: 6
+    }
   ];
   

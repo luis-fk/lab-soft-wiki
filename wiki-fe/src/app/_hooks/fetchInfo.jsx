@@ -10,7 +10,7 @@ const useFetchInfo = (infoId) => {
             try {
                 const response = await fetch(`http://127.0.0.1:8000/siteinfo/?id=${infoId}`);
                 if (!response.ok) {
-                    throw new Error("Failed to fetch data");
+                    setErrorMessage("Ocorreu um erro ao buscar as informações!");
                 }
                 const data = await response.json();
                 setInfo(data);
