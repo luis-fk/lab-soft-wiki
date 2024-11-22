@@ -8,6 +8,7 @@ from .views import (
     endereco_view,
     user_view,
     siteinfo_view,
+    mapa_view,
     view  # Certifique-se de que `view.py` está corretamente importado
 )
 
@@ -64,4 +65,10 @@ urlpatterns = [
     path("siteinfo/create/", siteinfo_view.create_siteinfo, name="create_siteinfo"),
     path("siteinfo/update/<int:siteinfo_id>/", siteinfo_view.update_siteinfo, name="update_siteinfo"),
     path("siteinfo/delete/<int:siteinfo_id>/", siteinfo_view.delete_siteinfo, name="delete_siteinfo"),
+    
+    #URLs para envio de mapas (mapa_view.py)
+    
+    path("mapa/nao-trabalhados/", mapa_view.mapa_nao_trabalhados, name="mapa_nao_trabalhados"),
+    path("mapa/incidencia-aedes/", mapa_view.mapa_incidencia_aedes, name="mapa_incidencia_aedes"),
+    path("mapa/tratamento-imoveis/", mapa_view.mapa_tratamento_imoveis, name="mapa_tratamento_imoveis"),
 ]
