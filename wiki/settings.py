@@ -98,8 +98,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'db_grupo04',      # Database name
+        'USER': 'u_grupo04',       # Database user
+        'PASSWORD': 'grupo04',     # Database password
+        'HOST': '200.144.245.12',  # Database server host
+        'PORT': '65432',           # Database server port
     }
 }
 AUTH_USER_MODEL = 'encyclopedia.User'
