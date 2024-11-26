@@ -5,7 +5,7 @@ export async function POST(req, res) {
     const { subject, email, content } = await req.json();
     
     const mailerSend = new MailerSend({
-        apiKey: process.env.NEXT_PUBLIC_EMAIL_API,
+        apiKey: "mlsn.f05540cb84f723cd514c8a1a3e06e5084228c4a710220b36f4e25a67b9dab961",
     });
 
     const sentFrom = new Sender("MS_Z8gxHh@trial-0r83ql31emzgzw1j.mlsender.net", email);
