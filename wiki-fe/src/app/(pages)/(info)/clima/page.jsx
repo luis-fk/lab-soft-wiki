@@ -15,7 +15,7 @@ export default function Page() {
         const fetchForecast = async () => {
             const lat = -20.8197;
             const lon = -49.3794;
-            const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY}&units=metric&lang=pt`;
+            const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=4ebfebd6fb68c6041fef034307b03a9d&units=metric&lang=pt`;
 
             try {
                 const response = await fetch(url);
