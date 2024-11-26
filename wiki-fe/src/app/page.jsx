@@ -10,6 +10,8 @@ import { infoIds } from "@/assets/misc/InfoIds";
 import React, { useEffect } from 'react';
 import '@/styles/layout/backgroundImage.css'
 import '@/styles/layout/layout.css'
+import ReportButton from "@/components/layout/ReportButton";
+
 
 export default function Page() {
   const { info, errorMessage } = useFetchInfo(infoIds[5].welcome);
@@ -26,6 +28,7 @@ export default function Page() {
 
       <Body> 
         <TrendingTopics />
+        <ReportButton />
         <Info
           text={info?.text || 'Carregando...'}
           title={info?.title || 'Carregando...'}
