@@ -1,0 +1,43 @@
+.textInputs {
+    margin: 20px;
+    padding: 10px;
+}
+
+/* Caixa que encapsula o editor de texto */
+.editor-box {
+    padding: 20px;
+    border-radius: 25px;
+    background-color: rgba(218, 218, 218, 0.5);
+}
+
+.titleInput {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.textarea-group textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    min-height: 450px; 
+}
+
+.button-group {
+    margin-top: 20px;
+}
+
+.button-group button {
+    background-color: #32a6f3;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.button-group button:hover {
+    background-color: #238dff;
+}
