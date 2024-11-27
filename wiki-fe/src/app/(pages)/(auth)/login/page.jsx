@@ -5,7 +5,7 @@ export const metadata = {
   title: 'Login',
 }
 
-export default function SignUpPage({errorMessage}) {
+export default function page({errorMessage}) {
   return (
     <>
       <Login params={errorMessage} />

@@ -8,6 +8,7 @@ class User(AbstractUser):
         ('user', 'User'),
         ('staff', 'Staff'),
         ('admin', 'Admin'),
+        ('inactive', 'Inactive'),
     ]
     name = models.CharField(max_length=255)
     city = models.CharField(max_length=255, blank=True, null=True)

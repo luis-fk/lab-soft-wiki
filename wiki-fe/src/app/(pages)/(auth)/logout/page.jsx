@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { terminateSession, getSession } from '@/lib/session';
 
-export default function Page() {
+export default function page() {
     const router = useRouter();
 
     useEffect(() => {

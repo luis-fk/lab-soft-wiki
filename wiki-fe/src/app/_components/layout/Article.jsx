@@ -91,7 +91,7 @@ export default function Article({ params }) {
                 <p className="article-content" ref={useMarkdownToHtml(params?.content)}></p>
 
                 {params.isValidArticle && (
-                    <Comments params={{ articleId: params?.articleId, userId: session?.userId }} />
+                    <Comments params={{ articleId: params?.articleId, userId: session?.userId, userRole: session?.role }} />
                 )}
             </div>
     );

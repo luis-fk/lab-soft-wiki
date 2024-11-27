@@ -15,10 +15,11 @@ export default function Users() {
   const roleTranslations = {
     'admin': 'Administrador',
     'user': 'Usuário',
-    'staff': 'Pesquisador'
+    'staff': 'Pesquisador',
+    'inactive': 'Inativo'
   };
 
-  const roles = ['admin', 'user', 'staff'];
+  const roles = ['admin', 'user', 'staff', 'inactive'];
   
   useEffect(() => {
     const fetchUsers = async () => {
@@ -139,7 +140,7 @@ export default function Users() {
               <th>Nome</th>
               <th>Email</th>
               <th>Cidade</th>
-              <th>Role</th>
+              <th>Permissão</th>
               <th>Data de inscrição</th>
             </tr>
           </thead>

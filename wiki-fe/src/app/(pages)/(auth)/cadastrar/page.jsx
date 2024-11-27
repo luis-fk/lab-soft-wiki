@@ -5,7 +5,7 @@ export const metadata = {
   title: 'Cadastrar',
 }
 
-export default function SignUpPage() {
+export default function page() {
   return (
     <>
       <SignUp />

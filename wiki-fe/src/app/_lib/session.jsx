@@ -63,13 +63,16 @@ export async function authenticate(formData) {
     body: JSON.stringify({
         email: formData.get('email'),
         password: formData.get('password'),
-    }), 
-});
+      }), 
+  });
+  
+  const data = await response.json();
   
   if (response.status !== 200) {
     return {errorMessage: 'Credenciais inválidas, por favor tente novamente'}
-  } else {
-    const data = await response.json();
+  } else if (data.role === 'inactive') {
+    return {errorMessage: 'Usuário desabilitado, por favor entre em contato com o administrador, ou crie outra conta.'}
+  }else {
     await createSession(data.id, data.role);
     return {}
   }
