@@ -20,6 +20,11 @@ export default async function Body({ children }) {
                     <Link href="/admin/users">Usuários</Link>
                 </>
                 }
+                {(session.role === 'admin' || session.role === 'staff') &&
+                <>
+                    <Link href="/denuncias">Denúncias</Link>
+                </>
+                }
             </div>
 
             {children}
