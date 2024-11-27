@@ -106,6 +106,27 @@ export default function Comments({ params }) {
     }
   };
 
+  const handleDelete = async (commentId) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/commentary/delete/${commentId}/`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        setErrorMessage(errorData.error || 'Falha ao excluir o comentário');
+        return;
+      }
+  
+      setComments(comments.filter((comment) => comment.id !== commentId));
+      setSuccessMessage('Comentário excluído com sucesso!');
+      setTimeout(() => setSuccessMessage(''), 3000);
+    } catch (err) {
+      setErrorMessage('Ocorreu um erro ao excluir o comentário.');
+    }
+  };
+
   return (
     <div>
       <hr style={{ border: 'none', borderTop: '1px solid #333', width: '95%', margin: '20px auto' }} />
@@ -157,6 +178,22 @@ export default function Comments({ params }) {
                 hour: '2-digit',
                 minute: '2-digit'
               })}</span>
+              {params.userRole === 'admin' && (
+                <button
+                  style={{
+                    marginLeft: '10px',
+                    padding: '5px 10px',
+                    color: 'white',
+                    backgroundColor: 'red',
+                    border: 'none',
+                    cursor: 'pointer',
+                    borderRadius: '5px'
+                  }}
+                  onClick={() => handleDelete(comment.id)}
+                >
+                  Deletar
+                </button>
+              )}
             <hr style={{ border: 'none', borderTop: '1px solid #333', width: '95%', margin: '20px auto' }} />
           </div>
         ))
