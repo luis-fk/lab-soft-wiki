@@ -4,7 +4,7 @@ import ErrorMessage from '@/components/auth/ErrorMessage';
 import SuccessMessage from '@/components/auth/SuccessMessage';
 import React, { useState, useEffect, useRef  } from 'react';
 import { getSession } from '@/lib/session';
-
+import Link from "next/link";
 
 export default function Report() {
     const [errorMessage, setErrorMessage] = useState(null);
@@ -104,9 +104,9 @@ export default function Report() {
                     <textarea name="content" placeholder="Deixe sua mensagem aqui..." rows="5" required></textarea>
                 </div>
 
-                <div className="submitButton-container">
+                {session?.userId ? <div className="submitButton-container">
                     <button type="submit">Enviar Denúncia</button>
-                </div>
+                </div> : <p>Para fazer uma denúncia é necessario <Link href="/login">entrar na sua conta</Link>.</p>}
 
                 {errorMessage && <ErrorMessage message={errorMessage} />}
                 {successMessage && <SuccessMessage message={successMessage} />}
