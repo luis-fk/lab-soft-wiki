@@ -71,4 +71,5 @@ urlpatterns = [
     path("mapa/nao-trabalhados/", mapa_view.mapa_nao_trabalhados, name="mapa_nao_trabalhados"),
     path("mapa/incidencia-aedes/", mapa_view.mapa_incidencia_aedes, name="mapa_incidencia_aedes"),
     path("mapa/tratamento-imoveis/", mapa_view.mapa_tratamento_imoveis, name="mapa_tratamento_imoveis"),
+    path("mapa/heatmap-interativo/", mapa_view.mapa_heatmap_interativo_casos, name="mapa_heatmap_interativo_casos"),
 ]
