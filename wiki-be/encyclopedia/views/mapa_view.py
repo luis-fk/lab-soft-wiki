@@ -12,6 +12,8 @@ from django.http import HttpResponse, HttpResponseServerError
 from django.conf import settings
 import logging
 from rest_framework.decorators import api_view
+import plotly.express as px
+import psycopg2
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -294,3 +296,176 @@ def calcular_metricas(gdf):
     except Exception as e:
         logger.error(f"Erro ao calcular métricas: {e}")
         return None
+def recuperar_parquet_do_banco(output_file, db_url, parquet_id=None):
+    """
+    Recupera um arquivo Parquet do banco de dados e salva localmente.
+    """
+    try:
+        conn = psycopg2.connect(db_url)
+        cursor = conn.cursor()
+
+        query = "SELECT file_data FROM parquet_files"
+        if parquet_id:
+            query += " WHERE id = %s"
+            cursor.execute(query, (parquet_id,))
+        else:
+            query += " ORDER BY created_at DESC LIMIT 1"
+            cursor.execute(query)
+        
+        result = cursor.fetchone()
+        if result is None:
+            logger.error("Nenhum arquivo Parquet encontrado no banco.")
+            return False
+        
+        with open(output_file, 'wb') as f:
+            f.write(result[0])
+        logger.info(f"Parquet recuperado e salvo como {output_file}.")
+        return True
+    except Exception as e:
+        logger.exception(f"Erro ao recuperar o Parquet: {e}")
+        return False
+    finally:
+        cursor.close()
+        conn.close()
+
+def plot_mapa_calor_interativo(
+    parquet_file,
+    outlier_threshold_factor=3,
+    data_inicio=None,
+    data_fim=None,
+    output_html="heatmap_plotly_optimized_postgres.html"
+):
+    """
+    Gera um mapa de calor interativo de notificações por setor censitário.
+    """
+    try:
+        # Leitura do arquivo Parquet
+        df = pd.read_parquet(parquet_file)
+
+        # Garantir que a coluna 'mes_ano' é string para comparação
+        df['mes_ano'] = df['mes_ano'].astype(str)
+
+        # Filtro por intervalo de datas
+        if data_inicio:
+            df = df[df['mes_ano'] >= data_inicio]
+        if data_fim:
+            df = df[df['mes_ano'] <= data_fim]
+
+        # Verificar e converter 'geometry' para GeoSeries
+        df['geometry'] = gpd.GeoSeries.from_wkb(df['geometry'])
+
+        # Converter para GeoDataFrame
+        gdf = gpd.GeoDataFrame(df, geometry='geometry')
+
+        # Agrupar os dados por setor censitário
+        gdf_agrupado = gdf.groupby('censitario').agg({
+            'notificacoes': 'sum',
+            'geometry': 'first'
+        }).reset_index()
+
+        # Garantir que 'geometry' seja GeoSeries no GeoDataFrame resultante
+        gdf_agrupado = gpd.GeoDataFrame(gdf_agrupado, geometry='geometry')
+
+        # Calcular limites para outliers
+        q1 = gdf_agrupado['notificacoes'].quantile(0.25)
+        q3 = gdf_agrupado['notificacoes'].quantile(0.75)
+        iqr = q3 - q1
+        outlier_threshold = q3 + outlier_threshold_factor * iqr
+
+        # Identificar outliers
+        gdf_agrupado['is_outlier'] = gdf_agrupado['notificacoes'] > outlier_threshold
+
+        # Extrair coordenadas e reduzir precisão
+        gdf_agrupado['lon'] = gdf_agrupado.geometry.centroid.x.round(6)
+        gdf_agrupado['lat'] = gdf_agrupado.geometry.centroid.y.round(6)
+
+        # Configurar o centro do mapa
+        center_lat = gdf_agrupado['lat'].mean()
+        center_lon = gdf_agrupado['lon'].mean()
+
+        # Separar outliers e dados normais
+        gdf_outliers = gdf_agrupado[gdf_agrupado['is_outlier']]
+        gdf_normal = gdf_agrupado[~gdf_agrupado['is_outlier']]
+
+        # Criar mapa interativo para dados normais
+        fig = px.scatter_mapbox(
+            gdf_normal,
+            lat='lat',
+            lon='lon',
+            color='notificacoes',
+            size='notificacoes',
+            size_max=15,
+            mapbox_style="carto-positron",
+            color_continuous_scale="Reds",
+            hover_data={'notificacoes': True, 'censitario': True},
+            title="Mapa de Calor - Notificações de Dengue",
+            center=dict(lat=center_lat, lon=center_lon),
+            zoom=12
+        )
+
+        # Definir o nome da primeira trace
+        if len(fig.data) > 0:
+            fig.data[0].name = 'Notificações'
+
+        # Adicionar outliers com cor preta
+        if not gdf_outliers.empty:
+            fig.add_scattermapbox(
+                lat=gdf_outliers['lat'],
+                lon=gdf_outliers['lon'],
+                mode='markers',
+                marker=dict(size=10, color='black', opacity=0.7),
+                name='Outliers',
+                hoverinfo='skip'  # Remover hover para outliers
+            )
+
+        # Atualizar layout para legendas e margens menores
+        fig.update_layout(
+            legend_title="Legenda",
+            margin=dict(l=10, r=10, t=30, b=10),
+        )
+
+        # Salvar como HTML otimizado
+        fig.write_html(output_html, include_plotlyjs='cdn')  # Usar CDN para reduzir tamanho
+        logger.info(f"Mapa salvo como {output_html}")
+    except Exception as e:
+        logger.exception(f"Erro ao gerar o mapa de calor interativo: {e}")
+        raise
+
+@api_view(['GET'])
+def mapa_heatmap_interativo_casos(request):
+    """
+    View para gerar e retornar o mapa de calor interativo.
+    """
+    try:
+        # Define URL do banco de dados
+        db_url = "postgresql://u_grupo04:grupo04@200.144.245.12:65432/db_grupo04"
+
+        # Caminhos para arquivos temporários
+        parquet_file = os.path.join(settings.BASE_DIR, 'temp_notificacoes.parquet')
+        output_html = os.path.join(settings.BASE_DIR, 'heatmap_plotly_optimized_postgres.html')
+
+        # Obter data_inicio e data_fim dos parâmetros da requisição
+        data_inicio = request.GET.get('data_inicio', None)  # Exemplo: '202201'
+        data_fim = request.GET.get('data_fim', None)        # Exemplo: '202212'
+
+        # Recuperar Parquet do banco
+        success = recuperar_parquet_do_banco(parquet_file, db_url)
+        if not success:
+            return HttpResponseServerError("Erro ao recuperar o Parquet do banco.")
+
+        # Gerar o mapa
+        plot_mapa_calor_interativo(parquet_file, data_inicio=data_inicio, data_fim=data_fim, output_html=output_html)
+
+        # Ler o HTML gerado e retornar na resposta
+        with open(output_html, 'r', encoding='utf-8') as f:
+            html_content = f.read()
+
+        # Opcional: remover arquivos temporários
+        os.remove(parquet_file)
+        os.remove(output_html)
+
+        return HttpResponse(html_content, content_type='text/html')
+
+    except Exception as e:
+        logger.exception("Ocorreu um erro ao gerar o mapa de calor interativo.")
+        return HttpResponseServerError("Erro ao gerar o mapa de calor interativo.")
